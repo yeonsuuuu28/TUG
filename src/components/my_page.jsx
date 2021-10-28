@@ -3,7 +3,7 @@ import React from 'react'
 const mypage = () => {
 
     function handleclick(){
-        window.location.href = "/credit_system";
+        window.location.href = "/credit";
     }
 
     return (

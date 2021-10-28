@@ -3,7 +3,7 @@ import React from 'react'
 const quiz = () => {
 
     function handleclick(){
-        window.location.href = "/chat_room";
+        window.location.href = "/chat";
     }
 
     return (

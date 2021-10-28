@@ -3,7 +3,7 @@ import React from 'react'
 const chat = () => {
 
     function handleclick(){
-        window.location.href = "/my_page";
+        window.location.href = "/mypage";
     }
 
     return (

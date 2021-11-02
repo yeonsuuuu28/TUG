@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from './navbar.jsx'
 
 const main = () => {
 
@@ -8,7 +9,7 @@ const main = () => {
 
     return (
         <div>
-            <button onClick = {handleclick}>JOIN CLASS</button>
+            <Navbar/>
         </div>
     )
 }

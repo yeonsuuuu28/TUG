@@ -42,7 +42,7 @@ export class navbar extends Component {
                     <ul>
                     <ul style={{float: "right"}}>
                                 <li className="dropdown signin"><a href="# ">
-                                <i className="fas fa-user-circle fa-lg"></i>{user_name}</a>
+                                <i className="fas fa-user-circle fa-lg"></i>&nbsp;&nbsp;{user_name}</a>
                                     <div className="dropdown-content">
                                         <a onClick={() => {signOutWithGoogle(); window.location.reload();}} href="# ">Sign Out</a>
                                     </div>

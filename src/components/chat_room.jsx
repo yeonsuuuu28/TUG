@@ -4,6 +4,8 @@ import {
     useState
 } from 'react';
 
+import firebase from "./firebase.jsx";
+import {auth, signInWithGoogle, signOutWithGoogle, db} from "./firebase.jsx";
 
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import {
@@ -88,11 +90,35 @@ const Chat = () => {
         window.location.href = "/mypage";
     }
 
+    function writeToDB(messageGroup) {
+        // push a child of message_group
+        
+        var newKey = firebase.database().ref('/rooms/cs473/').push();
+        newKey.set({
+            messageGroup: messageGroup
+        });
+    }
+
+    function readFromDB() {
+        // request to read some data
+        return firebase.database().ref('/rooms/cs473/').once(
+            'value',
+            function(snapshot) {
+                var myValue = snapshot.val();
+                console.log(myValue);
+            }
+        );
+    }
+
     return (
-        <div>            
-            <script src="node_modules/@chatscope/chat-ui-kit-react/dist/chat-ui-kit-react.min.js"></script>
+        <div>
+            <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
             <button onClick = {handleclick}>MYPAGE TO CHECK!</button>
             <button border={true} onClick={() => handleSend(`Please be my teammate! I'm telling you ${remoteMsgCnt.current++} times!`, remoteSender, true)} style={{
+            marginBottom: "1em"
+            }}>Add remote message</button>
+            <button border={true} onClick={() => readFromDB()} style={{
             marginBottom: "1em"
             }}>Add remote message</button>
             <div style={{ position: "relative", height: "500px" }}> 

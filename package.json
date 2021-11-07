@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@babel/core": "^7.15.8",
+    "@chatscope/chat-ui-kit-react": "^1.8.2",
+    "@chatscope/chat-ui-kit-styles": "^1.2.3",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",

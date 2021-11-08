@@ -3,6 +3,8 @@ import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child } from "firebase/database";
 
+//* JUST COPY&PASTED from join_class.jsx.  Should be coded later!! 
+
 class start_team_building extends Component {
 
     constructor(props) { //TODO 
@@ -14,20 +16,16 @@ class start_team_building extends Component {
 
     dbAdd = (e) => {
         const dbRef = ref(getDatabase());
-        get(child(dbRef, 'users/' + auth.currentUser.displayName+'/class/')).then((snapshot) => {
-            if (snapshot.exists()) {
-                if (!(Object.values(snapshot.val()).includes(e))) {
-                    alert("Successfully joined");
-                    push(ref(db, 'users/' + auth.currentUser.displayName+'/class/'), e)
-                }
-                else {
-                    alert("Already joined")
-                }
-            }
-            else {
-                alert("Successfully joined");
-                push(ref(db, 'users/' + auth.currentUser.displayName+'/class/'), e)
-            }});
+            get(child(dbRef, 'classes/' + e + '/user/' + auth.currentUser.uid + '/')).then((snapshot) => {
+              if(snapshot.exists()) {
+                  alert("Success!!!!");
+                  //TODO erase update import!!!
+                  set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/' + 'answers' + '/answer1/'), 2);
+              }
+              else{
+                console.log(snapshot.val());
+              }
+            });
     }
 
     classes = (x) => {
@@ -44,6 +42,7 @@ class start_team_building extends Component {
         return (
             <div>
             <Navbar/>
+
             <br/>
             <div onClick = {() => {this.classes("CS473")}}>Introduction to Social Computing</div>
             <br/>
@@ -57,24 +56,3 @@ class start_team_building extends Component {
 }
 
 export default start_team_building
-
-///////////// added by Seonghye ///////////////
-        /// add 'classes' structure into database
-        get(child(dbRef, 'classes/' + e)).then((snapshot) => {
-          if(snapshot.exists()) {
-            if (!(Object.values(snapshot.val()).includes(auth.currentUser.displayName))) {
-              alert("Successfully joined into the class!");
-              push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
-            }
-            else {
-              alert("Already joined the class");
-              push(ref(db, 'classes/' + e + '/' + auth.currentUser.displayName + '/'));
-
-            }
-          }
-          else {
-            push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
-            alert("Successfully joined into the class!");
-          }
-        });
-        ///////////// added by Seonghye ///////////////

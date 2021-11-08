@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
-import { getDatabase, ref, push, get, child } from "firebase/database";
+import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 class join extends Component {
@@ -42,21 +42,20 @@ class join extends Component {
         
         ///////////// added by Seonghye ///////////////
         /// add 'classes' structure into database
-        get(child(dbRef, 'classes/' + e)).then((snapshot) => {
+        get(child(dbRef, 'classes/' + e + '/user/')).then((snapshot) => {
           if(snapshot.exists()) {
-            if (!(Object.values(snapshot.val()).includes(auth.currentUser.displayName))) {
-              alert("Successfully joined into the class!");
-              push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
+            if (!(Object.values(snapshot.val()).includes(auth.currentUser.uid))) {
+              alert("Successfully joined into the class!1");
+              console.log(snapshot.val());
+              set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
             }
             else {
               alert("Already joined the class");
-              push(ref(db, 'classes/' + e + '/' + auth.currentUser.displayName + '/'));
-
             }
           }
           else {
-            push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
-            alert("Successfully joined into the class!");
+            set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
+            alert("Successfully joined into the class!2");
           }
         });
         ///////////// added by Seonghye ///////////////

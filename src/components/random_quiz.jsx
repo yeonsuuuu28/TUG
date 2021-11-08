@@ -1,45 +1,54 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
-import { getDatabase, ref, push, get, child } from "firebase/database";
+import { getDatabase, ref, push, get, child, set } from "firebase/database";
+
+let course = "";
 
 function handleclick(){
   window.location.href = "/chat";
-}
+};
 
 //* handleAnswerClick: event handler when the answer button is clicked
-function handleAnswerClick(){
-  //TODO store the answer into DB
+/// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button
+/// stores the clicked answer data into DB
+function handleAnswerClick(qnum, score, answer){
   const dbRef = ref(getDatabase());
-  // get(child(dbRef, 'users/' + auth.currentUser.displayName + ('users/' + 'userId').set({
-  //   username: 'name', //TODO: get the username
-  //   answer: 'answer'
-  // });
-  console.log('You clicked!');
-}
+  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
+  get(child(dbRef, route)).then((snapshot) => {
+    if(snapshot.exists()) {
+        alert("Success!!!!");
+        set(ref(db, route + 'questions' + '/' + qnum + '/score/'), score);
+        set(ref(db, route + 'questions' + '/' + qnum + '/answer/'), answer);
+    }
+    else{
+      alert("something is wrong");
+    }
+  });
+};
 
 //* handleImportantClick: event handler when the importance-check button is clicked
 function handleImportantClick(){
   //TODO
-}
+};
 
 //* GetFunAnswers
 /// input: id - index of fun question in funQcandidates array
 /// output: <html> - button list of each corresponding answer
 function GetFunAnswers({id}){
   const answerButtons = funAcandidates[id].answers.map(x =>
-    <li key={x.score}>
-      <button className="answer" onClick = {handleAnswerClick}>{x.answer}</button>
-    </li>
+    <div key={x.score} className="answer" onClick = {() => handleAnswerClick(id, x.score, x.answer)}>
+      {x.answer}
+    </div>
   );
 
   return(
-    <ul className="answer">
+    <div className="answer">
       {answerButtons}
-    </ul>
+    </div>
   );
-}
+};
 
 //* GetRandomFunQuestions
 /// input: number - number of random questions you want to request 
@@ -65,7 +74,7 @@ function GetRandomFunQuestions({number}){
       {QAobjects}
     </ul>
   )
-}
+};
 
 //* GetEssenAnswers
 /// input: id - index of essential question in essenQcandidates array
@@ -73,7 +82,7 @@ function GetRandomFunQuestions({number}){
 function GetEssenAnswers({id}){
   const answerButtons = essenAcandidates[id].answers.map(x =>
     <li key={x.score}>
-      <button className="answer" onClick = {handleAnswerClick}>{x.answer}</button>
+      <button className="answer" onClick = {handleAnswerClick.bind(this)}>{x.answer}</button>
     </li>
   );
 
@@ -82,7 +91,7 @@ function GetEssenAnswers({id}){
       {answerButtons}
     </ul>
   );
-}
+};
 
 //* GetEssentialQuestions
 /// input: none
@@ -108,10 +117,13 @@ function GetEssentialQuestions(){
       {QAobjects}
     </ul>
   )
-}
+};
 
-const quiz = () => {
-  if(false){ //TODO set true at first round, false otherwise
+const quiz = (props) => {
+  course = props.course; // set course name
+  course = "CS473"; //TODO: erase later
+
+  if(true){ //TODO set true at first round, false otherwise
     return (
       <div>
           <GetRandomFunQuestions number="2" />
@@ -128,6 +140,6 @@ const quiz = () => {
     )
   }
     
-}
+};
 
 export default quiz

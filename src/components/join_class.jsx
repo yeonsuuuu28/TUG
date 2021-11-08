@@ -25,12 +25,11 @@ class join extends Component {
 
     dbAdd = (e) => {
         const dbRef = ref(getDatabase());
-        get(child(dbRef, 'users/' + auth.currentUser.displayName + '/class/')).then((snapshot) => {
+        get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/')).then((snapshot) => {
             if (snapshot.exists()) {
-                console.log(this.userid);
                 if (!(Object.values(snapshot.val()).includes(e))) {
                     alert("Successfully joined");
-                    push(ref(db, 'users/' + auth.currentUser.displayName+'/class/'), e)
+                    push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/'), e)
                 }
                 else {
                     alert("Already joined")
@@ -38,7 +37,7 @@ class join extends Component {
             }
             else {
                 alert("Successfully joined");
-                push(ref(db, 'users/' + auth.currentUser.displayName+'/class/'), e)
+                push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/'), e)
             }});
     }
 

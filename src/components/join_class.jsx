@@ -5,13 +5,6 @@ import { getDatabase, ref, push, get, child } from "firebase/database";
 
 class join extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            class: []
-        }
-    }
-
     dbAdd = (e) => {
         const dbRef = ref(getDatabase());
         get(child(dbRef, 'users/' + auth.currentUser.displayName+'/class/')).then((snapshot) => {

@@ -3,7 +3,7 @@ import 'firebase/auth';        // for authentication
 import 'firebase/database';    // for realtime database
 import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
-import { getDatabase } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiMYGX7mptEDkQQypbuaMY1ppvtdpqye4",

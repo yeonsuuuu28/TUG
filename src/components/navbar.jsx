@@ -44,6 +44,7 @@ export class navbar extends Component {
                                 <li className="dropdown signin"><a href="# ">
                                 <i className="fas fa-user-circle fa-lg"></i>&nbsp;&nbsp;{user_name}</a>
                                     <div className="dropdown-content">
+                                        <a href="/mypage">My Page</a>
                                         <a onClick={() => {signOutWithGoogle(); window.location.reload();}} href="# ">Sign Out</a>
                                     </div>
                                 </li>

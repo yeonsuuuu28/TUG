@@ -28,7 +28,7 @@ export class navbar extends Component {
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>
-                            <img src={LOGO} alt = "" className='logo'/>
+                            <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
                             <li><a href="/" className = "title">TUG</a></li>
                         </ul>
                     </ul>

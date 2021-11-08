@@ -1,7 +1,7 @@
 import firebase from 'firebase/compat/app'
 import 'firebase/auth';        // for authentication
 import 'firebase/database';    // for realtime database
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from "firebase/database";
 
@@ -22,6 +22,6 @@ export const db = getDatabase(app);
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
-export const signInWithGoogle = () => signInWithPopup(auth, provider);
+export const signInWithGoogle = () => signInWithRedirect(auth, provider);
 export const signOutWithGoogle = () => signOut(auth);
 export default firebase;

@@ -28,7 +28,7 @@ export class navbar extends Component {
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>
-                            <img src={LOGO} alt = "" className='logo'/>
+                            <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
                             <li><a href="/" className = "title">TUG</a></li>
                         </ul>
                     </ul>
@@ -44,6 +44,7 @@ export class navbar extends Component {
                                 <li className="dropdown signin"><a href="# ">
                                 <i className="fas fa-user-circle fa-lg"></i>&nbsp;&nbsp;{user_name}</a>
                                     <div className="dropdown-content">
+                                        <a href="/mypage">My Page</a>
                                         <a onClick={() => {signOutWithGoogle(); window.location.reload();}} href="# ">Sign Out</a>
                                     </div>
                                 </li>

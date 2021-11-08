@@ -11,10 +11,11 @@ function handleclick(){
 //* handleAnswerClick: event handler when the answer button is clicked
 function handleAnswerClick(){
   //TODO store the answer into DB
-  db.ref('users/' + 'userId').set({ //TODO: 마지막 하던 부분!
-    username: 'name', //TODO: get the username
-    answer: 'answer'
-  });
+  const dbRef = ref(getDatabase());
+  // get(child(dbRef, 'users/' + auth.currentUser.displayName + ('users/' + 'userId').set({
+  //   username: 'name', //TODO: get the username
+  //   answer: 'answer'
+  // });
   console.log('You clicked!');
 }
 

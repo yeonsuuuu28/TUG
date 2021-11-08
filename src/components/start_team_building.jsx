@@ -3,9 +3,9 @@ import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child } from "firebase/database";
 
-class join extends Component {
+class start_team_building extends Component {
 
-    constructor(props) {
+    constructor(props) { //TODO 
         super(props);
         this.state = {
             class: []
@@ -28,28 +28,7 @@ class join extends Component {
                 alert("Successfully joined");
                 push(ref(db, 'users/' + auth.currentUser.displayName+'/class/'), e)
             }});
-        
-        ///////////// added by Seonghye ///////////////
-        /// add 'classes' structure into database
-        get(child(dbRef, 'classes/' + e)).then((snapshot) => {
-          if(snapshot.exists()) {
-            if (!(Object.values(snapshot.val()).includes(auth.currentUser.displayName))) {
-              alert("Successfully joined into the class!");
-              push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
-            }
-            else {
-              alert("Already joined the class");
-              push(ref(db, 'classes/' + e + '/' + auth.currentUser.displayName + '/'));
-
-            }
-          }
-          else {
-            push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
-            alert("Successfully joined into the class!");
-          }
-        });
-        ///////////// added by Seonghye ///////////////
-      }
+    }
 
     classes = (x) => {
         if (auth.currentUser === null){
@@ -77,4 +56,25 @@ class join extends Component {
 
 }
 
-export default join
+export default start_team_building
+
+///////////// added by Seonghye ///////////////
+        /// add 'classes' structure into database
+        get(child(dbRef, 'classes/' + e)).then((snapshot) => {
+          if(snapshot.exists()) {
+            if (!(Object.values(snapshot.val()).includes(auth.currentUser.displayName))) {
+              alert("Successfully joined into the class!");
+              push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
+            }
+            else {
+              alert("Already joined the class");
+              push(ref(db, 'classes/' + e + '/' + auth.currentUser.displayName + '/'));
+
+            }
+          }
+          else {
+            push(ref(db, 'classes/' + e + '/'), auth.currentUser.displayName);
+            alert("Successfully joined into the class!");
+          }
+        });
+        ///////////// added by Seonghye ///////////////

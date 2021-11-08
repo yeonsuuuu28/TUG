@@ -1,18 +1,23 @@
-.funQ {
-  background-color: white;
-  color: black;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  height: 80px;
-}
-
-ul .funA {
+ul .question {
   background-color: white;
   color: black;
 }
 
-button .funA {
+ul .answer {
+  background-color: white;
+  color: black;
+}
+
+button .answer {
+  background-color: white;
+  color: black;
+}
+
+button .importance_check {
+  box-shadow: 2;
+}
+
+#quiz-content {
   background-color: white;
   color: black;
 }

@@ -18,19 +18,28 @@ function handleAnswerClick(qnum, score, answer){
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
   get(child(dbRef, route)).then((snapshot) => {
     if(snapshot.exists()) {
-        alert("Success!!!!");
-        set(ref(db, route + 'questions' + '/' + qnum + '/score/'), score);
-        set(ref(db, route + 'questions' + '/' + qnum + '/answer/'), answer);
+        set(ref(db, route + 'questions/' + qnum + '/score/'), score);
+        set(ref(db, route + 'questions/' + qnum + '/answer/'), answer);
     }
     else{
-      alert("something is wrong");
+      alert("something is wrong"); // TODO go out to the main page
     }
   });
 };
 
-//* handleImportantClick: event handler when the importance-check button is clicked
-function handleImportantClick(){
-  //TODO
+//* handleImportanceClick: event handler when the importance-check button is clicked
+function handleImportanceClick(qnum){
+  const dbRef = ref(getDatabase());
+  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
+  get(child(dbRef, route)).then((snapshot) => {
+    if(snapshot.exists()) {
+        alert("Success!!!!");
+        set(ref(db, route + 'questions/' + qnum + '/importance/'), "yes");
+    }
+    else{
+      alert("something is wrong"); // TODO go out to the main page
+    }
+  });
 };
 
 //* GetFunAnswers
@@ -81,9 +90,9 @@ function GetRandomFunQuestions({number}){
 /// output: <html> - button list of each corresponding answer
 function GetEssenAnswers({id}){
   const answerButtons = essenAcandidates[id].answers.map(x =>
-    <li key={x.score}>
-      <button className="answer" onClick = {handleAnswerClick.bind(this)}>{x.answer}</button>
-    </li>
+    <div key={x.score} className="answer" onClick = {() => handleAnswerClick(id, x.score, x.answer)}>
+    {x.answer}
+  </div>
   );
 
   return(
@@ -106,7 +115,7 @@ function GetEssentialQuestions(){
 
   const QAobjects = randArr.map(x => // list of the html object of each question and answer set (+ importance-check button. only exists in the first round for essential questions)
     <li className = "question" key = {x[1]}>
-      <button onClick={handleImportantClick} className='importance_check'></button>
+      <button onClick={handleImportanceClick(x[1])} className='importance_check'></button>
       {essenQcandidates[x[1]].question}
       <GetEssenAnswers id = {x[1]} />
     </li>

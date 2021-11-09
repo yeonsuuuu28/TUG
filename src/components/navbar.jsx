@@ -49,7 +49,7 @@ export class navbar extends Component {
                                     </div>
                                 </li>
                             </ul>
-                        <li><a href="/quiz">MAKE TEAM</a></li>
+                        <li><a href="/startquiz">MAKE TEAM</a></li>
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>

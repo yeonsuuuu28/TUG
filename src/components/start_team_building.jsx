@@ -1,58 +1,73 @@
-import React, {Component} from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
-import { getDatabase, ref, push, get, child } from "firebase/database";
+import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import { onAuthStateChanged } from "firebase/auth";
 
-//* JUST COPY&PASTED from join_class.jsx.  Should be coded later!! 
-
-class start_team_building extends Component {
-
-    constructor(props) { //TODO 
-        super(props);
-        this.state = {
-            class: []
-        }
-    }
-
-    dbAdd = (e) => {
-        const dbRef = ref(getDatabase());
-            get(child(dbRef, 'classes/' + e + '/user/' + auth.currentUser.uid + '/')).then((snapshot) => {
-              if(snapshot.exists()) {
-                  alert("Success!!!!");
-                  //TODO erase update import!!!
-                  set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/' + 'answers' + '/answer1/'), 2);
-              }
-              else{
-                console.log(snapshot.val());
-              }
-            });
-    }
-
-    classes = (x) => {
-        if (auth.currentUser === null){
-            alert("Sign in to join class")
-        }
-        else {
-            this.dbAdd(x)
-            };
-        }
-
-
-    render(){
-        return (
-            <div>
-            <Navbar/>
-
-            <br/>
-            <div onClick = {() => {this.classes("CS473")}}>Introduction to Social Computing</div>
-            <br/>
-            <div onClick = {() => {this.classes("CS300")}}>Introduction to Algorithms</div>
-            <br/>
-            <div onClick = {() => {this.classes("CS101")}}>Introduction to Programming</div>
-            </div>
-        )
-    }
-
+//* handleCourseClick
+function handleCourseClick(){
+  //TODO
 }
+
+// function UserIdentification(){
+  
+// };
+
+//* GetCourseList
+/// input: none
+/// output: <html> - set of courses
+function GetCourseList(){  
+  const [uid, setUid] = useState('');
+  const [username, setUserName] = useState('');
+  let courseObjects = "loading...";
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+        setUserName(user.displayName);
+      }
+    });
+  }, [])
+
+  if(uid && username) {
+    alert("good "+uid+username);
+    const dbRef = ref(getDatabase());
+    const route = '/users/' + uid + '/' + username + '/class/';
+    get(child(dbRef, route)).then((snapshot) => {
+      if(snapshot.exists()){
+        courseObjects = Object.values(snapshot.val()).map(course => 
+          <li className = "course" key = {course}>
+            {course}
+            <button onClick={handleCourseClick} className='join_quiz'>Open</button>
+          </li>
+        );
+        console.log(courseObjects);
+      }
+      else{ // TODO
+        alert("wrong");
+        return(<div>something wrong1</div>)
+      }
+    });
+  }
+  else{
+    return(<div>loading...</div>)
+  }
+
+  return(
+    <ul id="course-list">
+      {courseObjects}
+    </ul>
+  )
+};
+
+const start_team_building = () => {
+  return(
+    <div>
+      <Navbar />
+      <GetCourseList />
+    </div>
+  )    
+};
 
 export default start_team_building

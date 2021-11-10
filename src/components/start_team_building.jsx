@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Link } from 'react'
 import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
@@ -9,49 +9,47 @@ function handleCourseClick(){
   //TODO
 }
 
-// function UserIdentification(){
-  
-// };
-
-//* GetCourseList
-/// input: none
-/// output: <html> - set of courses
-function GetCourseList(){  
+function UserIdentification(){
   const [uid, setUid] = useState('');
   const [username, setUserName] = useState('');
-  let courseObjects = "loading...";
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUid(user.uid);
         setUserName(user.displayName);
+        console.log("identified ", uid, username);
       }
     });
   }, [])
 
+  return (
+    <GetCourseList uid={uid} username={username} />
+  );
+};
+
+//* GetCourseList
+/// input: none
+/// output: <html> - set of courses
+function GetCourseList({ uid, username }){
+
+  const [courseObjects, setCourseObjects] = useState('loading...');
+  
   if(uid && username) {
-    alert("good "+uid+username);
     const dbRef = ref(getDatabase());
     const route = '/users/' + uid + '/' + username + '/class/';
     get(child(dbRef, route)).then((snapshot) => {
-      if(snapshot.exists()){
-        courseObjects = Object.values(snapshot.val()).map(course => 
+      if(snapshot.exists() && courseObjects == 'loading...'){
+        setCourseObjects(Object.values(snapshot.val()).map(course => 
           <li className = "course" key = {course}>
             {course}
-            <button onClick={handleCourseClick} className='join_quiz'>Open</button>
+            <Link to="./quiz" params={{ course:{course} }}>Open</Link>
+            {/* <button onClick={handleCourseClick} className='join_quiz'>Open</button> //TODO Open only when it's ready to start quiz */}
           </li>
-        );
+        ));
         console.log(courseObjects);
       }
-      else{ // TODO
-        alert("wrong");
-        return(<div>something wrong1</div>)
-      }
     });
-  }
-  else{
-    return(<div>loading...</div>)
   }
 
   return(
@@ -65,7 +63,7 @@ const start_team_building = () => {
   return(
     <div>
       <Navbar />
-      <GetCourseList />
+      <UserIdentification />
     </div>
   )    
 };

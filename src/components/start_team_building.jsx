@@ -4,11 +4,12 @@ import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 
-//* handleCourseClick
-function handleCourseClick(){
-  //TODO
+//* handleCourseClick - go to quiz session when the course 'open' button is clicked.
+function handleCourseClick(course){
+  window.location.href = "/quiz/"+course;
 }
 
+//* UserIdentification - identify the user and load the GetCourseList component.
 function UserIdentification(){
   const [uid, setUid] = useState('');
   const [username, setUserName] = useState('');
@@ -43,8 +44,7 @@ function GetCourseList({ uid, username }){
         setCourseObjects(Object.values(snapshot.val()).map(course => 
           <li className = "course" key = {course}>
             {course}
-            <Link to="./quiz" params={{ course:{course} }}>Open</Link>
-            {/* <button onClick={handleCourseClick} className='join_quiz'>Open</button> //TODO Open only when it's ready to start quiz */}
+            <button onClick={() => handleCourseClick(course)} className='join_quiz'>Open</button> //TODO Open only when it's ready to start quiz
           </li>
         ));
         console.log(courseObjects);

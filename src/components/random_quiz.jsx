@@ -13,13 +13,20 @@ function handleclick(){
 //* handleAnswerClick: event handler when the answer button is clicked
 /// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button
 /// stores the clicked answer data into DB
-function handleAnswerClick(course, qnum, score, answer){
+function handleAnswerClick(course, qnum, score, answer, fun){
+  alert("good");
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
   get(child(dbRef, route)).then((snapshot) => {
     if(snapshot.exists()) {
-        set(ref(db, route + 'questions/' + qnum + '/score/'), score);
-        set(ref(db, route + 'questions/' + qnum + '/answer/'), answer);
+      if(fun){
+        set(ref(db, route + 'fun_questions/' + qnum + '/score/'), score);
+        set(ref(db, route + 'fun_questions/' + qnum + '/answer/'), answer);
+      }
+      else{
+        set(ref(db, route + 'essen_questions/' + qnum + '/score/'), score);
+        set(ref(db, route + 'essen_questions/' + qnum + '/answer/'), answer);
+      }
     }
     else{
       alert("something is wrong"); // TODO go out to the main page
@@ -34,7 +41,7 @@ function handleImportanceClick(course, qnum){
   get(child(dbRef, route)).then((snapshot) => {
     if(snapshot.exists()) {
         alert("Success!!!!");
-        set(ref(db, route + 'questions/' + qnum + '/importance/'), "yes");
+        set(ref(db, route + 'essen_questions/' + qnum + '/importance/'), "yes");
     }
     else{
       alert("something is wrong"); // TODO go out to the main page
@@ -47,9 +54,9 @@ function handleImportanceClick(course, qnum){
 /// output: <html> - button list of each corresponding answer
 function GetFunAnswers({course, id}){
   const answerButtons = funAcandidates[id].answers.map(x =>
-    <div key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer)}>
+    <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer, true)}>
       {x.answer}
-    </div>
+    </button>
   );
 
   return(
@@ -90,9 +97,9 @@ function GetRandomFunQuestions({course, number}){
 /// output: <html> - button list of each corresponding answer
 function GetEssenAnswers({course, id}){
   const answerButtons = essenAcandidates[id].answers.map(x =>
-    <div key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer)}>
+    <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer, false)}>
     {x.answer}
-  </div>
+  </button>
   );
 
   return(
@@ -115,7 +122,7 @@ function GetEssentialQuestions({course}){
 
   const QAobjects = randArr.map(x => // list of the html object of each question and answer set (+ importance-check button. only exists in the first round for essential questions)
     <li className = "question" key = {x[1]}>
-      <button onClick={handleImportanceClick(course, x[1])} className='importance_check'></button>
+      <button onClick={() => handleImportanceClick(course, x[1])} className='importance_check'></button>
       {essenQcandidates[x[1]].question}
       <GetEssenAnswers course = {course} id = {x[1]} />
     </li>
@@ -128,19 +135,16 @@ function GetEssentialQuestions({course}){
   )
 };
 
-function quiz(props) {
-  // const [course, setCourse] = useState(props.course);
-  // setCourse(class); // set course name
-  const course = props.course;
-  // const course = "CS473"; //TODO: erase later
+function Quiz(props) {
+  const course = props.match.params.course;
 
-  if(true){ //TODO set true at first round, false otherwise
+  if(false){ //TODO set true at first round, false otherwise
     return (
       <div>
           <GetRandomFunQuestions course={course} number="2" />
           <button onClick = {handleclick}>CHAT!</button>
       </div>
-  )
+    )
   }
   else{
     return (
@@ -153,4 +157,4 @@ function quiz(props) {
     
 };
 
-export default quiz
+export default Quiz

@@ -4,9 +4,10 @@ import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } fr
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 
-// let course = ""; //TODO erase this later
+//* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
+function handleDoneClick(){
+//TODO
 
-function handleclick(){
   window.location.href = "/chat";
 };
 
@@ -135,26 +136,25 @@ function GetEssentialQuestions({course}){
   )
 };
 
-function Quiz(props) {
-  const course = props.match.params.course;
 
-  if(false){ //TODO set true at first round, false otherwise
-    return (
-      <div>
-          <GetRandomFunQuestions course={course} number="2" />
-          <button onClick = {handleclick}>CHAT!</button>
-      </div>
-    )
+function Quiz(props) {
+  const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
+
+  const QAlist = () => {
+    if(true){  //TODO set true at first round, false otherwise
+      return(<GetRandomFunQuestions course={course} number="2" />);
+    }
+    else{
+      return(<GetEssentialQuestions course={course} number="2" />);
+    }
   }
-  else{
-    return (
-      <div>
-          <GetEssentialQuestions course={course} number="2" />
-          <button onClick = {handleclick}>CHAT!</button>
-      </div>
-    )
-  }
-    
+
+  return(
+    <div>
+      <QAlist />
+      <button onClick = {handleDoneClick}>Done</button>
+    </div>
+  )
 };
 
 export default Quiz

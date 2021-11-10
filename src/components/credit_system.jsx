@@ -2,6 +2,12 @@ import React,{ useState } from 'react'
 import Navbar from './navbar.jsx'
 import './credit.css';
 
+//import {auth} from "./join_class.jsx"
+//import {auth, db} from "./firebase.jsx";
+import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+
 
 
 const data = [
@@ -9,21 +15,49 @@ const data = [
     { name: "Yeonsu", points: 0  },
     { name: "Seonghye", points: 0 },
   ]
+var members = {}
 
-/*// Creating a custom hook
-function useInput(defaultValue) {
-    const [value, setValue] = useState(defaultValue);
-    function onChange(e) {
-      setValue(e.target.value);
-    }
-    return {
-      value,
-      onChange,
-    };
-  }
-*/
-  
-const credit = () =>{
+function handleSubmit(e){
+    e.preventDefault();
+    console.log(members.class)
+    console.log(data)
+}
+
+            
+class readDB extends React.Component{
+
+    dbRead = () => {
+        const auth = getAuth();
+        const dbRef = ref(getDatabase()); 
+        onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+            //read db
+            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    console.log(snapshot.val())
+                    members = snapshot.val()
+                    }
+                else {
+                    console.log("no data");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });}
+
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        
+    // ...
+        else {
+        alert("not signed in")
+        // User is signed out
+         // ...
+        };
+    }); }
+
+    render(){
+        this.dbRead()
     return(
         <><div>
             <Navbar />
@@ -42,7 +76,8 @@ const credit = () =>{
             <tr key={key}>
               <td>{val.name}</td>
               <td><form>
-                <label>
+                <label>{val.name}
+                    <NameForm/>
                     <input type="number" onChange="" placeholder="0" />
                 </label>
                 </form>
@@ -52,8 +87,6 @@ const credit = () =>{
         })}
       </table>
             </div>
-            
-
         <div className="form">
             <form onSubmit={handleSubmit}>
                 <button type="submit">Submit</button>
@@ -62,12 +95,55 @@ const credit = () =>{
 </>
    );
 
-}
+}}
+  
 
-function handleSubmit(e){
-    e.preventDefault();
-    alert('You clicked submit.');
-}
+  class NameForm extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {value: ''};
+  
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+  
+    handleChange(event) {
+      this.setState({value: event.target.value});
+    }
+  
+    handleSubmit(event) {
+      alert('A name was submitted: ' + this.state.value);
+      event.preventDefault();
+    }
+
+   
+  
+    render() {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            <input type="text" value={this.state.value} onChange={this.handleChange} />
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
+      );
+    }
+  }
+
+/*// Creating a custom hook
+function useInput(defaultValue) {
+    const [value, setValue] = useState(defaultValue);
+    function onChange(e) {
+      setValue(e.target.value);
+    }
+    return {
+      value,
+      onChange,
+    };
+  }
+*/
+  
+
 
 
 class Form extends React.Component {
@@ -106,4 +182,4 @@ class Form extends React.Component {
 );
 }
 }
-export default credit
+export default readDB

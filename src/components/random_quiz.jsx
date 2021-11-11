@@ -75,7 +75,7 @@ function GetAnswers({course, id, fun}){
 
 
 //* GetRandomFunQuestions
-/// input: number - number of random questions you want to request 
+/// input: course - course id , number - number of random questions you want to request 
 /// output: <html> - set of questions and answer buttons
 function GetRandomFunQuestions({course, number}){ 
   const N = funQcandidates.length;
@@ -128,17 +128,19 @@ function GetEssentialQuestions({course}){
 };
 
 //* checkDone - check if the user answered to every questions
+/// input: course - course id, fun: true if the round is 2~ (==problems are fun questions), funNumber - number of fun questions at each round
 /// if yes : go to calculating function
 /// if no  : 
-function checkDone(course, fun){ //TODO,, just copy&pasted
+function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-  console.log(course, fun, route);
+  console.log(course, fun, route); 
   if(fun){
     get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
       const answeredquestions = Object.keys(snapshot.val());
-      if(snapshot.exists() && answeredquestions.length == funQcandidates.length) {
+      if(snapshot.exists() && answeredquestions.length >= funNumber) { // TODO: funNumber * number of rounds
         //TODO calculate score
+        console.log(calculateRandomParameter(course, snapshot, funNumber));
       }
       else{
         alert("not done"); //TODO
@@ -159,6 +161,24 @@ function checkDone(course, fun){ //TODO,, just copy&pasted
   }
 }
 
+//* calculateRandomParameter
+/// input: course - course id, s - snapshot of DB of .../fun_questions
+/// output: value of random parameter
+function calculateRandomParameter(course, s){
+  const randomness = 0.1;
+  const answeredquestions = Object.keys(s.val());
+  const answeredscores = answeredquestions.map(qid => s.child(qid + '/score/').val());
+
+  return randomness * answeredscores.reduce((a, b) => a+b, 0);
+}
+
+//* calculateScore
+function calculateScore(){
+
+}
+
+
+//* Titlebar
 function Titlebar({title}){
   return(
     <div className = "nav_bar">
@@ -176,14 +196,15 @@ function Titlebar({title}){
 
 function Quiz(props) {
   const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
-  const fun = false; //TODO set true at first round, false otherwise
+  const fun = true; //TODO set true at first round, false otherwise
+  const funNumber = Math.min(funQcandidates.length, 2); // number of fun questions at each round
 
   const QAlist = () => {
     if(fun){ 
-      return(<GetRandomFunQuestions course={course} number="2" />);
+      return(<GetRandomFunQuestions course={course} number={funNumber} />);
     }
     else{
-      return(<GetEssentialQuestions course={course} number="2" />);
+      return(<GetEssentialQuestions course={course} />);
     }
   }
 
@@ -191,7 +212,7 @@ function Quiz(props) {
     <div>
       <Titlebar title="Quiz Time!" />
       <QAlist />
-      <button onClick={() => checkDone(course, fun)}>Done</button>
+      <button onClick={() => checkDone(course, fun, funNumber)}>Done</button>
     </div>
   )
 };

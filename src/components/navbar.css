@@ -10,6 +10,9 @@
 ul {
   list-style: none;
   padding-inline-start: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
 }
 
 .navbartest {

@@ -36,33 +36,42 @@ function UserIdentification(){
 function GetCourseList({ uid, username }){
 
   const [courseObjects, setCourseObjects] = useState('loading...');
-  
+  const [courseName, setCourseName] = useState([]);
+  const [courseProf, setCourseProf] = useState([]);
+
   if(uid && username) {
     const dbRef = ref(getDatabase());
     const route = '/users/' + uid + '/' + username + '/class/';
     get(child(dbRef, route)).then((snapshot) => {
       if(snapshot.exists() && courseObjects == 'loading...'){
         const courseid = Object.values(snapshot.val());
-        get(child(dbRef, '/classes/')).then((snapshot)=> {
-          if(snapshot.exists()){
-            const coursename = courseid.map(id => {
-              console.log(snapshot.child(id + '/name').key)
-            })
+        
+        get(child(dbRef, '/classes/')).then((s)=> {
+          if(s.exists()){
+            setCourseName(courseid.map(id => s.child(id + '/name/').val()));
+            setCourseProf(courseid.map(id => s.child(id + '/professor/').val()));  
+
+            setCourseObjects((courseid).map((id, index) => 
+              <li className = "course" key = {id}>
+                <ul>
+                  <li className='coursedescription'>
+                    <div className = "coursename">{id}: {courseName[index]}</div>
+                    <div className='courseprof'>{courseProf[index]}</div>
+                  </li>
+                  <li>
+                    <button onClick={() => handleCourseClick(id)} className='join_quiz'>Start</button> {/*//TODO Start only when it's ready to start quiz */}
+                  </li>
+                </ul>
+              </li>
+            ));
+            console.log(courseObjects);
+            console.log(courseName, courseProf);
+
           }
           else{
             alert("no class"); //TODO
           }
-        }
-        )
-        
-
-        setCourseObjects(Object.values(snapshot.val()).map(course => 
-          <li className = "course" key = {course}>
-            {course}
-            <button onClick={() => handleCourseClick(course)} className='join_quiz'>Start</button> {/*//TODO Start only when it's ready to start quiz */}
-          </li>
-        ));
-        console.log(courseObjects);
+        });
       }
     });
   }

@@ -40,6 +40,60 @@ const GroupChatInterface = () => {
     )
 }
 
+//* AnimalNames(#) - generate random names for # people without duplicates
+const AnimalNames = (num) => {
+    const names = [
+        "Tiger",
+        "Wombat",
+        "Opposum",
+        "Dingo",
+        "Stallion",
+        "Jaguar",
+        "Mustang",
+        "Armadillo",
+        "Camel",
+        "Badger",
+        "Addax",
+        "Steer",
+        "Lamb",
+        "Snake",
+        "Hamster",
+        "Squirrel",
+        "Hyena",
+        "Fish",
+        "Gazelle",
+        "Dog",
+        "Zebra",
+        "Rat",
+        "Mole",
+        "Canary",
+        "Ferret",
+        "Impala",
+        "Mare",
+        "Hedgehog",
+        "Nyancat",
+        "Nupjuk"
+    ]
+
+    function randomNoRepeats(array) {
+        var copy = array.slice(0);
+        return function() {
+          if (copy.length < 1) { copy = array.slice(0); }
+          var index = Math.floor(Math.random() * copy.length);
+          var item = copy[index];
+          copy.splice(index, 1);
+          return item;
+        };
+    }
+
+    var uniqueNames = [];
+    const newName = randomNoRepeats(names);
+    for (var i=0; i<num; i++) {
+        uniqueNames.push(newName());
+    }
+
+    return uniqueNames;
+}
 
 //* UserIdentification - identify the user and load the GetCourseList component.
 function UserIdentification(){
@@ -85,13 +139,11 @@ const Chat = ({localSender, localSenderName}) => {
             const lastGroup = prevGroups[prevGroups.length - 1];
 
             if (lastGroup.sender === sender) {
-                
-                console.log('append to previous group')
                 // Add to group
                 const newMessages = [...lastGroup.messages].concat({
                     _id: `m-${++msgIdRef.current}`,
                     message,
-                    sender
+                    sender: sender
                 });
                 const newGroup = { ...lastGroup,
                     messages: newMessages
@@ -99,31 +151,35 @@ const Chat = ({localSender, localSenderName}) => {
                 const newGroups = prevGroups.slice(0, -1).concat(newGroup);
                 
                 return newGroups;
-            } else {
-                console.log('new group')
+            }
+            
+            else {
                 // Sender different than last sender - create new group 
                 const newGroup = {
                     _id: `g-${++groupIdRef.current}`,
                     direction: sender === localSender ? "outgoing" : "incoming",
                     messages: [{
-                    _id: `m-${++msgIdRef.current}`,
-                    message,
-                    sender
-                    }]
+                        _id: `m-${++msgIdRef.current}`,
+                        message,
+                        sender: sender
+                    }],
+                    sender: sender
                 };
                 
                 return prevGroups.concat(newGroup);
             }
-        } else {
-            console.log('new chat')
+        }
+        
+        else {
             const newGroup = {
-            _id: `g-${++groupIdRef.current}`,
-            direction: sender === localSender ? "outgoing" : "incoming",
-            messages: [{
-                _id: `m-${++msgIdRef.current}`,
-                message,
+                _id: `g-${++groupIdRef.current}`,
+                direction: sender === localSender ? "outgoing" : "incoming",
+                messages: [{
+                    _id: `m-${++msgIdRef.current}`,
+                    message,
+                    sender: sender
+                }],
                 sender: sender
-            }]
             };
             
             return [newGroup];
@@ -161,6 +217,8 @@ const Chat = ({localSender, localSenderName}) => {
 
     
     function readRemainingMessages(roomId) {
+        
+        console.log(AnimalNames(5));
         console.log(`reading chat logs of room[${roomId}]`)
         
         const dbRef = ref(getDatabase());
@@ -174,14 +232,12 @@ const Chat = ({localSender, localSenderName}) => {
                 
                 var emptyGroup = [];
                 for (let i=0; i<messages.length; i++) {
-                    console.log(emptyGroup.length);
-                    // handleSend(messages[i]['message'], messages[i]['sender'], true);
                     emptyGroup = updatedGroups(emptyGroup, messages[i]['message'], messages[i]['sender'], true);
                 }
                 setGroups(emptyGroup);
             }
             else {
-                console.log(`snapshot of room[${roomId}] does not exist`)
+                console.log(`room[${roomId}] is empty`)
             }
         });
     }

@@ -28,6 +28,7 @@ class join extends Component {
         get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/')).then((snapshot) => {
             if (snapshot.exists()) {
                 if (!(Object.values(snapshot.val()).includes(e))) {
+
                     alert("Successfully joined");
                     push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/'), e)
                 }
@@ -39,26 +40,22 @@ class join extends Component {
                 alert("Successfully joined");
                 push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/'), e)
             }});
-        
-        ///////////// added by Seonghye ///////////////
-        /// add 'classes' structure into database
+
         get(child(dbRef, 'classes/' + e + '/user/')).then((snapshot) => {
           if(snapshot.exists()) {
-            if (!(Object.values(snapshot.val()).includes(auth.currentUser.uid))) {
-              alert("Successfully joined into the class!1");
-              console.log(snapshot.val());
+            if (!(Object.keys(snapshot.val()).includes(auth.currentUser.uid))) {
+            //   alert("Successfully joined into the class!");
               set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
             }
             else {
-              alert("Already joined the class");
+            //   alert("Already joined the class");
             }
           }
           else {
             set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
-            alert("Successfully joined into the class!2");
+            // alert("Successfully joined into the class!");
           }
         });
-        ///////////// added by Seonghye ///////////////
       }
 
     classes = (x) => {

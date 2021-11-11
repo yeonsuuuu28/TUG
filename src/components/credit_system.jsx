@@ -1,30 +1,23 @@
 import React,{ useState } from 'react'
 import Navbar from './navbar.jsx'
 import './credit.css';
-
-//import {auth} from "./join_class.jsx"
+import DynamicForm from './DynamicForm';
 //import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
-
-
-const data = [
-    { name: "Auejin", points: 0},
-    { name: "Yeonsu", points: 0  },
-    { name: "Seonghye", points: 0 },
-  ]
 var members = {}
-
-function handleSubmit(e){
-    e.preventDefault();
-    console.log(members.class)
-    console.log(data)
-}
-
             
 class readDB extends React.Component{
+    state = {
+        data: [
+            { name: "Auejin", points: 0},
+            { name: "Yeonsu", points: 0 },
+            { name: "Seonghye", points: 0 },
+          ],
+        test:[]
+    }
 
     dbRead = () => {
         const auth = getAuth();
@@ -35,9 +28,12 @@ class readDB extends React.Component{
             //read db
             get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName)).then((snapshot) => {
                 if (snapshot.exists()) {
-                    console.log(snapshot.val())
-                    members = snapshot.val()
-                    }
+                    //console.log(snapshot.val())
+                    this.setState({
+                        test:[snapshot.val()]
+                    })
+                    //console.log("hello" + this.state.test)
+                }
                 else {
                     console.log("no data");
                 }
@@ -56,6 +52,14 @@ class readDB extends React.Component{
         };
     }); }
 
+
+    onSubmit = (model) =>{
+        alert(JSON.stringify(model));
+        this.setState({
+            data:[model, ...this.state.data]
+        })
+    }
+
     render(){
         this.dbRead()
     return(
@@ -65,6 +69,25 @@ class readDB extends React.Component{
         <div>
                 <span>Value: 100 </span>
         </div>
+        <div className ="App">
+            <DynamicForm className = "form"
+                title = "Credit"
+                model = {[
+                    {key:"auejin", label:this.state.data[0].name, type: "number", props: {min:0, max:100, required:true}},
+                    {key:"yeonsu", label:"Yeonsu", type: "number", props: {min:0, max:100,required:true}},
+                    {key:"seonghye", label:"Seonghye", type: "number", props: {min:0, max:100,required:true}}
+                ]}
+                onSubmit = {(model) => {this.onSubmit(model)}}
+            />
+
+            <pre style ={{width:"100"}}>
+                {/*{JSON.stringify(this.state.test)}
+                */}
+                {JSON.stringify(this.model)}
+                {JSON.stringify(this.state.data)}
+            </pre>
+        </div>
+{/*     
         <div className = "credit">
         <table>
         <tr>
@@ -87,99 +110,10 @@ class readDB extends React.Component{
         })}
       </table>
             </div>
-        <div className="form">
-            <form onSubmit={handleSubmit}>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+            */}
+        
 </>
    );
 
 }}
-  
-
-  class NameForm extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {value: ''};
-  
-      this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
-    }
-  
-    handleChange(event) {
-      this.setState({value: event.target.value});
-    }
-  
-    handleSubmit(event) {
-      alert('A name was submitted: ' + this.state.value);
-      event.preventDefault();
-    }
-
-   
-  
-    render() {
-      return (
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-      );
-    }
-  }
-
-/*// Creating a custom hook
-function useInput(defaultValue) {
-    const [value, setValue] = useState(defaultValue);
-    function onChange(e) {
-      setValue(e.target.value);
-    }
-    return {
-      value,
-      onChange,
-    };
-  }
-*/
-  
-
-
-
-class Form extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            nameValue: '',
-            ageValue: ''
-        }
-    }
-    onChangeName(event) {
-        this.setState({
-            nameValue:event.target.value
-        });
-
-    }
-    onChangeAge(event) {
-        this.setState({
-            ageValue: event.target.value
-        });
-    }
-    showValue(){
-        alert('name '+ this.state.nameValue + ' age: ' + this.state.ageValue)
-    }
-    render() {
-        return (
-            <form>
-                <label>Name:
-                    <input type="text" onChange={this.onChangeName.bind(this)}/>
-                </label>
-                <label>Age:
-                    <input type="text" onChange={this.onChangeAge.bind(this)}/>
-                </label>
-                <input type="submit" value="Submit" onClick={this.showValue.bind(this)}/>
-            </form>
-);
-}
-}
 export default readDB

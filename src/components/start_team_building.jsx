@@ -3,6 +3,7 @@ import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
+import './start_team_building.css';
 
 //* handleCourseClick - go to quiz session when the course 'open' button is clicked.
 function handleCourseClick(course){
@@ -41,10 +42,24 @@ function GetCourseList({ uid, username }){
     const route = '/users/' + uid + '/' + username + '/class/';
     get(child(dbRef, route)).then((snapshot) => {
       if(snapshot.exists() && courseObjects == 'loading...'){
+        const courseid = Object.values(snapshot.val());
+        get(child(dbRef, '/classes/')).then((snapshot)=> {
+          if(snapshot.exists()){
+            const coursename = courseid.map(id => {
+              console.log(snapshot.child(id + '/name').key)
+            })
+          }
+          else{
+            alert("no class"); //TODO
+          }
+        }
+        )
+        
+
         setCourseObjects(Object.values(snapshot.val()).map(course => 
           <li className = "course" key = {course}>
             {course}
-            <button onClick={() => handleCourseClick(course)} className='join_quiz'>Open</button> //TODO Open only when it's ready to start quiz
+            <button onClick={() => handleCourseClick(course)} className='join_quiz'>Start</button> {/*//TODO Start only when it's ready to start quiz */}
           </li>
         ));
         console.log(courseObjects);

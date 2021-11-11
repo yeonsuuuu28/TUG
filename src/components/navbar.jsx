@@ -38,17 +38,16 @@ export class navbar extends Component {
         else {
             const user_name = this.state.currentUser.displayName;
                 return (
-                    <div className = "nav_bar">
-                    <ul>
-                    <ul style={{float: "right"}}>
-                                <li className="dropdown signin"><a href="# ">
+                    <ul className = "nav_bar">
+                        <ul style={{float: "right"}}>
+                            <li className="dropdown signin"><a href="# ">
                                 <i className="fas fa-user-circle fa-lg"></i>&nbsp;&nbsp;{user_name}</a>
-                                    <div className="dropdown-content">
-                                        <a href="/mypage">My Page</a>
-                                        <a onClick={() => {signOutWithGoogle(); window.location.reload();}} href="# ">Sign Out</a>
-                                    </div>
-                                </li>
-                            </ul>
+                                <div className="dropdown-content">
+                                    <a href="/mypage">My Page</a>
+                                    <a onClick={() => {signOutWithGoogle(); window.location.reload();}} href="# ">Sign Out</a>
+                                </div>
+                            </li>
+                        </ul>
                         <li><a href="/startquiz">MAKE TEAM</a></li>
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
@@ -57,7 +56,6 @@ export class navbar extends Component {
                             <li><a href="/" className = "title">TUG</a></li>
                         </ul>
                     </ul>
-                </div>
                 )
             }
         }

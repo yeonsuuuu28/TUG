@@ -5,9 +5,13 @@
   --color-dark-blue: #1b1e2e;
   --color-light-grey: #eeeeee;
 
-  /*// Size */
-  --padding: 12px;
-  --avatar-size: 36px;
+  /*// Box Size */
+  --margin: 20px;
+  --border-width: 1px;
+  --border-radius: 5px;
+  --padding-large: 50px;
+  --padding-medium: 20px;
+  --padding-small: 5px;
 
   /*// Font Size */
   --font-large: 18px;

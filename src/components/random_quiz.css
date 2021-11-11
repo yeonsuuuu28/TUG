@@ -1,6 +1,11 @@
-ul .question {
+.quiz-content {
   background-color: var(--color-light-grey);
-  color: black;
+  color: var(--color-black);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 200px;
 }
 
 ul .answer {

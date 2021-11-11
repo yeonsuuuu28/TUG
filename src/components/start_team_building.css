@@ -1,7 +1,34 @@
-ul #course-list {
-  background-color: white;
+ul#course-list {
+  box-sizing: border-box;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  list-style-type: none;
+  padding: 0 var(--padding-large) 0 var(--padding-large);
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  font-family: var(--font-second);
 }
 
-li .course {
+li.course {
+  box-sizing: border-box;
   background-color: white;
+  align-items: center;
+  float: none;
+  margin: var(--margin);
+  border: var(--border-width);
+  padding: var(--padding-medium);
+  border-style: solid;
+  font-size: var(--font-medium);
+}
+
+button.join_quiz {
+  background-color: white;
+  float: right;
+  border-width: var(--border-width);
+  border-radius: var(--border-radius);
+  border-color: var(--color-black);
+  padding: var(--padding-small) var(--padding-medium) var(--padding-small)
+    var(--padding-medium);
+  font-size: var(--font-micro);
 }

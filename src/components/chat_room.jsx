@@ -1,11 +1,20 @@
 import React from 'react'
 import {
     useRef,
-    useState
+    useState,
+    useEffect
 } from 'react';
 
-import firebase from "./firebase.jsx";
-import {auth, signInWithGoogle, signOutWithGoogle, db} from "./firebase.jsx";
+import { auth, db } from "./firebase.jsx";
+import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+import Navbar from './navbar.jsx'
+
+
+// for chat ui, we are using https://chatscope.io/demo/
+// https://chatscope.io/storybook/react/?path=/story/components-chatcontainer--live-controlled-example-with-grouped-messages
+// might use this one too https://github.com/chatscope/use-chat, https://github.com/chatscope/use-chat-example
 
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import {
@@ -20,15 +29,50 @@ import {
   TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
 
-// for chat ui, we are using https://chatscope.io/demo/
-// https://chatscope.io/storybook/react/?path=/story/components-chatcontainer--live-controlled-example-with-grouped-messages
-// might use this one too https://github.com/chatscope/use-chat, https://github.com/chatscope/use-chat-example
 
-const Chat = () => {
+
+const GroupChatInterface = () => {
+    return (
+        <div>
+            <Navbar />
+            <UserIdentification />
+        </div>
+    )
+}
+
+
+//* UserIdentification - identify the user and load the GetCourseList component.
+function UserIdentification(){
+    const [uid, setUid] = useState('');
+    const [username, setUserName] = useState('');
+  
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUid(String(auth.currentUser.uid));
+                setUserName(String(auth.currentUser.displayName));
+                console.log("Hello", auth.currentUser.uid, auth.currentUser.displayName);
+            }
+        });
+    }, [])
     
+    if (uid && username) {
+        return (
+            <Chat localSender={uid} localSenderName={username} />
+          );
+    }
+    else {
+        return (
+            <div> Loading... </div>
+        );
+    }    
+};
+
+const Chat = ({localSender, localSenderName}) => {
     
+    const [idAnonNames, setIdAnonNames] = useState({});
     const remoteSender = "Fish";
-    const localSender = "You";
+    
     const groupIdRef = useRef(0);
     const msgIdRef = useRef(0);
     const remoteMsgCnt = useRef(0);
@@ -36,13 +80,13 @@ const Chat = () => {
     const [msgInputValue, setMsgInputValue] = useState("");
     const [groups, setGroups] = useState([]);
 
-    const handleSend = (message, sender, notCancel) => {
-        console.log(sender);
-
-        if (groups.length > 0) {
-            const lastGroup = groups[groups.length - 1];
+    const updatedGroups = (prevGroups, message, sender, notCancel) => {
+        if (prevGroups.length > 0) {
+            const lastGroup = prevGroups[prevGroups.length - 1];
 
             if (lastGroup.sender === sender) {
+                
+                console.log('append to previous group')
                 // Add to group
                 const newMessages = [...lastGroup.messages].concat({
                     _id: `m-${++msgIdRef.current}`,
@@ -52,9 +96,11 @@ const Chat = () => {
                 const newGroup = { ...lastGroup,
                     messages: newMessages
                 };
-                const newGroups = groups.slice(0, -1).concat(newGroup);
-                setGroups(newGroups);
+                const newGroups = prevGroups.slice(0, -1).concat(newGroup);
+                
+                return newGroups;
             } else {
+                console.log('new group')
                 // Sender different than last sender - create new group 
                 const newGroup = {
                     _id: `g-${++groupIdRef.current}`,
@@ -65,9 +111,11 @@ const Chat = () => {
                     sender
                     }]
                 };
-                setGroups(groups.concat(newGroup));
+                
+                return prevGroups.concat(newGroup);
             }
         } else {
+            console.log('new chat')
             const newGroup = {
             _id: `g-${++groupIdRef.current}`,
             direction: sender === localSender ? "outgoing" : "incoming",
@@ -77,50 +125,118 @@ const Chat = () => {
                 sender: sender
             }]
             };
-            setGroups([newGroup]);
+            
+            return [newGroup];
         }
-
+    }
+    
+    const handleSend = (message, sender, notCancel) => {
+        console.log(`${groups.length}, ${groupIdRef.current}, ${msgIdRef.current} - ${sender}: ${message}`);
+        
+        setGroups(updatedGroups(groups, message, sender, notCancel));
+        
         if (!notCancel) {
             setMsgInputValue("");
             inputRef.current.focus();
         }
     };
 
+    
+    // Add new message to Firebase
+    // TODO: Implement global messageID
+    function writeMessage(roomId, messageId, message, sender) {
+
+        // if sent by myself, sender = localSender = auth.currentUser.uid
+        const db = getDatabase();
+        set(ref(db, `rooms/${roomId}/messages/${msgIdRef.current}`), {
+          id: `${msgIdRef.current}`,
+          message: message,
+          sender : sender
+        });
+
+        
+        // update local interface first
+        handleSend(message, sender);
+    }
+
+    
+    function readRemainingMessages(roomId) {
+        console.log(`reading chat logs of room[${roomId}]`)
+        
+        const dbRef = ref(getDatabase());
+        const route = `rooms/${roomId}/messages/`
+        get(child(dbRef, route)).then((snapshot) => {
+            if (snapshot.exists()) {
+                // for each previous messages, handleSend(message, sender, notCancel=true)
+                const logs = Object.values(snapshot.val());
+                const messageIds = Object.keys(logs);
+                const messages = Object.values(logs);
+                
+                var emptyGroup = [];
+                for (let i=0; i<messages.length; i++) {
+                    console.log(emptyGroup.length);
+                    // handleSend(messages[i]['message'], messages[i]['sender'], true);
+                    emptyGroup = updatedGroups(emptyGroup, messages[i]['message'], messages[i]['sender'], true);
+                }
+                setGroups(emptyGroup);
+            }
+            else {
+                console.log(`snapshot of room[${roomId}] does not exist`)
+            }
+        });
+    }
+
     function handleclick(){
         window.location.href = "/mypage";
     }
 
-    function writeToDB(messageGroup) {
-        // push a child of message_group
-        
-        var newKey = firebase.database().ref('/rooms/cs473/').push();
-        newKey.set({
-            messageGroup: messageGroup
-        });
-    }
+    //* GetCourseList
+    /// input: none
+    /// output: <html> - set of courses
+    function GetJoinedUserIDs(classname){
 
-    function readFromDB() {
-        // request to read some data
-        return firebase.database().ref('/rooms/cs473/').once(
-            'value',
-            function(snapshot) {
-                var myValue = snapshot.val();
-                console.log(myValue);
+        if(classname) {
+        const dbRef = ref(getDatabase());
+        const route = '/classes/' + classname + '/';
+        get(child(dbRef, route)).then((snapshot) => {
+            if(snapshot.exists()){
+                // Object.values(snapshot.val())
+                const res = Object.values(snapshot.val())[0];
+                const userids = Object.keys(res);
+                const joineds = Object.values(res).map(x => x['joined']);
+                console.log(userids);
+                console.log(joineds);
             }
-        );
-    }
+        });
+        }
+
+        return;
+    };
+
+
+    useEffect(
+        ()=> {
+            readRemainingMessages(0);
+        }, []
+    );
 
     return (
         <div>
-            <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
-            <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
             <button onClick = {handleclick}>MYPAGE TO CHECK!</button>
-            <button border={true} onClick={() => handleSend(`Please be my teammate! I'm telling you ${remoteMsgCnt.current++} times!`, remoteSender, true)} style={{
-            marginBottom: "1em"
-            }}>Add remote message</button>
-            <button border={true} onClick={() => readFromDB()} style={{
-            marginBottom: "1em"
-            }}>Add remote message</button>
+            <button
+                border={true}
+                // onClick={() => handleSend(`Please be my teammate! I'm telling you ${remoteMsgCnt.current++} times!`, remoteSender, true)}
+                onClick={() => writeMessage(
+                    0, 0, `Please be my teammate! I'm telling you ${remoteMsgCnt.current++} times!`, remoteSender)}
+                style={{ marginBottom: "1em"}}>
+                    Add remote message
+            </button>
+            <button
+                //border={true} onClick={() => UserIdentification()}
+                border={true} onClick={() => GetJoinedUserIDs('CS101')}
+                style={{marginBottom: "1em"}}>
+                    Read Data
+            </button>
             <div style={{ position: "relative", height: "500px" }}> 
             <MainContainer>
             <ChatContainer>
@@ -137,7 +253,8 @@ const Chat = () => {
                 </MessageList>
                 <MessageInput 
                     placeholder="Get to know your teammates!" attachButton={false}
-                    onSend={m => handleSend(m, localSender)}
+                    // onSend={m => handleSend(m, localSender)} // TODO: apply dynamic room number and message id
+                    onSend={m => writeMessage(0, 0, m, localSender)}
                     onChange={setMsgInputValue}
                     value={msgInputValue} ref={inputRef} />
             </ChatContainer>
@@ -147,4 +264,5 @@ const Chat = () => {
     )
 }
 
-export default Chat
+// export default Chat
+export default GroupChatInterface

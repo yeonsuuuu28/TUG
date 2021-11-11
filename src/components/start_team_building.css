@@ -17,9 +17,18 @@ li.course {
   float: none;
   margin: var(--margin);
   border: var(--border-width);
-  padding: var(--padding-medium);
   border-style: solid;
+  padding: 30px var(--padding-medium);
+  height: 100px;
   font-size: var(--font-medium);
+}
+
+li.coursedescription {
+  float: left;
+}
+
+div.courseprof {
+  font-size: var(--font-small);
 }
 
 button.join_quiz {

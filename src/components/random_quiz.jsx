@@ -3,6 +3,7 @@ import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import LOGO from "../images/LOGO.PNG"
 
 //* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
 function handleDoneClick(){
@@ -72,22 +73,6 @@ function GetAnswers({course, id, fun}){
   );
 };
 
-//* GetFunAnswers
-/// input: id - index of fun question in funQcandidates array
-/// output: <html> - button list of each corresponding answer
-function GetFunAnswers({course, id}){
-  const answerButtons = funAcandidates[id].answers.map(x =>
-    <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer, true)}>
-      {x.answer}
-    </button>
-  );
-
-  return(
-    <div className="answer">
-      {answerButtons}
-    </div>
-  );
-};
 
 //* GetRandomFunQuestions
 /// input: number - number of random questions you want to request 
@@ -115,22 +100,6 @@ function GetRandomFunQuestions({course, number}){
   )
 };
 
-//* GetEssenAnswers
-/// input: id - index of essential question in essenQcandidates array
-/// output: <html> - button list of each corresponding answer
-function GetEssenAnswers({course, id}){
-  const answerButtons = essenAcandidates[id].answers.map(x =>
-    <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer, false)}>
-    {x.answer}
-  </button>
-  );
-
-  return(
-    <ul className="answer">
-      {answerButtons}
-    </ul>
-  );
-};
 
 //* GetEssentialQuestions
 /// input: none
@@ -147,7 +116,7 @@ function GetEssentialQuestions({course}){
     <li className = "question" key = {x[1]}>
       <button onClick={() => handleImportanceClick(course, x[1])} className='importance_check'></button>
       {essenQcandidates[x[1]].question}
-      <GetEssenAnswers course = {course} id = {x[1]} />
+      <GetAnswers course = {course} id = {x[1]} fun = {false}/>
     </li>
   );
 
@@ -158,12 +127,59 @@ function GetEssentialQuestions({course}){
   )
 };
 
+//* checkDone - check if the user answered to every questions
+/// if yes : go to calculating function
+/// if no  : 
+function checkDone(course, fun){ //TODO,, just copy&pasted
+  const dbRef = ref(getDatabase());
+  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
+  console.log(course, fun, route);
+  if(fun){
+    get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
+      const answeredquestions = Object.keys(snapshot.val());
+      if(snapshot.exists() && answeredquestions.length == funQcandidates.length) {
+        //TODO calculate score
+      }
+      else{
+        alert("not done"); //TODO
+      }
+    });
+  }
+  else{
+    alert("yes");
+    get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
+      const answeredquestions = Object.keys(snapshot.val());
+      if(snapshot.exists() && answeredquestions.length == essenQcandidates.length) {
+        //TODO calculate score
+      }
+      else{
+        alert("not done"); //TODO
+      }
+    });
+  }
+}
+
+function Titlebar({title}){
+  return(
+    <div className = "nav_bar">
+    <ul>
+        <li>Quiz Time!</li>
+        <li><a href="/">HOME</a></li>
+        <ul style={{float: "left"}}>
+            <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
+            <li><a href="/" className = "title">TUG</a></li>
+        </ul>
+    </ul>
+    </div>
+  )
+}
 
 function Quiz(props) {
   const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
+  const fun = false; //TODO set true at first round, false otherwise
 
   const QAlist = () => {
-    if(true){  //TODO set true at first round, false otherwise
+    if(fun){ 
       return(<GetRandomFunQuestions course={course} number="2" />);
     }
     else{
@@ -173,10 +189,12 @@ function Quiz(props) {
 
   return(
     <div>
+      <Titlebar title="Quiz Time!" />
       <QAlist />
-      <button onClick = {handleDoneClick}>Done</button>
+      <button onClick={() => checkDone(course, fun)}>Done</button>
     </div>
   )
 };
 
-export default Quiz
+export default Quiz;
+export { Titlebar };

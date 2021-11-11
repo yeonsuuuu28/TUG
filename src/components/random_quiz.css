@@ -1,5 +1,5 @@
 ul .question {
-  background-color: white;
+  background-color: var(--color-light-grey);
   color: black;
 }
 

@@ -3,6 +3,30 @@ import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import "./join_class.css";
+import classes from "./classes_list.jsx";
+
+
+const getclasses = () => {
+    const dbRef = ref(getDatabase());
+    for (let i=0; i<classes.length; i++) {
+        get(child(dbRef, 'classes/')).then((snapshot) => {
+            if(snapshot.exists()) {
+                if (!(Object.keys(snapshot.val()).includes(classes[i].code))) {
+                    set(ref(db, 'classes/' + classes[i].code + "/professor/"), classes[i].professor)
+                    set(ref(db, 'classes/' + classes[i].code + "/name/"), classes[i].name)
+                }
+                else {
+                }
+            }
+            else {
+                set(ref(db, 'classes/' + classes[i].code + "/professor/"), classes[i].professor)
+                set(ref(db, 'classes/' + classes[i].code + "/name/"), classes[i].name)
+            }
+        });
+    }
+}
+
 
 class join extends Component {
 
@@ -13,6 +37,7 @@ class join extends Component {
         }
     }
     
+
     uniqueID = () => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
@@ -28,7 +53,6 @@ class join extends Component {
         get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/')).then((snapshot) => {
             if (snapshot.exists()) {
                 if (!(Object.values(snapshot.val()).includes(e))) {
-
                     alert("Successfully joined");
                     push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/'), e)
                 }
@@ -74,11 +98,15 @@ class join extends Component {
             <div>
             <Navbar/>
             <br/>
+            {getclasses()}
+            <div className="join_title">Join Your Class</div>
             <div onClick = {() => {this.classes("CS473")}}>Introduction to Social Computing</div>
             <br/>
             <div onClick = {() => {this.classes("CS300")}}>Introduction to Algorithms</div>
             <br/>
             <div onClick = {() => {this.classes("CS101")}}>Introduction to Programming</div>
+            <br/>
+            <div onClick = {() => {this.classes("CS350")}}>Introduction to Software Engineering</div>
             </div>
         )
     }

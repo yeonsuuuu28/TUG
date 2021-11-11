@@ -6,7 +6,7 @@ import { getDatabase, ref, push, get, child, set } from "firebase/database";
 
 //* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
 function handleDoneClick(){
-//TODO
+  //TODO check if the user answered to every questions
 
   window.location.href = "/chat";
 };
@@ -50,6 +50,28 @@ function handleImportanceClick(course, qnum){
   });
 };
 
+//* GetAnswers
+/// input: id - index of fun question in funQcandidates array
+/// output: <html> - button list of each corresponding answer
+function GetAnswers({course, id, fun}){
+  const answercandidates = () => {
+    if(fun) return(funAcandidates[id])
+    else return(essenAcandidates[id])
+  }
+
+  const answerButtons = answercandidates().answers.map(x =>
+    <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer, fun)}>
+      {x.answer}
+    </button>
+  );
+
+  return(
+    <div className="answer">
+      {answerButtons}
+    </div>
+  );
+};
+
 //* GetFunAnswers
 /// input: id - index of fun question in funQcandidates array
 /// output: <html> - button list of each corresponding answer
@@ -82,7 +104,7 @@ function GetRandomFunQuestions({course, number}){
   const QAobjects = randArr.map(x => // list of the html object of each question and answer set
     <li className = "question" key = {x[1]}>
       {funQcandidates[x[1]].question}
-      <GetFunAnswers course = {course} id = {x[1]} />
+      <GetAnswers course = {course} id = {x[1]} fun={true}/>
     </li>
   );
 

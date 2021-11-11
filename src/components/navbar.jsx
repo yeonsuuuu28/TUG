@@ -24,7 +24,7 @@ export class navbar extends Component {
                 <div className = "nav_bar">
                     <ul>
                         <li onClick={signInWithGoogle} className="signin" href="# "><a href="# ">SIGN IN</a></li>
-                        <li><a href="/quiz">MAKE TEAM</a></li>
+                        <li><a href="/startquiz">MAKE TEAM</a></li>
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>

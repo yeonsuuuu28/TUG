@@ -12,10 +12,11 @@ ul {
   padding-inline-start: 0;
 }
 
-ul.nav_bar {
+.navbartest {
   background-color: var(--color-dark-blue);
-  border: 0;
+  list-style-type: none;
   margin: 0;
+  padding: 0;
   overflow: hidden;
   height: 80px;
 }

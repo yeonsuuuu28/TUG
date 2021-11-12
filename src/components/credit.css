@@ -13,7 +13,8 @@
 .form {
     width: 100%;
     padding-left: 20px;
-    align-items: center;
+    text-align: center;
+    
 }
     
   table {

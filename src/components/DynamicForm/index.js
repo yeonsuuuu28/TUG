@@ -1,29 +1,50 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './form.css';
 
 
 export default class DynamicForm extends React.Component {
     state = {
-
-    }
-    constructor(props){
-        super(props);
+        count: 100,
     }
 
     onSubmit = (e) =>{ /*call parent on submit*/
         e.preventDefault();
-        if(this.props.onSubmit) this.props.onSubmit(this.state);
+
+        if (this.state.count === 0){
+            if(this.props.onSubmit) this.props.onSubmit(this.state);
+        }else{
+            alert("Please distribute points")
+        }
+
     }
     
     //onChange handler
     onChange =(e,key) =>{
+        const arr = [] //keys array
+        var sum = 0
+        //get allkeys
+        for (const i in this.props.model){
+            arr.push(this.props.model[i].key)
+        }
         this.setState({
             [key]: this[key].value
         })
+        
+        //get updated values and sum them up
+        for (const j in arr){
+            sum = sum += Number(this[arr[j]].value)
+        }
+        console.log(sum)
+        this.setState({
+            //append array
+            //temp: [...this.state.temp,[key,this[key].value]],
+            count: 100 - sum 
+        })
+        
     }
 
     renderForm = () =>{
+        
         //loop through model data
         let model = this.props.model; //get model from credit system 
         let formUI = model.map((m) => {
@@ -32,32 +53,38 @@ export default class DynamicForm extends React.Component {
             let props = m.props || {};
             
             return(
-                <div key = {key} className ="form-group">
-                    <label className="form-label"
-                        key ={"l + m.key"}
-                        htmlFor={m.key}>
-                        {m.label}
-                    </label>
-                    <input {...props} 
-                    //reference all input element this.name, bla blla
-                        ref ={(key)=>{this[m.key] = key}}
-                        className = "form-input"
-                        type = {type}
-                        key = {"i" + m.key}
-                        onChange={(e) => {this.onChange(e,key)}}
-                    />
-                </div>
-            );
-        } );
+                <><tr key={key} className="form-group">
+                        <td><label className="form-label"
+                            key={"l + m.key"}
+                            htmlFor={m.key}>
+                            {m.label}
+                        </label>
+                        </td>
+                        <td>
+                            <input {...props}
+                                //reference all input element this.name, bla blla
+                                ref={(key) => { this[m.key] = key; } }
+                                className="form-input"
+                                type={type}
+                                key={"i" + m.key}
+                                onChange={(e) => { this.onChange(e, key,m); } } />
+                        </td>
+                    </tr></>
+               
+                    
+                    
+                               );
+        } ); 
         return formUI
     }
-
 
     render(){
         let title = this.props.title || "Dynamic Form";
         return(
             <div className = {this.props.className}>
                 <h3>{title}</h3>
+                <h4> Remaining points to distribute: {this.state.count} </h4>
+                
                 <form className = "dynamic-form" onSubmit ={(e)=>{this.onSubmit(e)}}>
                     {this.renderForm()}
                     <div className = "form-group">

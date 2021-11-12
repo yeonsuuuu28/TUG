@@ -1,3 +1,8 @@
+
+const pairedQuestions = [
+  [1,2], [10, 11], [12, 13]
+]
+
 const essenQcandidates = [ // candidates of essential questions for team building
   { 
     id: 1,
@@ -9,11 +14,11 @@ const essenQcandidates = [ // candidates of essential questions for team buildin
   },
   {
     id: 3,
-    question: "Are you good at Python?"
+    question: "Are you a perfectionist?"
   },
   {
     id: 4,
-    question: "Do you prefer python available teammate?"
+    question: "Do you prefer python or java?"
   },
   {
     id: 5,
@@ -21,7 +26,7 @@ const essenQcandidates = [ // candidates of essential questions for team buildin
   },
   {
     id: 6,
-    question: "Do you prefer enthusiastic or relaxed teammates?"
+    question: "Do you prefer Kaokao chatting or Zoom meeting?"
   },
   {
     id: 7,
@@ -52,16 +57,17 @@ const essenQcandidates = [ // candidates of essential questions for team buildin
     question: "Which grade do you prefer as your teammates?"
   },
 ]
+
 const essenAcandidates = [ // range description for each essenQcandidates
   { 
     id: 1,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Korean"
       },
       {
-        score: 5,
+        score: 2,
         answer: "English"
       }
     ]
@@ -70,11 +76,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 2,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Korean"
       },
       {
-        score: 5,
+        score: 2,
         answer: "English"
       }
     ]
@@ -83,11 +89,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 3,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Yes"
       },
       {
-        score: 5,
+        score: 2,
         answer: "No"
       }
     ]
@@ -96,12 +102,12 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 4,
     answers: [
       {
-        score: 0,
-        answer: "Yes"
+        score: -2,
+        answer: "python"
       },
       {
-        score: 5,
-        answer: "No"
+        score: 2,
+        answer: "java"
       }
     ]
   },
@@ -109,11 +115,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 5,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Enthusiastic"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Relaxed"
       }
     ]
@@ -122,12 +128,12 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 6,
     answers: [
       {
-        score: 0,
-        answer: "Enthusiastic"
+        score: -2,
+        answer: "Kakao chatting"
       },
       {
-        score: 5,
-        answer: "Relaxed"
+        score: 2,
+        answer: "Zoom meeting"
       }
     ]
   },
@@ -135,11 +141,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 7,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Morning"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Daybreak"
       }
     ]
@@ -148,11 +154,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 8,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Real-time"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Non-real-time"
       }
     ]
@@ -161,11 +167,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 9,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Early"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Late"
       }
     ]
@@ -174,11 +180,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 10,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Female"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Male"
       }
     ]
@@ -187,11 +193,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 11,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Female"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Male"
       }
     ]
@@ -200,11 +206,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 12,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Freshman"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Senior"
       }
     ]
@@ -213,11 +219,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     id: 13,
     answers: [
       {
-        score: 0,
+        score: -2,
         answer: "Freshman"
       },
       {
-        score: 5,
+        score: 2,
         answer: "Senior"
       }
     ]
@@ -315,4 +321,4 @@ const funAcandidates = [ // possible answers for each funQcandidates
   },
 ]
 
-export {essenQcandidates, essenAcandidates, funQcandidates, funAcandidates }
+export {essenQcandidates, pairedQuestions, essenAcandidates, funQcandidates, funAcandidates }

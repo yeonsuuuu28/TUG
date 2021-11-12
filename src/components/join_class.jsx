@@ -70,6 +70,8 @@ class join extends Component {
             if (!(Object.keys(snapshot.val()).includes(auth.currentUser.uid))) {
             //   alert("Successfully joined into the class!");
               set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
+              set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/essen_questions/done/'), "no");
+              set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/fun_questions/done/'), "no");
             }
             else {
             //   alert("Already joined the class");
@@ -77,6 +79,8 @@ class join extends Component {
           }
           else {
             set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
+            set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/essen_questions/done/'), "no");
+            set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/fun_questions/done/'), "no");
             // alert("Successfully joined into the class!");
           }
         });

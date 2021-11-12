@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from "./navbar.jsx"
 
 const mypage = () => {
 
@@ -8,6 +9,7 @@ const mypage = () => {
 
     return (
         <div>
+            <Navbar/>
             <button onClick = {handleclick}>DISTRIBUTE CREDIT!</button>
         </div>
     )

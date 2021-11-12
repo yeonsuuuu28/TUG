@@ -5,7 +5,9 @@ import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./join_class.css";
 import classes from "./classes_list.jsx";
-
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
 
 const getclasses = () => {
     const dbRef = ref(getDatabase());
@@ -27,6 +29,20 @@ const getclasses = () => {
     }
 }
 
+const display = () => {
+    let table = [];
+    for (var i = 0; i < classes.length; i++) {
+        table.push(
+            <tr><td className="table_class">
+                <div className="table_class_title">{classes[i].name}</div>
+                <div className="table_class_subtitle">{classes[i].professor}</div>
+            </td></tr>
+        )
+    }
+    return table;
+}
+
+const testtest = ["hi"];
 
 class join extends Component {
 
@@ -36,7 +52,7 @@ class join extends Component {
             id: ""
         }
     }
-    
+        
 
     uniqueID = () => {
         const auth = getAuth();
@@ -68,16 +84,13 @@ class join extends Component {
         get(child(dbRef, 'classes/' + e + '/user/')).then((snapshot) => {
           if(snapshot.exists()) {
             if (!(Object.keys(snapshot.val()).includes(auth.currentUser.uid))) {
-            //   alert("Successfully joined into the class!");
               set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
             }
             else {
-            //   alert("Already joined the class");
             }
           }
           else {
             set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
-            // alert("Successfully joined into the class!");
           }
         });
       }
@@ -93,6 +106,8 @@ class join extends Component {
         }
 
 
+
+
     render(){
         return (
             <div>
@@ -100,13 +115,27 @@ class join extends Component {
             <br/>
             {getclasses()}
             <div className="join_title">Join Your Class</div>
-            <div onClick = {() => {this.classes("CS473")}}>Introduction to Social Computing</div>
             <br/>
-            <div onClick = {() => {this.classes("CS300")}}>Introduction to Algorithms</div>
-            <br/>
-            <div onClick = {() => {this.classes("CS101")}}>Introduction to Programming</div>
-            <br/>
-            <div onClick = {() => {this.classes("CS350")}}>Introduction to Software Engineering</div>
+            <TextField
+                id="input-with-icon-textfield"
+                label=""
+                InputProps={{
+                startAdornment: (
+                    <InputAdornment position="start">
+                    <SearchIcon />
+                    </InputAdornment>
+                ),
+                }}
+                variant="standard"
+            />
+            <table className = "table_setting">{display()}</table>
+                {/* <div onClick = {() => {this.classes("CS473")}}>Introduction to Social Computing</div>
+                <br/>
+                <div onClick = {() => {this.classes("CS300")}}>Introduction to Algorithms</div>
+                <br/>
+                <div onClick = {() => {this.classes("CS101")}}>Introduction to Programming</div>
+                <br/>
+                <div onClick = {() => {this.classes("CS350")}}>Introduction to Software Engineering</div> */}
             </div>
         )
     }

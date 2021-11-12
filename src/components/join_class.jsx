@@ -158,7 +158,6 @@ export default function Join() {
             <div>
             <Navbar/>
             <br/>
-            {getclasses()}
             <div className="join_title">Join Your Class</div>
             <br/>
             <div className="search_bar">
@@ -182,7 +181,7 @@ export default function Join() {
                 onKeyPress={convert_key}
             />
             </Box></div>
-
+            {getclasses()}
             <table className = "table_setting"><tbody>{display()}</tbody></table>
             </div>
         )

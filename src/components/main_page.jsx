@@ -5,11 +5,6 @@ import MAIN1 from "../images/main1.svg"
 import {Link} from 'react-router-dom'
 
 const main = () => {
-
-    function handleclick(){
-        window.location.href = "/join";
-    }
-
     return (
         <div>
             <Navbar/>

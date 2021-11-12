@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";

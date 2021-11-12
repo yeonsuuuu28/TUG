@@ -64,3 +64,9 @@
     cursor: pointer;
     margin: 0 auto;
 }
+
+.search_bar {
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+}

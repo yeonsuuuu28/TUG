@@ -8,6 +8,31 @@ import classes from "./classes_list.jsx";
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
+import Box from '@mui/material/Box';
+import { alpha, styled } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+
+const TextFieldSearchBar = styled(TextField)({
+    '& .MuiInputBase-input': {
+        fontSize: 15,
+        fontFamily: "Lato",
+    },
+    '& .MuiInputBase-root': {
+        borderRadius: 20,
+        fontSize: 13,
+        fontFamily: "Lato",
+        paddingLeft: 5
+    },
+      '& label': {
+        fontSize: 13,
+        fontFamily: "Lato",
+    },
+
+
+
+  });
 
 const getclasses = () => {
     const dbRef = ref(getDatabase());
@@ -117,18 +142,26 @@ class join extends Component {
             {getclasses()}
             <div className="join_title">Join Your Class</div>
             <br/>
-            {/* <TextField
-                id="input-with-icon-textfield"
-                label=""
+            <div className="search_bar">
+            <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+            {/* <SearchIcon sx={{ color: 'action.active', mr: 1, my: 0.5 }} /> */}
+            <TextFieldSearchBar
+                id="outlined-adornment-password"
+                label="Search Classes"
                 InputProps={{
-                startAdornment: (
-                    <InputAdornment position="start">
+                endAdornment: (
+                    <InputAdornment position="end">
                     <SearchIcon />
                     </InputAdornment>
                 ),
                 }}
-                variant="standard"
-            /> */}
+                fullWidth
+                size="small"
+                margin="normal"
+            />
+            </Box></div>
+        
+
             <table className = "table_setting"><tbody>{display()}</tbody></table>
             </div>
         )

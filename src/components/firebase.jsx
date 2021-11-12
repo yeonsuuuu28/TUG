@@ -5,6 +5,7 @@ import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut } from "fireba
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, set } from "firebase/database";
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyDiMYGX7mptEDkQQypbuaMY1ppvtdpqye4",
     authDomain: "cs473---tug.firebaseapp.com",
@@ -20,8 +21,10 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getDatabase(app);
 
+
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
 export const signInWithGoogle = () => signInWithRedirect(auth, provider);
 export const signOutWithGoogle = () => signOut(auth);
+
 export default firebase;

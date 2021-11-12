@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Myclass() {
-    return ("hi")
+    return (<a href="/startquiz">MAKE TEAM</a>)
 }

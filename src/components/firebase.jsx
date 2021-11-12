@@ -3,7 +3,8 @@ import 'firebase/auth';        // for authentication
 import 'firebase/database';    // for realtime database
 import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, onDisconnect } from "firebase/database";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiMYGX7mptEDkQQypbuaMY1ppvtdpqye4",
@@ -19,9 +20,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getDatabase(app);
+export const presenceRef = ref(db, "disconnectmessage");
+onDisconnect(presenceRef).set("I disconnected!");
+
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({prompt: 'select_account'});
 export const signInWithGoogle = () => signInWithRedirect(auth, provider);
 export const signOutWithGoogle = () => signOut(auth);
+
 export default firebase;

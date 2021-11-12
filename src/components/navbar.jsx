@@ -21,10 +21,12 @@ export class navbar extends Component {
         
         if (this.state.currentUser === null) {
             return (
-                <div className = "nav_bar">
+                <div className = "navbartest">
                     <ul>
                         <li onClick={signInWithGoogle} className="signin" href="# "><a href="# ">SIGN IN</a></li>
-                        <li><a href="/startquiz">MAKE TEAM</a></li>
+                        {/* <li><a href="/startquiz">MAKE TEAM</a></li> */}
+                        <li><a href="/mypage">MAKE TEAM</a></li>
+                        <li><a href="/join">JOIN CLASS</a></li>
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>
@@ -38,7 +40,7 @@ export class navbar extends Component {
         else {
             const user_name = this.state.currentUser.displayName;
                 return (
-                    <ul className = "nav_bar">
+                    <ul className = "navbartest">
                         <ul style={{float: "right"}}>
                             <li className="dropdown signin"><a href="# ">
                                 <i className="fas fa-user-circle fa-lg"></i>&nbsp;&nbsp;{user_name}</a>
@@ -48,7 +50,9 @@ export class navbar extends Component {
                                 </div>
                             </li>
                         </ul>
-                        <li><a href="/startquiz">MAKE TEAM</a></li>
+                        {/* <li><a href="/startquiz">MAKE TEAM</a></li> */}
+                        <li><a href="/mypage">MAKE TEAM</a></li>
+                        <li><a href="/join">JOIN CLASS</a></li>
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>

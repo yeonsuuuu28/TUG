@@ -6,3 +6,74 @@
     text-align: center;
     margin-top: 30px;
 }
+
+.table_class {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 30px;   
+    font-family: "Lato", sans-serif; 
+    text-align: left;
+    height: 50px; 
+}
+
+.table_join_button {
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    /* border-left: 1px solid black; */
+    border-collapse:collapse;
+    padding-right: 20px;
+}
+
+.table_setting {
+    width: 70%;
+    border: 0px;
+    margin-left: 15%;
+    border-spacing: 0px 25px;
+}
+
+.table_class_title {
+    /* font-weight: bold; */
+    padding-bottom: 10px;
+    font-size: 18pt;
+    padding-left: 5px;
+}
+
+.table_class_subtitle {
+    font-weight:100;
+    font-size: 11pt;
+    padding-left: 5px;
+    color: grey;
+}
+
+.join_button {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    width: 120px;
+    height: 40px;
+    background: #1b1e2e;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.search_bar {
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
+    /* margin-top: 20px; */
+}
+
+.search_button {
+    cursor: pointer;
+    padding-top: 5px;
+    margin: 0;
+}

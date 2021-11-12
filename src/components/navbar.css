@@ -15,10 +15,11 @@ ul {
   padding: 0;
 }
 
-ul.nav_bar {
+.navbartest {
   background-color: var(--color-dark-blue);
-  border: 0;
+  list-style-type: none;
   margin: 0;
+  padding: 0;
   overflow: hidden;
   height: 80px;
 }
@@ -32,7 +33,7 @@ li a {
   color: white;
   background-color: #1b1e2e;
   padding: 30px;
-  padding-right: 60px;
+  padding-right: 50px;
   text-decoration: none;
   text-align: center;
   font-family: Lato;
@@ -42,7 +43,7 @@ li a {
 .dropdown-content {
   display: none;
   position: absolute;
-  min-width: 180px;
+  min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 

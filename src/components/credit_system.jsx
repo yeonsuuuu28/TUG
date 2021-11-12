@@ -1,4 +1,4 @@
-import React,{ useState } from 'react'
+import React from 'react'
 import Navbar from './navbar.jsx'
 import './credit.css';
 import DynamicForm from './DynamicForm';
@@ -8,13 +8,14 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
 var members = {}
+
             
 class readDB extends React.Component{
     state = {
         data: [
-            { name: "Auejin", points: 0},
-            { name: "Yeonsu", points: 0 },
-            { name: "Seonghye", points: 0 },
+            { name:"Auejin", point:0},
+            { name:"Yeonsu", point: 0},
+            { name:"Seonghye", point:0}
           ],
         test:[]
     }
@@ -67,9 +68,7 @@ class readDB extends React.Component{
             <Navbar />
         </div>
         <div>
-                <span>Value: 100 </span>
-        </div>
-        <div className ="App">
+        
             <DynamicForm className = "form"
                 title = "Credit"
                 model = {[
@@ -79,13 +78,14 @@ class readDB extends React.Component{
                 ]}
                 onSubmit = {(model) => {this.onSubmit(model)}}
             />
+      
 
             <pre style ={{width:"100"}}>
                 {/*{JSON.stringify(this.state.test)}
-                */}
-                {JSON.stringify(this.model)}
+                {JSON.stringify(this.model)}*/}
                 {JSON.stringify(this.state.data)}
             </pre>
+            
         </div>
 {/*     
         <div className = "credit">

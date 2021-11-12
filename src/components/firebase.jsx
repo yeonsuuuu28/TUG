@@ -3,7 +3,7 @@ import 'firebase/auth';        // for authentication
 import 'firebase/database';    // for realtime database
 import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, onDisconnect } from "firebase/database";
+import { getDatabase, ref, onDisconnect } from "firebase/database";
 
 
 const firebaseConfig = {

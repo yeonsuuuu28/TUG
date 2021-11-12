@@ -32,39 +32,43 @@ const getclasses = () => {
 const display = () => {
     let table = [];
     for (var i = 0; i < classes.length; i++) {
+        let j = classes[i].code;
         table.push(
-            <tr><td className="table_class">
-                <div className="table_class_title">{classes[i].name}</div>
-                <div className="table_class_subtitle">{classes[i].professor}</div>
-            </td></tr>
+            <tr className="test10" key={i}>
+                <td className="table_class" key={i+1}>
+                    <div className="table_class_title">{classes[i].name}</div>
+                    <div className="table_class_subtitle">{classes[i].professor}</div>
+                </td>
+                <td className="table_join_button" key={i+2}>
+                    <div className="join_button" onClick = {()=>classes_join(j)} key={i+3}>JOIN</div>
+                </td>
+            </tr>
         )
     }
     return table;
 }
 
-const testtest = ["hi"];
-
-class join extends Component {
-
-    constructor(props) {
-        super(props);
-        this.userid = {
-            id: ""
-        }
+function classes_join(x) {
+    uniqueID();
+    if (auth.currentUser === null){
+        alert("Sign in to join class")
     }
-        
+    else {
+        dbAdd(x)
+        };
+    }
 
-    uniqueID = () => {
-        const auth = getAuth();
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              const uid = user.uid;
-              this.userid = uid;
-            }
+function uniqueID() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+            return uid;
+        }
         })
     }
 
-    dbAdd = (e) => {
+function dbAdd(e) {
         const dbRef = ref(getDatabase());
         get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/')).then((snapshot) => {
             if (snapshot.exists()) {
@@ -95,18 +99,15 @@ class join extends Component {
         });
       }
 
-    classes = (x) => {
-        this.uniqueID();
-        if (auth.currentUser === null){
-            alert("Sign in to join class")
+class join extends Component {
+
+    constructor(props) {
+        super(props);
+        this.userid = {
+            id: ""
         }
-        else {
-            this.dbAdd(x)
-            };
-        }
-
-
-
+    }
+        
 
     render(){
         return (
@@ -116,7 +117,7 @@ class join extends Component {
             {getclasses()}
             <div className="join_title">Join Your Class</div>
             <br/>
-            <TextField
+            {/* <TextField
                 id="input-with-icon-textfield"
                 label=""
                 InputProps={{
@@ -127,15 +128,8 @@ class join extends Component {
                 ),
                 }}
                 variant="standard"
-            />
-            <table className = "table_setting">{display()}</table>
-                {/* <div onClick = {() => {this.classes("CS473")}}>Introduction to Social Computing</div>
-                <br/>
-                <div onClick = {() => {this.classes("CS300")}}>Introduction to Algorithms</div>
-                <br/>
-                <div onClick = {() => {this.classes("CS101")}}>Introduction to Programming</div>
-                <br/>
-                <div onClick = {() => {this.classes("CS350")}}>Introduction to Software Engineering</div> */}
+            /> */}
+            <table className = "table_setting"><tbody>{display()}</tbody></table>
             </div>
         )
     }

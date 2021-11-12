@@ -3,7 +3,7 @@ import 'firebase/auth';        // for authentication
 import 'firebase/database';    // for realtime database
 import { getAuth, signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, onDisconnect } from "firebase/database";
 
 
 const firebaseConfig = {
@@ -20,6 +20,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getDatabase(app);
+export const presenceRef = ref(db, "disconnectmessage");
+onDisconnect(presenceRef).set("I disconnected!");
 
 
 const provider = new GoogleAuthProvider();

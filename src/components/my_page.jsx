@@ -5,6 +5,34 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Navbar from "./navbar.jsx"
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+
+
+const StyledTabs = styled(Tabs)({
+    '& 	.MuiTabs-indicator': {
+        width: "3.5px",
+    }, 
+})
+
+
+const StyledTab = styled(Tab)({
+    fontFamily: "Lato",
+    fontSize: 14,
+    '&.Mui-selected': {
+        color: '#1b1e2e',
+        fontWeight: "bold",
+        backgroundColor: "#eeeeee"
+      },
+})
+
+const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#1b1e2e',
+      },
+    },
+  });
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,7 +70,6 @@ function a11yProps(index) {
 
 export default function VerticalTabs() {
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -50,25 +77,23 @@ export default function VerticalTabs() {
   return (
     <div>
     <Navbar />
+    <ThemeProvider theme={theme}>
     <Box
-      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 500 }}
+      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 'calc(100vh - 80px)'}}
     >
-      <Tabs
+      <StyledTabs
         orientation="vertical"
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+        sx={{ borderRight: 1, borderColor: 'divider'}}
+        textColor= "primary"
+        indicatorColor="primary"
       >
-        <Tab label="Your Class" {...a11yProps(0)} />
-        <Tab label="Item Two" {...a11yProps(1)} />
-        <Tab label="Item Three" {...a11yProps(2)} />
-        <Tab label="Item Four" {...a11yProps(3)} />
-        <Tab label="Item Five" {...a11yProps(4)} />
-        <Tab label="Item Six" {...a11yProps(5)} />
-        <Tab label="Item Seven" {...a11yProps(6)} />
-      </Tabs>
+        <StyledTab label="Your Class" {...a11yProps(0)} sx={{  height: 'calc((100vh - 80px)/3)'}} />
+        <StyledTab label="Active Team" {...a11yProps(1)} sx={{ height: 'calc((100vh - 80px)/3)' }}/>
+        <StyledTab label="Past Team" {...a11yProps(2)} sx={{ height: 'calc((100vh - 80px)/3)' }}/>
+      </StyledTabs>
       <TabPanel value={value} index={0}>
         Item One
       </TabPanel>
@@ -78,18 +103,6 @@ export default function VerticalTabs() {
       <TabPanel value={value} index={2}>
         Item Three
       </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item Four
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Item Seven
-      </TabPanel>
-    </Box> </div>
+    </Box> </ThemeProvider> </div>
   );
 }

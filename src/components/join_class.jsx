@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
+
 const TextFieldSearchBar = styled(TextField)({
     '& .MuiInputBase-input': {
         fontSize: 15,
@@ -39,6 +40,7 @@ const getclasses = () => {
                 if (!(Object.keys(snapshot.val()).includes(classes[i].code))) {
                     set(ref(db, 'classes/' + classes[i].code + "/professor/"), classes[i].professor)
                     set(ref(db, 'classes/' + classes[i].code + "/name/"), classes[i].name)
+                    set(ref(db, 'classes/' + classes[i].code + "/open/"), classes[i].open)
                 }
                 else {
                 }
@@ -46,6 +48,7 @@ const getclasses = () => {
             else {
                 set(ref(db, 'classes/' + classes[i].code + "/professor/"), classes[i].professor)
                 set(ref(db, 'classes/' + classes[i].code + "/name/"), classes[i].name)
+                set(ref(db, 'classes/' + classes[i].code + "/open/"), classes[i].open)
             }
         });
     }

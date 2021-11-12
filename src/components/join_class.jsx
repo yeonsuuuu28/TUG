@@ -96,12 +96,17 @@ function dbAdd(e) {
           if(snapshot.exists()) {
             if (!(Object.keys(snapshot.val()).includes(auth.currentUser.uid))) {
               set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
+              set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/essen_questions/done/'), "no");
+              set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/fun_questions/done/'), "no");
             }
             else {
             }
           }
           else {
             set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/joined/'), "yes");
+            set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/essen_questions/done/'), "no");
+            set(ref(db, 'classes/' + e + '/user/' + auth.currentUser.uid + '/fun_questions/done/'), "no");
+            // alert("Successfully joined into the class!");
           }
         });
       }

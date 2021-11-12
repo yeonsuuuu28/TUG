@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import './random_quiz.css'
-import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
+import { essenQcandidates, pairedQuestions, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import LOGO from "../images/LOGO.PNG"
+import team_building_algorithm from './team_building_algorithm';
 
 //* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
 function handleDoneClick(){
@@ -65,7 +66,7 @@ function GetAnswers({course, id, fun}){
       {x.answer}
     </button>
   );
-
+//TODO list the 5 buttons
   return(
     <div className="answer">
       {answerButtons}
@@ -137,10 +138,12 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
   console.log(course, fun, route); 
   if(fun){
     get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
+      set(ref(db, route + 'essen_questions/done/'), "no");
       const answeredquestions = Object.keys(snapshot.val());
-      if(snapshot.exists() && answeredquestions.length >= funNumber) { // TODO: funNumber * number of rounds
+      if(snapshot.exists() && answeredquestions.length - 1 == funNumber) { // TODO: funNumber * number of rounds
         //TODO calculate score
-        console.log(calculateRandomParameter(course, snapshot, funNumber));
+        set(ref(db, route + 'fun_questions/done/'), "yes"); //TODO: diff by rounds?
+        const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
       }
       else{
         alert("not done"); //TODO
@@ -148,11 +151,14 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
     });
   }
   else{
-    alert("yes");
     get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
+      set(ref(db, route + 'essen_questions/done/'), "no");
+      alert("yes"); // TODO: erase later
       const answeredquestions = Object.keys(snapshot.val());
-      if(snapshot.exists() && answeredquestions.length == essenQcandidates.length) {
+      if(snapshot.exists() && answeredquestions.length - 1 == essenQcandidates.length) {
         //TODO calculate score
+        set(ref(db, route + 'essen_questions/done/'), "yes");
+        const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
       }
       else{
         alert("not done"); //TODO
@@ -160,23 +166,6 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
     });
   }
 }
-
-//* calculateRandomParameter
-/// input: course - course id, s - snapshot of DB of .../fun_questions
-/// output: value of random parameter
-function calculateRandomParameter(course, s){
-  const randomness = 0.1;
-  const answeredquestions = Object.keys(s.val());
-  const answeredscores = answeredquestions.map(qid => s.child(qid + '/score/').val());
-
-  return randomness * answeredscores.reduce((a, b) => a+b, 0);
-}
-
-//* calculateScore
-function calculateScore(){
-
-}
-
 
 //* Titlebar
 function Titlebar({title}){
@@ -196,7 +185,7 @@ function Titlebar({title}){
 
 function Quiz(props) {
   const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
-  const fun = true; //TODO set true at first round, false otherwise
+  const fun = false; //TODO set true at first round, false otherwise
   const funNumber = Math.min(funQcandidates.length, 2); // number of fun questions at each round
 
   const QAlist = () => {

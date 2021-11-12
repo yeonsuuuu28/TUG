@@ -86,7 +86,6 @@ function GetCourseList({ uid, username }){
 const start_team_building = () => {
   return(
     <div>
-      <Navbar />
       <UserIdentification />
     </div>
   )    

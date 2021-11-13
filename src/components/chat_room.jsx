@@ -6,8 +6,9 @@ import {
 } from 'react';
 
 import { auth, db } from "./firebase.jsx";
-import { getDatabase, ref, push, get, child, set } from "firebase/database";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, set, get } from "firebase/database";
+import { onAuthStateChanged } from "firebase/auth";
+import { useList } from 'react-firebase-hooks/database';
 
 import Navbar from './navbar.jsx'
 
@@ -23,12 +24,9 @@ import {
   MessageList,
   Message,
   MessageInput,
-  CustomMessage,
-  MessageSeparator,
   MessageGroup,
   TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
-
 
 
 const GroupChatInterface = () => {
@@ -112,36 +110,35 @@ function UserIdentification(){
     
     if (uid && username) {
         return (
-            <Chat localSender={uid} localSenderName={username} />
+            <RealChat roomId={0} senderId={uid}/>
           );
     }
     else {
         return (
-            <div> Loading... </div>
+            <div> Loading ... </div>
         );
     }    
 };
 
-const Chat = ({localSender, localSenderName}) => {
+const RealChat = ({roomId, senderId}) => {
     
-    const [idAnonNames, setIdAnonNames] = useState({});
-    const remoteSender = "Fish";
-    
-    const groupIdRef = useRef(0);
-    const msgIdRef = useRef(0);
+    const remoteId = 'Moderator';
     const remoteMsgCnt = useRef(0);
+    
     const inputRef = useRef();
     const [msgInputValue, setMsgInputValue] = useState("");
     const [groups, setGroups] = useState([]);
 
-    const updatedGroups = (prevGroups, message, sender, notCancel) => {
+    // read append one chat message message and return new groups[] 
+    const updatedGroups = (prevGroups, messageId, message, sender, notCancel) => {
+
         if (prevGroups.length > 0) {
             const lastGroup = prevGroups[prevGroups.length - 1];
 
             if (lastGroup.sender === sender) {
                 // Add to group
                 const newMessages = [...lastGroup.messages].concat({
-                    _id: `m-${++msgIdRef.current}`,
+                    _id: `${messageId}`,
                     message,
                     sender: sender
                 });
@@ -156,10 +153,10 @@ const Chat = ({localSender, localSenderName}) => {
             else {
                 // Sender different than last sender - create new group 
                 const newGroup = {
-                    _id: `g-${++groupIdRef.current}`,
-                    direction: sender === localSender ? "outgoing" : "incoming",
+                    _id: `${messageId}`,
+                    direction: sender === senderId ? "outgoing" : "incoming",
                     messages: [{
-                        _id: `m-${++msgIdRef.current}`,
+                        _id: `${messageId}`,
                         message,
                         sender: sender
                     }],
@@ -172,10 +169,10 @@ const Chat = ({localSender, localSenderName}) => {
         
         else {
             const newGroup = {
-                _id: `g-${++groupIdRef.current}`,
-                direction: sender === localSender ? "outgoing" : "incoming",
+                _id: `${messageId}`,
+                direction: sender === senderId ? "outgoing" : "incoming",
                 messages: [{
-                    _id: `m-${++msgIdRef.current}`,
+                    _id: `${messageId}`,
                     message,
                     sender: sender
                 }],
@@ -185,11 +182,10 @@ const Chat = ({localSender, localSenderName}) => {
             return [newGroup];
         }
     }
-    
-    const handleSend = (message, sender, notCancel) => {
-        console.log(`${groups.length}, ${groupIdRef.current}, ${msgIdRef.current} - ${sender}: ${message}`);
-        
-        setGroups(updatedGroups(groups, message, sender, notCancel));
+
+    // append one chat message and apply it to render
+    const handleSend = (messageId, message, sender, notCancel) => {
+        setGroups(updatedGroups(groups, messageId, message, sender, notCancel));
         
         if (!notCancel) {
             setMsgInputValue("");
@@ -197,120 +193,116 @@ const Chat = ({localSender, localSenderName}) => {
         }
     };
 
-    
-    // Add new message to Firebase
-    // TODO: Implement global messageID
-    function writeMessage(roomId, messageId, message, sender) {
+    // write one chat message to Firebase and render
+    function writeMessage(roomId, message, sender) {
+        
+        const messageId = String(new Date().getTime())
 
         // if sent by myself, sender = localSender = auth.currentUser.uid
         const db = getDatabase();
-        set(ref(db, `rooms/${roomId}/messages/${msgIdRef.current}`), {
-          id: `${msgIdRef.current}`,
+        set(ref(db, `rooms/${roomId}/messages/${messageId}`), {
+          id: `${messageId}`,
           message: message,
           sender : sender
         });
 
         
-        // update local interface first
-        handleSend(message, sender);
+        // render webpage
+        handleSend(messageId, message, sender);
     }
 
     
-    function readRemainingMessages(roomId) {
-        
-        console.log(AnimalNames(5));
-        console.log(`reading chat logs of room[${roomId}]`)
-        
-        const dbRef = ref(getDatabase());
-        const route = `rooms/${roomId}/messages/`
-        get(child(dbRef, route)).then((snapshot) => {
+    
+    const roomInitTime = useRef(0);
+    
+    /*const count = useRef(10);
+    const intervalId = useRef(null);
+
+    useEffect( () => {
+        intervalId.current = setInterval( () => {
+            count.current -= 1;
+        }, 1000);
+
+        return () => clearInterval(intervalId.current);
+    }, []);
+    
+    useEffect( () => {
+        intervalId.current = setInterval( () => {
+            setCount(10);
+        }, 1000);
+
+        return () => clearInterval(intervalId.current);
+    }, [count]);*/
+
+    // write room info with no messages when initialized 
+    function updateRoomInfo(roomId) {
+        const db = getDatabase();
+
+        get(ref(db, `rooms/${roomId}/info`)).then((snapshot) => {
+
             if (snapshot.exists()) {
-                // for each previous messages, handleSend(message, sender, notCancel=true)
-                const logs = Object.values(snapshot.val());
-                const messageIds = Object.keys(logs);
-                const messages = Object.values(logs);
-                
-                var emptyGroup = [];
-                for (let i=0; i<messages.length; i++) {
-                    emptyGroup = updatedGroups(emptyGroup, messages[i]['message'], messages[i]['sender'], true);
-                }
-                setGroups(emptyGroup);
+                const roomInfo = snapshot.val();
+
+                roomInitTime.current = roomInfo['initTime'];
+                console.log(snapshot.val());
             }
+            
             else {
-                console.log(`room[${roomId}] is empty`)
+                // TODO: define animal name for each group members
+                console.log("New Group Initialized!");
+
+                const startTime = new Date().getTime();
+                roomInitTime.current = startTime;
+                
+                set(ref(db, `rooms/${roomId}/info`), {
+                    initTime: startTime,
+                });
             }
         });
     }
 
-    function handleclick(){
-        window.location.href = "/mypage";
-    }
 
-    //* GetCourseList
-    /// input: none
-    /// output: <html> - set of courses
-    function GetJoinedUserIDs(classname){
-
-        if(classname) {
-        const dbRef = ref(getDatabase());
-        const route = '/classes/' + classname + '/';
-        get(child(dbRef, route)).then((snapshot) => {
-            if(snapshot.exists()){
-                // Object.values(snapshot.val())
-                const res = Object.values(snapshot.val())[0];
-                const userids = Object.keys(res);
-                const joineds = Object.values(res).map(x => x['joined']);
-                console.log(userids);
-                console.log(joineds);
-            }
-        });
+    ///// main /////
+    
+    const route = `rooms/${roomId}/messages/`
+    const [snapshots, loading, error] = useList(ref(db, route));
+    const messages = snapshots.map(doc => doc.val())
+    useEffect( () => {
+        if (messages.length == 0) {
+            // TODO: start timer for this group
+            updateRoomInfo(roomId);
         }
-
-        return;
-    };
-
-
-    useEffect(
-        ()=> {
-            readRemainingMessages(0);
-        }, []
-    );
+        var emptyGroup = [];
+        for (let i=0; i<messages.length; i++) {
+            emptyGroup = updatedGroups(emptyGroup, messages[i]['id'], messages[i]['message'], messages[i]['sender']);
+        }
+        setGroups(emptyGroup);
+        }, [snapshots]
+    )
 
     return (
         <div>
-            <button onClick = {handleclick}>MYPAGE TO CHECK!</button>
             <button
-                border={true}
-                // onClick={() => handleSend(`Please be my teammate! I'm telling you ${remoteMsgCnt.current++} times!`, remoteSender, true)}
-                onClick={() => writeMessage(
-                    0, 0, `Please be my teammate! I'm telling you ${remoteMsgCnt.current++} times!`, remoteSender)}
+                onClick={() => writeMessage( roomId, `${senderId} clicked me ${remoteMsgCnt.current++} times!`, remoteId )}
                 style={{ marginBottom: "1em"}}>
-                    Add remote message
-            </button>
-            <button
-                //border={true} onClick={() => UserIdentification()}
-                border={true} onClick={() => GetJoinedUserIDs('CS101')}
-                style={{marginBottom: "1em"}}>
-                    Read Data
+                    Let Moderator Speak
             </button>
             <div style={{ position: "relative", height: "500px" }}> 
             <MainContainer>
             <ChatContainer>
-                <MessageList typingIndicator={<TypingIndicator content={`${remoteSender} is typing`}/>}>
+                <MessageList typingIndicator={<TypingIndicator content={`${remoteId} is typing`}/>}>
                     {groups.map(g => <MessageGroup key={g._id} data-id={g._id} direction={g.direction}>
-                    <MessageGroup.Header>{`${g.messages[0].sender}`}</MessageGroup.Header>
+                    <MessageGroup.Header>
+                        { `${g.messages[0].sender}` }
+                    </MessageGroup.Header>
                     <MessageGroup.Messages key={g._id} sender={g.sender}>
-                        {
-                        //g.messages.map(m => <CustomMessage as={Message} key={m._id} data-id={m._id} model={m} />)                        
-                        g.messages.map(m => <Message key={m._id} data-id={m._id} model={m}/>)
-                        }
+                        { g.messages.map(m => <Message key={m._id} data-id={m._id} model={m}/>) }
                     </MessageGroup.Messages>
                     </MessageGroup>)}
                 </MessageList>
                 <MessageInput 
                     placeholder="Get to know your teammates!" attachButton={false}
-                    // onSend={m => handleSend(m, localSender)} // TODO: apply dynamic room number and message id
-                    onSend={m => writeMessage(0, 0, m, localSender)}
+                    onSend={m => writeMessage(roomId, m, senderId)}
                     onChange={setMsgInputValue}
                     value={msgInputValue} ref={inputRef} />
             </ChatContainer>
@@ -318,7 +310,7 @@ const Chat = ({localSender, localSenderName}) => {
         </div>
         </div>
     )
-}
+};
 
 // export default Chat
 export default GroupChatInterface

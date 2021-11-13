@@ -6,7 +6,7 @@ import kmeans from './kmeans.jsx';
 /// input: course - course id, s - snapshot of DB of .../fun_questions
 /// output: value of random parameter
 function calculateRandomParameter(fun_scores){
-  const randomness = 0.5;
+  const randomness = 0.1;
   return randomness * fun_scores.reduce((a, b) => a+b, 0);
 }
 
@@ -41,22 +41,19 @@ function importance(s){
   
   const rtn = questions.map((qid, index) => {
     if(s.child('/' + qid + '/importance/').val() === "yes"){
-      return(user_scores[index] * 2)
+      return(user_scores[index] * 2) // double the score if it is important 
     }
     else return(user_scores[index])
   });
-
-  console.log('user_scores: ', user_scores);
-  console.log('importance: ', rtn);
 
   return rtn;
 }
 
 //* team_building_algorithm
-/// input: c - course id, n - number of teams
+/// input: c - course id, round, n - number of teams
 /// store team list with the user ids into DB
 // TODO paired questions thing
-function team_building_algorithm(c, n) {
+function team_building_algorithm(c, round, n) {
   const dbRef = ref(getDatabase());
   const route = '/classes/' + c + '/user/';
   let user_list = [];
@@ -66,36 +63,41 @@ function team_building_algorithm(c, n) {
 
   get(child(dbRef, route)).then((s) => {
     s.forEach((user) => {
-      console.log("a", user.key)
+      // console.log("user: ", user.key)
       /// essential questions
       if(user.child('/essen_questions/done/').val() === 'yes') {
         user_list.push(user.key);
         user_scores = importance(user.child('/essen_questions/')); // apply the importance check
-        console.log(user_scores);
       }
       else{
         alert("user: " + user.key + "is not done on the quiz."); //TODO: wait til every users finish the quiz
       }
       /// fun questions
-      // if(user.child('/essen_questions/done/').val() === 'yes') {
-      //   user_list.push(user.key);
-      //   const questions = Object.keys(user.child('/essen_questions/').val());
-      //   questions.pop(); // pop 'done'
-      //   essen_scores.push(questions.map(qid => user.child('/essen_questions/' + qid + '/score/').val()));
-      // }
-      // else{
-      //   alert("user: " + user.key + "is not done on the quiz."); //TODO: wait til every users finish the quiz
-      // }
-    
-      const randomparameter = calculateRandomParameter(fun_scores);
-      const tot_scores = user_scores.concat(randomparameter);
-      dataset.push(tot_scores);
+      if(round > 1){ /// round 2~
+        if(user.child('/fun_questions/done/').val() === 'yes') {
+          const questions = Object.keys(user.child('/fun_questions/').val());
+          questions.pop(); // pop 'done'
+          fun_scores = questions.map(qid => user.child('/fun_questions/' + qid + '/score/').val());
+        }
+        else{
+          alert("user: " + user.key + "is not done on the quiz."); //TODO: wait til every users finish the quiz
+        }
+      
+        const randomparameter = calculateRandomParameter(fun_scores);
+        const tot_scores = user_scores.concat(randomparameter);
+        dataset.push(tot_scores);
+      }
+      else{ /// round 1
+        dataset.push(user_scores);
+      }
+      
     });
 
     console.log("final", user_list, dataset);
     const result = kmeans(dataset, 2); // TODO: change 2 -> n
     console.log(result.clusters);
 
+    /// make teams with clustered result
     const teams = result.clusters.map(c => {
       if(c.points.length === 1){
         return user_list[dataset.findIndex((e) => e === c.points[0])]

@@ -9,13 +9,12 @@ function QuizWaiting(props) {
   const round = props.match.params.round;
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/';
-  // const [totalStudents, setTotalStudents] = useState('');
-  const [leftStudents, setLeftStudents] = useState('');
+  const [leftStudents, setLeftStudents] = useState('loading...');
 
   setTimeout(setInterval(getLeftStudents(), 10000), 5000);
   
-  if(leftStudents == 0){
-    team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+  if(leftStudents[0] == 0){
+    team_building_algorithm(course, round, 2); // TODO: should define k (the number of teams)
     window.location.href = "/chat"; /// goto chat page
   }
 
@@ -24,14 +23,15 @@ function QuizWaiting(props) {
   function getLeftStudents() {
     get(child(dbRef, route)).then((s) => {
       const totalStudents = Object.keys(s.val()).length;
-      // setTotalStudents(totalStudents); // set total students
       let leftStudents = totalStudents;
       s.forEach((user) => {
         if(user.child('/essen_questions/done/').val() === 'yes') { // essential questions
           if( round > 1 ? true : false ){
             if(user.child('/fun_questions/done/').val() === 'yes'){ // fun questions 
+              console.log("userchild fun: ", user.key, user.child('/fun_questions/done/').val());
               leftStudents = leftStudents - 1;
             }
+            else console.log(user);
           }
           else leftStudents = leftStudents - 1;
           console.log("left: ", leftStudents);

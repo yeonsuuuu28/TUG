@@ -8,6 +8,7 @@ import Navbar from "./navbar.jsx"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import MyClass from "./my_class.jsx"
+import ActiveTeams from './activeteams.jsx';
 
 
 const StyledTabs = styled(Tabs)({
@@ -99,7 +100,7 @@ export default function VerticalTabs() {
         <MyClass/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ActiveTeams />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three

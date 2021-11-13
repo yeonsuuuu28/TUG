@@ -31,8 +31,8 @@ function PCA(dataset) {
 }
 
 //* importance
-/// input: user_scores - score list of the user, s - snapshot of db of the .../(userid)/essen_questions/
-/// output: user_scores with importance
+/// input: s - snapshot of db of the .../(userid)/essen_questions/
+/// output: users' score list with importance
 // TODO: need to improve the algorithm
 function importance(s){
   const questions = Object.keys(s.val());
@@ -54,8 +54,9 @@ function importance(s){
 
 //* team_building_algorithm
 /// input: c - course id, n - number of teams
-/// output: teams - team list with the user ids
-const team_building_algorithm = (c, n) => {
+/// store team list with the user ids into DB
+// TODO paired questions thing
+function team_building_algorithm(c, n) {
   const dbRef = ref(getDatabase());
   const route = '/classes/' + c + '/user/';
   let user_list = [];
@@ -69,10 +70,7 @@ const team_building_algorithm = (c, n) => {
       /// essential questions
       if(user.child('/essen_questions/done/').val() === 'yes') {
         user_list.push(user.key);
-        // const questions = Object.keys(user.child('/essen_questions/').val());
-        // questions.pop(); // pop 'done'
-        // user_scores = questions.map(qid => user.child('/essen_questions/' + qid + '/score/').val());
-        user_scores = importance(user.child('/essen_questions/')); // apply the importance 
+        user_scores = importance(user.child('/essen_questions/')); // apply the importance check
         console.log(user_scores);
       }
       else{
@@ -94,34 +92,28 @@ const team_building_algorithm = (c, n) => {
       dataset.push(tot_scores);
     });
 
-    // console.log("dataset bef: ", dataset);
-    // dataset = dataset[0].map((_, colIndex) => dataset.map(row => row[colIndex])); // transpose
-
-    // console.log("dataset: ", dataset);
-
     console.log("final", user_list, dataset);
     const result = kmeans(dataset, 2); // TODO: change 2 -> n
     console.log(result.clusters);
 
     const teams = result.clusters.map(c => {
       if(c.points.length === 1){
-        // console.log(dataset);
-        // console.log("sd", c.points, dataset.findIndex((e) => e === c.points[0]));
         return user_list[dataset.findIndex((e) => e === c.points[0])]
       }
       else{
-        // console.log("sd", c.points, dataset.findIndex((e) => e === c.points[0]));
         const team = c.points.map(arr => user_list[dataset.findIndex((e) => e === arr)]);
-        // console.log("last", team);
         return team;
       }
     });
 
-    return teams;
+    /// store into DB
+    const route2 = '/classes/' + c + '/rooms/';
+    teams.forEach((team, index) => {
+      set(ref(db, route2 + index + '/users'), team);
+    });
   });
 
   
 }
 
-// export {calculateRandomParameter, PCA, generateDataset}
 export default team_building_algorithm;

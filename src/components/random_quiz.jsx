@@ -1,22 +1,16 @@
 import React, { useState } from 'react'
 import './random_quiz.css'
-import { essenQcandidates, pairedQuestions, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
+import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import LOGO from "../images/LOGO.PNG"
 import team_building_algorithm from './team_building_algorithm';
-
-//* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
-function handleDoneClick(){
-  //TODO check if the user answered to every questions
-
-  window.location.href = "/chat";
-};
+import Voting from './voting.jsx';
 
 //* handleAnswerClick: event handler when the answer button is clicked
-/// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button
+/// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button, fun - true if the round>=2
 /// stores the clicked answer data into DB
-function handleAnswerClick(course, qnum, score, answer, fun){
+function handleAnswerClick(course, qnum, score, fun){
   alert("good");
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
@@ -24,11 +18,11 @@ function handleAnswerClick(course, qnum, score, answer, fun){
     if(snapshot.exists()) {
       if(fun){
         set(ref(db, route + 'fun_questions/' + qnum + '/score/'), score);
-        set(ref(db, route + 'fun_questions/' + qnum + '/answer/'), answer);
+        // set(ref(db, route + 'fun_questions/' + qnum + '/answer/'), answer);
       }
       else{
         set(ref(db, route + 'essen_questions/' + qnum + '/score/'), score);
-        set(ref(db, route + 'essen_questions/' + qnum + '/answer/'), answer);
+        // set(ref(db, route + 'essen_questions/' + qnum + '/answer/'), answer);
       }
     }
     else{
@@ -56,22 +50,46 @@ function handleImportanceClick(course, qnum){
 /// input: id - index of fun question in funQcandidates array
 /// output: <html> - button list of each corresponding answer
 function GetAnswers({course, id, fun}){
-  const answercandidates = () => {
-    if(fun) return(funAcandidates[id])
-    else return(essenAcandidates[id])
+  const shuffle = (arr) => {
+    return arr.slice().sort(() => Math.random() - 0.5);
   }
 
-  const answerButtons = answercandidates().answers.map(x =>
-    <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer, fun)}>
-      {x.answer}
-    </button>
-  );
-//TODO list the 5 buttons
-  return(
-    <div className="answer">
-      {answerButtons}
-    </div>
-  );
+  if(fun){
+    const answerButtons = shuffle(funAcandidates[id].answers).map(x => // shuffle: randomize the order of buttons
+      <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, fun)}>
+        {x.answer}
+      </button>
+    );
+
+    return(
+      <div className="answer">
+        {answerButtons}
+      </div>
+    );
+  }
+  else{
+    let flip = false;
+    const answerTexts = shuffle(essenAcandidates[id].answers).map(x => {// shuffle: randomize the order of buttons
+      if(x.score == 2) flip = true; // set flip
+      return(
+        <div>
+          {x.answer}
+        </div>
+      );
+    });
+    const scorearr = flip ? [2, 1, 0, -1, -2] : [-2, -1, 0, 1, 2];
+    const answerButtons = scorearr.map(score => // shuffle: randomize the order of buttons
+      <button key={score} className="answer" onClick = {() => handleAnswerClick(course, id, score, fun)}></button>
+    );
+
+    return(
+      <div className="answer">
+        {answerTexts[0]}
+        {answerButtons}
+        {answerTexts[1]}
+      </div>
+    );
+  }
 };
 
 
@@ -128,11 +146,26 @@ function GetEssentialQuestions({course}){
   )
 };
 
+//* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
+/// if done: 
+function handleDoneClick(course, fun, funNumber){
+  //TODO check if the user answered to every questions
+  const isDone = checkDone(course, fun, funNumber);
+  console.log(isDone);
+  if(isDone){
+    team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+    window.location.href = "/chat";
+  }
+  else{
+    alert("not done"); //TODO
+  }
+};
+
 //* checkDone - check if the user answered to every questions
 /// input: course - course id, fun: true if the round is 2~ (==problems are fun questions), funNumber - number of fun questions at each round
-/// if yes : go to calculating function
-/// if no  : 
-function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
+/// if yes : set 'done'-> 'yes' and return true
+/// if no  : return false
+async function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
   console.log(course, fun, route); 
@@ -141,12 +174,12 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
       set(ref(db, route + 'essen_questions/done/'), "no");
       const answeredquestions = Object.keys(snapshot.val());
       if(snapshot.exists() && answeredquestions.length - 1 == funNumber) { // TODO: funNumber * number of rounds
-        //TODO calculate score
         set(ref(db, route + 'fun_questions/done/'), "yes"); //TODO: diff by rounds?
-        const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        // const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        return true;
       }
       else{
-        alert("not done"); //TODO
+        return false;
       }
     });
   }
@@ -156,12 +189,12 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
       alert("yes"); // TODO: erase later
       const answeredquestions = Object.keys(snapshot.val());
       if(snapshot.exists() && answeredquestions.length - 1 == essenQcandidates.length) {
-        //TODO calculate score
         set(ref(db, route + 'essen_questions/done/'), "yes");
-        const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        // const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        return true;
       }
       else{
-        alert("not done"); //TODO
+        return false;
       }
     });
   }
@@ -171,21 +204,23 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
 function Titlebar({title}){
   return(
     <div className = "nav_bar">
-    <ul>
-        <li>Quiz Time!</li>
-        <li><a href="/">HOME</a></li>
-        <ul style={{float: "left"}}>
-            <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
-            <li><a href="/" className = "title">TUG</a></li>
-        </ul>
-    </ul>
+      <ul>
+          <li>{title}</li>
+          <ul style={{float: "left"}}>
+              <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
+              <li><a href="/" className = "title">TUG</a></li>
+          </ul>
+      </ul>
     </div>
   )
 }
 
+//* Quiz - '/quiz/:course/:round' page
 function Quiz(props) {
   const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
-  const fun = false; //TODO set true at first round, false otherwise
+  const round = props.match.params.round;
+  let fun = false; // value 'false' only for the first round 
+  if(round > 1) fun = true;  // set true at 2~ rounds
   const funNumber = Math.min(funQcandidates.length, 2); // number of fun questions at each round
 
   const QAlist = () => {
@@ -199,9 +234,10 @@ function Quiz(props) {
 
   return(
     <div>
-      <Titlebar title="Quiz Time!" />
+      <Titlebar title="Quiz Time" />
       <QAlist />
-      <button onClick={() => checkDone(course, fun, funNumber)}>Done</button>
+      <button onClick={() => handleDoneClick(course, fun, funNumber)}>Done</button>
+      <Voting /> {/*//TODO erase later*/}
     </div>
   )
 };

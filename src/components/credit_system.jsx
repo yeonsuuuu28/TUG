@@ -2,9 +2,10 @@ import React from 'react'
 import Navbar from './navbar.jsx'
 import './credit.css';
 import DynamicForm from './DynamicForm';
-//import {auth, db} from "./firebase.jsx";
+import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ConstructionOutlined } from '@mui/icons-material';
 
 
 var members = {}
@@ -17,17 +18,24 @@ class readDB extends React.Component{
             { name:"Yeonsu", point: 0},
             { name:"Seonghye", point:0}
           ],
-        test:[]
+        test:[],
+        team1:[
+            {credit:0},
+            {name:"Auejin", point:10},
+            { name:"Yeonsu", point: 0},
+            { name:"Seonghye", point:0}
+        ],
+        pastteams:[]
     }
 
-    dbRead = () => {
+    dbRead = (e) => {
         const auth = getAuth();
         const dbRef = ref(getDatabase()); 
         onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
             //read db
-            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName)).then((snapshot) => {
+            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName + "/classes")).then((snapshot) => {
                 if (snapshot.exists()) {
                     //console.log(snapshot.val())
                     this.setState({
@@ -40,11 +48,30 @@ class readDB extends React.Component{
                 }
             }).catch((error) => {
                 console.error(error);
-            });}
-
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
+            });
         
+         //get past teams 
+            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName + '/pastteams')).then((snapshot) => {
+                if (snapshot.exists()){
+                    //alert("copying pastteams to past")
+                    this.setState({
+                        //copy to pastteams
+                        pastteams: [snapshot.val()]
+                    })
+                    console.log(this.state.pastteams)
+
+                } else{
+                    //add in data
+                    alert("no data, pushing dummy data ")
+                    push(ref(db, 'users/' + uid + "/" + auth.currentUser.displayName + '/pastteams/CS101'),
+                     {
+                        "credits": "0",
+                        "Auejin": "10",
+                        "Yeonsu": "20",
+                        "Seonghye": "70"
+                    
+                    });}
+            })}
     // ...
         else {
         alert("not signed in")

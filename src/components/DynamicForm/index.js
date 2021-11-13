@@ -13,7 +13,7 @@ export default class DynamicForm extends React.Component {
         if (this.state.count === 0){
             if(this.props.onSubmit) this.props.onSubmit(this.state);
         }else{
-            alert("Please distribute points")
+            alert("Please distribute points correctly")
         }
 
     }

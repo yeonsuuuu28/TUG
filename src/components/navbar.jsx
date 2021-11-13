@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {auth, signInWithGoogle, signOutWithGoogle, db} from "./firebase.jsx";
+import {auth, signInWithGoogle, signOutWithGoogle} from "./firebase.jsx";
 import './navbar.css'
 import LOGO from "../images/LOGO.PNG"
 
@@ -24,7 +24,9 @@ export class navbar extends Component {
                 <div className = "navbartest">
                     <ul>
                         <li onClick={signInWithGoogle} className="signin" href="# "><a href="# ">SIGN IN</a></li>
-                        <li><a href="/startquiz">MAKE TEAM</a></li>
+                        {/* <li><a href="/startquiz">MAKE TEAM</a></li> */}
+                        <li><a href="/mypage">MAKE TEAM</a></li>
+                        <li><a href="/join">JOIN CLASS</a></li>
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>
@@ -48,7 +50,9 @@ export class navbar extends Component {
                                 </div>
                             </li>
                         </ul>
-                        <li><a href="/startquiz">MAKE TEAM</a></li>
+                        {/* <li><a href="/startquiz">MAKE TEAM</a></li> */}
+                        <li><a href="/mypage">MAKE TEAM</a></li>
+                        <li><a href="/join">JOIN CLASS</a></li>
                         <li><a href="/">ABOUT</a></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>

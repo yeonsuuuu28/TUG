@@ -3,24 +3,27 @@
     margin-bottom: 5px;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin: 10px 2px;
-    max-width: 600px;
+    margin: auto;
+    max-width: 300px;
 }
 .dynamic-form .form-group {
     padding: .5em;
-    display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
     justify-content: space-between;
 }
 
+    
 .dynamic-form .form-label {
+    margin-left:10px;
     text-align: left;
     color: #2E86C1;
 }
 .dynamic-form .form-input{
     margin-top: 5px;
+    margin-left: 10px;
     line-height: 1.5em;
+    width: 150px;
+
 }
 
 .dynamic-form select{
@@ -29,6 +32,7 @@
 }
 
 .dynamic-form .form-group button{
+    width:100px;
     padding: .5em;
 }
 
@@ -37,25 +41,10 @@
     flex-direction: row;
 }
 
-.form-group-radio label {
-}
-
-.form-group-radio input {
-
-}
-
 .dynamic-form .form-group-checkbox {
     display: flex;
     flex-direction: row;
 }
-
-.form-group-checkbox label {
-}
-
-.form-group-checkbox input {
-
-}
-
 .form-title {
     text-align: left;
 }
@@ -71,7 +60,7 @@
     color: white;
     border-radius: 4px;
     border:0;
-    margin-top: 15px;
+    margin-top: 30px;
     margin-left: 5px;
     margin-bottom:5px;
 }

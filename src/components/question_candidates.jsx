@@ -1,8 +1,4 @@
 
-const pairedQuestions = [
-  [1,2], [10, 11], [12, 13]
-]
-
 const essenQcandidates = [ // candidates of essential questions for team building
   { 
     id: 1,
@@ -321,4 +317,4 @@ const funAcandidates = [ // possible answers for each funQcandidates
   },
 ]
 
-export {essenQcandidates, pairedQuestions, essenAcandidates, funQcandidates, funAcandidates }
+export {essenQcandidates, essenAcandidates, funQcandidates, funAcandidates }

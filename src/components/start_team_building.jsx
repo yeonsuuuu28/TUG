@@ -4,10 +4,10 @@ import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import './start_team_building.css';
+import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 
 //* handleCourseClick - go to quiz session when the course 'open' button is clicked.
 function handleCourseClick(course){
-  // window.location.href = "/quiz/"+course;
   const dbRef = ref(getDatabase());
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
       if (snapshot.exists()) {
@@ -17,6 +17,7 @@ function handleCourseClick(course){
           push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/'), course)
       }})
       window.location.href = "/profile"
+      // window.location.href = "/quizinfo/"+course+'/1'; //Make Profile First and Enter Quiz. 
 }
 
 //* UserIdentification - identify the user and load the GetCourseList component.

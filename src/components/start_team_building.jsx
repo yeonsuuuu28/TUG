@@ -4,10 +4,11 @@ import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import './start_team_building.css';
+import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 
 //* handleCourseClick - go to quiz session when the course 'open' button is clicked.
 function handleCourseClick(course){
-  window.location.href = "/quiz/"+course;
+  window.location.href = "/quizinfo/"+course+'/1';
 }
 
 //* UserIdentification - identify the user and load the GetCourseList component.

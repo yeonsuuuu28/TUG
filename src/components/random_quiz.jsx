@@ -1,17 +1,11 @@
 import React, { useState } from 'react'
 import './random_quiz.css'
-import { essenQcandidates, pairedQuestions, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
+import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import LOGO from "../images/LOGO.PNG"
 import team_building_algorithm from './team_building_algorithm';
-
-//* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
-function handleDoneClick(){
-  //TODO check if the user answered to every questions
-
-  window.location.href = "/chat";
-};
+import Voting from './voting.jsx';
 
 //* handleAnswerClick: event handler when the answer button is clicked
 /// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button
@@ -128,11 +122,26 @@ function GetEssentialQuestions({course}){
   )
 };
 
+//* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
+/// if done: 
+function handleDoneClick(course, fun, funNumber){
+  //TODO check if the user answered to every questions
+  const isDone = checkDone(course, fun, funNumber);
+  console.log(isDone);
+  if(isDone){
+    team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+    window.location.href = "/chat";
+  }
+  else{
+    alert("not done"); //TODO
+  }
+};
+
 //* checkDone - check if the user answered to every questions
 /// input: course - course id, fun: true if the round is 2~ (==problems are fun questions), funNumber - number of fun questions at each round
-/// if yes : go to calculating function
-/// if no  : 
-function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
+/// if yes : set 'done'-> 'yes' and return true
+/// if no  : return false
+async function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
   console.log(course, fun, route); 
@@ -141,12 +150,12 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
       set(ref(db, route + 'essen_questions/done/'), "no");
       const answeredquestions = Object.keys(snapshot.val());
       if(snapshot.exists() && answeredquestions.length - 1 == funNumber) { // TODO: funNumber * number of rounds
-        //TODO calculate score
         set(ref(db, route + 'fun_questions/done/'), "yes"); //TODO: diff by rounds?
-        const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        // const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        return true;
       }
       else{
-        alert("not done"); //TODO
+        return false;
       }
     });
   }
@@ -156,12 +165,12 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
       alert("yes"); // TODO: erase later
       const answeredquestions = Object.keys(snapshot.val());
       if(snapshot.exists() && answeredquestions.length - 1 == essenQcandidates.length) {
-        //TODO calculate score
         set(ref(db, route + 'essen_questions/done/'), "yes");
-        const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        // const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
+        return true;
       }
       else{
-        alert("not done"); //TODO
+        return false;
       }
     });
   }
@@ -171,20 +180,20 @@ function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
 function Titlebar({title}){
   return(
     <div className = "nav_bar">
-    <ul>
-        <li>Quiz Time!</li>
-        <li><a href="/">HOME</a></li>
-        <ul style={{float: "left"}}>
-            <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
-            <li><a href="/" className = "title">TUG</a></li>
-        </ul>
-    </ul>
+      <ul>
+          <li>{title}</li>
+          <ul style={{float: "left"}}>
+              <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
+              <li><a href="/" className = "title">TUG</a></li>
+          </ul>
+      </ul>
     </div>
   )
 }
 
 function Quiz(props) {
   const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
+  const round = props.match.params.round;
   const fun = false; //TODO set true at first round, false otherwise
   const funNumber = Math.min(funQcandidates.length, 2); // number of fun questions at each round
 
@@ -199,9 +208,10 @@ function Quiz(props) {
 
   return(
     <div>
-      <Titlebar title="Quiz Time!" />
+      <Titlebar title="Quiz Time" />
       <QAlist />
-      <button onClick={() => checkDone(course, fun, funNumber)}>Done</button>
+      <button onClick={() => handleDoneClick(course, fun, funNumber)}>Done</button>
+      <Voting /> {/*//TODO erase later*/}
     </div>
   )
 };

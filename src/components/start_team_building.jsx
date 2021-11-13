@@ -8,7 +8,16 @@ import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } fr
 
 //* handleCourseClick - go to quiz session when the course 'open' button is clicked.
 function handleCourseClick(course){
-  window.location.href = "/quizinfo/"+course+'/1';
+  const dbRef = ref(getDatabase());
+  get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
+      if (snapshot.exists()) {
+          alert("you are already building a team") //TODO
+          }
+      else {
+          push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/'), course)
+      }})
+      window.location.href = "/profile"
+      // window.location.href = "/quizinfo/"+course+'/1'; //Make Profile First and Enter Quiz. 
 }
 
 //* UserIdentification - identify the user and load the GetCourseList component.

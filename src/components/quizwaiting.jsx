@@ -1,6 +1,7 @@
 import { Titlebar } from "./random_quiz.jsx";
 import React, { useState } from 'react'
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import team_building_algorithm from './team_building_algorithm';
 
 //* QuizWaiting - '/quizwaiting/:course/:round' page
 function QuizWaiting(props) {
@@ -14,6 +15,7 @@ function QuizWaiting(props) {
   setTimeout(setInterval(getLeftStudents(), 10000), 5000);
   
   if(leftStudents == 0){
+    team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
     window.location.href = "/chat"; /// goto chat page
   }
 

@@ -4,8 +4,8 @@ import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } fr
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import LOGO from "../images/LOGO.PNG"
-import team_building_algorithm from './team_building_algorithm';
 import Voting from './voting.jsx';
+import { isImportEqualsDeclaration } from 'typescript';
 
 //* handleAnswerClick: event handler when the answer button is clicked
 /// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button, fun - true if the round>=2
@@ -92,21 +92,39 @@ function GetAnswers({course, id, fun}){
 
 
 //* GetRandomFunQuestions
-/// input: course - course id , number - number of random questions you want to request 
+/// input: course - course id , round, number - number of random questions you want to request 
 /// output: <html> - set of questions and answer buttons
-function GetRandomFunQuestions({course, number}){ 
+function GetRandomFunQuestions({course, round, number}){ 
+  const dbRef = ref(getDatabase());
+  const route = '/classes/' + course + '/fun_order/';
   const N = funQcandidates.length;
-  var randArr = [];
-  for(var i =0; i<N; i++) {
-    randArr.push([Math.random(), i]);
-  }
-  randArr.sort();
-  randArr = randArr.slice(0, Math.min(number, N)); // randomly select the fun questions
+  const [questions, setQuestions] = useState([]);
 
-  const QAobjects = randArr.map(x => // list of the html object of each question and answer set
-    <li className = "question" key = {x[1]}>
-      {funQcandidates[x[1]].question}
-      <GetAnswers course = {course} id = {x[1]} fun={true}/>
+  get(child(dbRef, route)).then((snapshot) => {
+    if(snapshot.exists()) {
+      const history = Object.values(snapshot.val());
+      if(questions.length == 0){
+        setQuestions(history.slice(Math.min((round-2) * number, N), Math.min((round-1) * number, N)));
+      }
+    }
+    else{
+      var randArr = [];
+      for(var i =0; i<N; i++) {
+        randArr.push([Math.random(), i]);
+      }
+      randArr.sort();
+      const history = randArr.map(x => x[1]);
+      set(ref(db, route), history);
+      if(questions.length == 0){
+        setQuestions(history.slice(Math.min((round-2) * number, N), Math.min((round-1) * number, N)));
+      }
+    }
+  });
+
+  const QAobjects = questions.map(x => // list of the html object of each question and answer set
+    <li className = "question" key = {x}>
+      {funQcandidates[x].question}
+      <GetAnswers course = {course} id = {x} fun={true}/>
     </li>
   );
 
@@ -145,58 +163,50 @@ function GetEssentialQuestions({course}){
 };
 
 //* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
-/// if done: build teams
+/// input: course - course id, round, funNumber - number of fun questions at each round
+/// if done: goto quizwaiting page
 function handleDoneClick(course, round, funNumber){
-  //TODO check if the user answered to every questions
-  const isDone = checkDone(course, round > 1 ? true : false, funNumber);
-  console.log(isDone);
-  if(isDone){
-    team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
-    window.location.href = "/quizwaiting/" + course + "/" + round;
-  }
-  else{
-    alert("not done"); //TODO
+  const dbRef = ref(getDatabase());
+  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
+  console.log(course, round, route); 
+
+  /// essential questions
+  get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
+    set(ref(db, route + 'essen_questions/done/'), "no");
+    const answeredquestions = Object.keys(snapshot.val());
+    if(snapshot.exists() && answeredquestions.length - 1 == essenQcandidates.length) {
+      set(ref(db, route + 'essen_questions/done/'), "yes");
+      if(round == 1) { /// done
+        window.location.href = "/quizwaiting/" + course + "/" + round;
+      }
+    }
+    else{
+      if(round == 1) alert("not done"); //TODO
+    }
+  });
+
+  if(round > 1){ /// fun questions
+    // alert("yes"); // TODO: erase later
+    get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
+      set(ref(db, route + 'fun_questions/done/'), "no");
+      const answeredquestions = Object.keys(snapshot.val());
+      if(snapshot.exists() && answeredquestions.length - 1 == Math.min(funNumber*(round - 1), funQcandidates.length)) {
+        set(ref(db, route + 'fun_questions/done/'), "yes");
+        console.log("What: ",answeredquestions.length - 1 == Math.min(funNumber*(round - 1), funQcandidates.length));
+        
+        /// done
+        window.location.href = "/quizwaiting/" + course + "/" + round;
+      }
+      else{
+        console.log("Whatf: ",answeredquestions.length - 1 == Math.min(funNumber*(round - 1), funQcandidates.length));
+
+        alert("not done"); //TODO
+      }
+    });
   }
 };
 
-//* checkDone - check if the user answered to every questions
-/// input: course - course id, fun: true if the round is 2~ (==problems are fun questions), funNumber - number of fun questions at each round
-/// if yes : set 'done'-> 'yes' and return true
-/// if no  : return false
-async function checkDone(course, fun, funNumber){ //TODO,, just copy&pasted
-  const dbRef = ref(getDatabase());
-  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-  console.log(course, fun, route); 
-  if(fun){
-    get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
-      set(ref(db, route + 'essen_questions/done/'), "no");
-      const answeredquestions = Object.keys(snapshot.val());
-      if(snapshot.exists() && answeredquestions.length - 1 == funNumber) { // TODO: funNumber * number of rounds
-        set(ref(db, route + 'fun_questions/done/'), "yes"); //TODO: diff by rounds?
-        // const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
-        return true;
-      }
-      else{
-        return false;
-      }
-    });
-  }
-  else{
-    get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
-      set(ref(db, route + 'essen_questions/done/'), "no");
-      alert("yes"); // TODO: erase later
-      const answeredquestions = Object.keys(snapshot.val());
-      if(snapshot.exists() && answeredquestions.length - 1 == essenQcandidates.length) {
-        set(ref(db, route + 'essen_questions/done/'), "yes");
-        // const teams = team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
-        return true;
-      }
-      else{
-        return false;
-      }
-    });
-  }
-}
+
 
 //* Titlebar
 function Titlebar({title}){
@@ -223,7 +233,7 @@ function Quiz(props) {
 
   const QAlist = () => {
     if(fun){ 
-      return(<GetRandomFunQuestions course={course} number={funNumber} />);
+      return(<GetRandomFunQuestions course={course} number={funNumber} round={round}/>);
     }
     else{
       return(<GetEssentialQuestions course={course} />);

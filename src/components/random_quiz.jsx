@@ -8,9 +8,9 @@ import team_building_algorithm from './team_building_algorithm';
 import Voting from './voting.jsx';
 
 //* handleAnswerClick: event handler when the answer button is clicked
-/// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button
+/// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button, fun - true if the round>=2
 /// stores the clicked answer data into DB
-function handleAnswerClick(course, qnum, score, answer, fun){
+function handleAnswerClick(course, qnum, score, fun){
   alert("good");
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
@@ -18,11 +18,11 @@ function handleAnswerClick(course, qnum, score, answer, fun){
     if(snapshot.exists()) {
       if(fun){
         set(ref(db, route + 'fun_questions/' + qnum + '/score/'), score);
-        set(ref(db, route + 'fun_questions/' + qnum + '/answer/'), answer);
+        // set(ref(db, route + 'fun_questions/' + qnum + '/answer/'), answer);
       }
       else{
         set(ref(db, route + 'essen_questions/' + qnum + '/score/'), score);
-        set(ref(db, route + 'essen_questions/' + qnum + '/answer/'), answer);
+        // set(ref(db, route + 'essen_questions/' + qnum + '/answer/'), answer);
       }
     }
     else{
@@ -50,22 +50,46 @@ function handleImportanceClick(course, qnum){
 /// input: id - index of fun question in funQcandidates array
 /// output: <html> - button list of each corresponding answer
 function GetAnswers({course, id, fun}){
-  const answercandidates = () => {
-    if(fun) return(funAcandidates[id])
-    else return(essenAcandidates[id])
+  const shuffle = (arr) => {
+    return arr.slice().sort(() => Math.random() - 0.5);
   }
 
-  const answerButtons = answercandidates().answers.map(x =>
-    <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, x.answer, fun)}>
-      {x.answer}
-    </button>
-  );
-//TODO list the 5 buttons
-  return(
-    <div className="answer">
-      {answerButtons}
-    </div>
-  );
+  if(fun){
+    const answerButtons = shuffle(funAcandidates[id].answers).map(x => // shuffle: randomize the order of buttons
+      <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, fun)}>
+        {x.answer}
+      </button>
+    );
+
+    return(
+      <div className="answer">
+        {answerButtons}
+      </div>
+    );
+  }
+  else{
+    let flip = false;
+    const answerTexts = shuffle(essenAcandidates[id].answers).map(x => {// shuffle: randomize the order of buttons
+      if(x.score == 2) flip = true; // set flip
+      return(
+        <div>
+          {x.answer}
+        </div>
+      );
+    });
+    const scorearr = flip ? [2, 1, 0, -1, -2] : [-2, -1, 0, 1, 2];
+    const answerButtons = scorearr.map(score => // shuffle: randomize the order of buttons
+      <button key={score} className="answer" onClick = {() => handleAnswerClick(course, id, score, fun)}></button>
+    );
+
+    return(
+      <div className="answer">
+        {answerTexts[0]}
+        {answerButtons}
+        {answerTexts[1]}
+      </div>
+    );
+  }
 };
 
 
@@ -191,10 +215,12 @@ function Titlebar({title}){
   )
 }
 
+//* Quiz - '/quiz/:course/:round' page
 function Quiz(props) {
   const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
   const round = props.match.params.round;
-  const fun = false; //TODO set true at first round, false otherwise
+  let fun = false; // value 'false' only for the first round 
+  if(round > 1) fun = true;  // set true at 2~ rounds
   const funNumber = Math.min(funQcandidates.length, 2); // number of fun questions at each round
 
   const QAlist = () => {

@@ -11,6 +11,7 @@ import credit from "./components/credit_system";
 import profile from "./components/create_profile";
 import QuizInformation from "./components/quiz_information";
 import ActiveTeams from "./components/activeteams";
+import QuizWaiting from "./components/quizwaiting";
 
 const App = () => (
   <BrowserRouter>
@@ -25,6 +26,7 @@ const App = () => (
       <Route path="/profile" component = {profile} />
       <Route path="/quizinfo/:course/:round" component = {QuizInformation} />
       <Route path="/activeteams" component = {ActiveTeams} />
+      <Route path="/quizwaiting/:course/:round" component = {QuizWaiting} />
     </Switch>
   </BrowserRouter>
 );

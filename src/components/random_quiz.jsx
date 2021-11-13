@@ -18,11 +18,9 @@ function handleAnswerClick(course, qnum, score, fun){
     if(snapshot.exists()) {
       if(fun){
         set(ref(db, route + 'fun_questions/' + qnum + '/score/'), score);
-        // set(ref(db, route + 'fun_questions/' + qnum + '/answer/'), answer);
       }
       else{
         set(ref(db, route + 'essen_questions/' + qnum + '/score/'), score);
-        // set(ref(db, route + 'essen_questions/' + qnum + '/answer/'), answer);
       }
     }
     else{
@@ -147,14 +145,14 @@ function GetEssentialQuestions({course}){
 };
 
 //* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
-/// if done: 
-function handleDoneClick(course, fun, funNumber){
+/// if done: build teams
+function handleDoneClick(course, round, funNumber){
   //TODO check if the user answered to every questions
-  const isDone = checkDone(course, fun, funNumber);
+  const isDone = checkDone(course, round > 1 ? true : false, funNumber);
   console.log(isDone);
   if(isDone){
     team_building_algorithm(course, 2); // TODO: should define k (the number of teams)
-    window.location.href = "/chat";
+    window.location.href = "/quizwaiting/" + course + "/" + round;
   }
   else{
     alert("not done"); //TODO
@@ -236,7 +234,7 @@ function Quiz(props) {
     <div>
       <Titlebar title="Quiz Time" />
       <QAlist />
-      <button onClick={() => handleDoneClick(course, fun, funNumber)}>Done</button>
+      <button onClick={() => handleDoneClick(course, round, funNumber)}>Done</button>
       <Voting /> {/*//TODO erase later*/}
     </div>
   )

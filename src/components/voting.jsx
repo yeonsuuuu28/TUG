@@ -22,7 +22,7 @@ function Voting(props) {
   const leftchances = totalrounds - round + 1;
 
   return(
-    <div class="popup">
+    <div className="popup">
       <div>
         Discussion Time has Passed!
       </div>

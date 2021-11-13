@@ -38,7 +38,7 @@ const GroupChatInterface = () => {
     )
 }
 
-//* AnimalNames(#) - generate random names for # people without duplicates
+// generate random names for # people without duplicates
 const AnimalNames = (num) => {
     const names = [
         "Tiger",
@@ -93,7 +93,7 @@ const AnimalNames = (num) => {
     return uniqueNames;
 }
 
-//* UserIdentification - identify the user and load the GetCourseList component.
+// identify the user and load RealChat component.
 function UserIdentification(){
     const [uid, setUid] = useState('');
     const [username, setUserName] = useState('');
@@ -205,34 +205,40 @@ const RealChat = ({roomId, senderId}) => {
           message: message,
           sender : sender
         });
-
         
         // render webpage
         handleSend(messageId, message, sender);
     }
 
     
+    const secToRemind = [10, 20, 60, 120];
+    const maxChatSec = 120; // time to chat for each group (unit:s)
+    //const chatFinished = useRef(true);
+    const secLeft = useRef(0); // time left to chat with group members (unit:s)
+    const timerId = useRef(null);
+    const [timerSec, setTimerSec] = useState(0);
+    const [timerMin, setTimerMin] = useState(0);
     
-    const roomInitTime = useRef(0);
-    
-    /*const count = useRef(10);
-    const intervalId = useRef(null);
-
     useEffect( () => {
-        intervalId.current = setInterval( () => {
-            count.current -= 1;
+        timerId.current = setInterval( () => {
+            setTimerMin(parseInt(secLeft.current / 60));
+            setTimerSec(parseInt(secLeft.current % 60));
+            secLeft.current -= 1;
         }, 1000);
-
-        return () => clearInterval(intervalId.current);
+        
+        return () => clearInterval(timerId.current);
     }, []);
     
     useEffect( () => {
-        intervalId.current = setInterval( () => {
-            setCount(10);
-        }, 1000);
-
-        return () => clearInterval(intervalId.current);
-    }, [count]);*/
+        if (secLeft.current < 0){
+            console.log("타임 아웃");
+            set(ref(db, `rooms/${roomId}/info/chatFinished`), true);
+            clearInterval(timerId.current);
+        }
+    }, [timerSec]);
+    
+    // time when room first got created (unit:ms)
+    const roomInitTime = useRef(0);
 
     // write room info with no messages when initialized 
     function updateRoomInfo(roomId) {
@@ -242,25 +248,40 @@ const RealChat = ({roomId, senderId}) => {
 
             if (snapshot.exists()) {
                 const roomInfo = snapshot.val();
-
-                roomInitTime.current = roomInfo['initTime'];
                 console.log(snapshot.val());
+
+                // (unit:s) roomInitTime/1000 <= nowTime/1000 <= roomInitTime/1000 + maxChatSec
+                roomInitTime.current = roomInfo['initTime'];
+                
+                const nowTime = new Date().getTime();
+                const timeLeft = (roomInfo['initTime'] / 1000) + maxChatSec - (nowTime / 1000);
+                secLeft.current = timeLeft;
+                setTimerMin(parseInt(secLeft.current / 60));
+                setTimerSec(parseInt(secLeft.current % 60));
+                
+                // must check again even if not finished on the server
+                if (roomInfo['chatFinished'] === false && timeLeft < 0) {
+                    set(ref(db, `rooms/${roomId}/info/chatFinished`), true);
+                }
             }
             
             else {
                 // TODO: define animal name for each group members
                 console.log("New Group Initialized!");
 
-                const startTime = new Date().getTime();
-                roomInitTime.current = startTime;
+                const nowTime = new Date().getTime();
+                roomInitTime.current = nowTime;
+                secLeft.current = maxChatSec;
+                setTimerMin(parseInt(secLeft.current / 60));
+                setTimerSec(parseInt(secLeft.current % 60));
                 
                 set(ref(db, `rooms/${roomId}/info`), {
-                    initTime: startTime,
+                    initTime: nowTime,
+                    chatFinished: false,
                 });
             }
         });
     }
-
 
     ///// main /////
     
@@ -268,7 +289,7 @@ const RealChat = ({roomId, senderId}) => {
     const [snapshots, loading, error] = useList(ref(db, route));
     const messages = snapshots.map(doc => doc.val())
     useEffect( () => {
-        if (messages.length == 0) {
+        if (messages.length === 0) {
             // TODO: start timer for this group
             updateRoomInfo(roomId);
         }
@@ -290,7 +311,8 @@ const RealChat = ({roomId, senderId}) => {
             <div style={{ position: "relative", height: "500px" }}> 
             <MainContainer>
             <ChatContainer>
-                <MessageList typingIndicator={<TypingIndicator content={`${remoteId} is typing`}/>}>
+                <MessageList typingIndicator={(timerSec>0 || timerMin>0) && <TypingIndicator content={
+                    (timerMin>0 ? `${timerMin} minute${timerMin<2 ? "" : "s"} ` : "") + `${timerSec} second${timerSec<2 ? "" : "s"} left!`}/>}>
                     {groups.map(g => <MessageGroup key={g._id} data-id={g._id} direction={g.direction}>
                     <MessageGroup.Header>
                         { `${g.messages[0].sender}` }
@@ -300,11 +322,20 @@ const RealChat = ({roomId, senderId}) => {
                     </MessageGroup.Messages>
                     </MessageGroup>)}
                 </MessageList>
-                <MessageInput 
-                    placeholder="Get to know your teammates!" attachButton={false}
+                {(timerSec>0 || timerMin>0) && <MessageInput 
+                    placeholder={"Get to know your teammates!"}
+                    attachButton={false}
                     onSend={m => writeMessage(roomId, m, senderId)}
                     onChange={setMsgInputValue}
-                    value={msgInputValue} ref={inputRef} />
+                    value={msgInputValue} ref={inputRef} />}
+                {(timerSec<=0 && timerMin<=0) && <MessageInput 
+                    disabled
+                    placeholder={"Finished! Please wait for votes..."}
+                    attachButton={false}
+                    onSend={m => writeMessage(roomId, m, senderId)}
+                    onChange={setMsgInputValue}
+                    ref={inputRef} />}
+                
             </ChatContainer>
             </MainContainer>
         </div>

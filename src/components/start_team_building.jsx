@@ -7,7 +7,16 @@ import './start_team_building.css';
 
 //* handleCourseClick - go to quiz session when the course 'open' button is clicked.
 function handleCourseClick(course){
-  window.location.href = "/quiz/"+course;
+  // window.location.href = "/quiz/"+course;
+  const dbRef = ref(getDatabase());
+  get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
+      if (snapshot.exists()) {
+          alert("you are already building a team") //TODO
+          }
+      else {
+          push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/'), course)
+      }})
+      window.location.href = "/profile"
 }
 
 //* UserIdentification - identify the user and load the GetCourseList component.

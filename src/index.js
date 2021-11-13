@@ -8,6 +8,7 @@ import chat from "./components/chat_room";
 import mypage from "./components/my_page";
 import startquiz from "./components/start_team_building";
 import credit from "./components/credit_system";
+import profile from "./components/create_profile";
 
 const App = () => (
   <BrowserRouter>
@@ -19,6 +20,7 @@ const App = () => (
       <Route path="/mypage" component = {mypage} />
       <Route path="/credit" component = {credit} />
       <Route path="/startquiz" component = {startquiz} />
+      <Route path="/profile" component = {profile} />
     </Switch>
   </BrowserRouter>
 );

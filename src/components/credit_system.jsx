@@ -1,41 +1,32 @@
-import React from 'react'
+import React,{ useState } from 'react'
 import Navbar from './navbar.jsx'
 import './credit.css';
 import DynamicForm from './DynamicForm';
-import {auth, db} from "./firebase.jsx";
+//import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { ConstructionOutlined } from '@mui/icons-material';
 
 
 var members = {}
-
             
 class readDB extends React.Component{
     state = {
         data: [
-            { name:"Auejin", point:0},
-            { name:"Yeonsu", point: 0},
-            { name:"Seonghye", point:0}
+            { name: "Auejin", points: 0},
+            { name: "Yeonsu", points: 0 },
+            { name: "Seonghye", points: 0 },
           ],
-        test:[],
-        team1:[
-            {credit:0},
-            {name:"Auejin", point:10},
-            { name:"Yeonsu", point: 0},
-            { name:"Seonghye", point:0}
-        ],
-        pastteams:[]
+        test:[]
     }
 
-    dbRead = (e) => {
+    dbRead = () => {
         const auth = getAuth();
         const dbRef = ref(getDatabase()); 
         onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
             //read db
-            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName + "/classes")).then((snapshot) => {
+            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName)).then((snapshot) => {
                 if (snapshot.exists()) {
                     //console.log(snapshot.val())
                     this.setState({
@@ -48,30 +39,11 @@ class readDB extends React.Component{
                 }
             }).catch((error) => {
                 console.error(error);
-            });
-        
-         //get past teams 
-            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName + '/pastteams')).then((snapshot) => {
-                if (snapshot.exists()){
-                    //alert("copying pastteams to past")
-                    this.setState({
-                        //copy to pastteams
-                        pastteams: [snapshot.val()]
-                    })
-                    console.log(this.state.pastteams)
+            });}
 
-                } else{
-                    //add in data
-                    alert("no data, pushing dummy data ")
-                    push(ref(db, 'users/' + uid + "/" + auth.currentUser.displayName + '/pastteams/CS101'),
-                     {
-                        "credits": "0",
-                        "Auejin": "10",
-                        "Yeonsu": "20",
-                        "Seonghye": "70"
-                    
-                    });}
-            })}
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        
     // ...
         else {
         alert("not signed in")
@@ -95,7 +67,9 @@ class readDB extends React.Component{
             <Navbar />
         </div>
         <div>
-        
+                <span>Value: 100 </span>
+        </div>
+        <div className ="App">
             <DynamicForm className = "form"
                 title = "Credit"
                 model = {[
@@ -105,14 +79,13 @@ class readDB extends React.Component{
                 ]}
                 onSubmit = {(model) => {this.onSubmit(model)}}
             />
-      
 
             <pre style ={{width:"100"}}>
                 {/*{JSON.stringify(this.state.test)}
-                {JSON.stringify(this.model)}*/}
+                */}
+                {JSON.stringify(this.model)}
                 {JSON.stringify(this.state.data)}
             </pre>
-            
         </div>
 {/*     
         <div className = "credit">

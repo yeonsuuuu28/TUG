@@ -27,6 +27,8 @@ const main = () => {
                 </Link>
                 <img src = {MAIN1} alt="" className="image1"/>
             </div>
+            <div className="about">
+                </div>
         </div>
     )
 }

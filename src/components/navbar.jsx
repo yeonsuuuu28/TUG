@@ -1,7 +1,8 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
 import {auth, signInWithGoogle, signOutWithGoogle} from "./firebase.jsx";
-import './navbar.css'
-import LOGO from "../images/LOGO.PNG"
+import './navbar.css';
+import LOGO from "../images/LOGO.PNG";
+import {Link} from 'react-router-dom'
 
 export class navbar extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ export class navbar extends Component {
                         {/* <li><a href="/startquiz">MAKE TEAM</a></li> */}
                         <li><a href="/mypage">MAKE TEAM</a></li>
                         <li><a href="/join">JOIN CLASS</a></li>
-                        <li><a href="/">ABOUT</a></li>
+                        <li><Link to="about" spy={true} smooth={true}>ABOUT</Link></li>
                         <li><a href="/">HOME</a></li>
                         <ul style={{float: "left"}}>
                             <a href="/"><img src={LOGO} alt = "" className='logo'/></a>

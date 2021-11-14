@@ -43,6 +43,7 @@ const getclasses = () => {
                     set(ref(db, 'classes/' + classes[i].code + "/open/"), classes[i].open)
                 }
                 else {
+                    // push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/'), 100)
                 }
             }
             else {

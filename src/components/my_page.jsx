@@ -4,11 +4,12 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Navbar from "./navbar.jsx"
+import Navbar from "./navbar.jsx";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
-import MyClass from "./my_class.jsx"
+import MyClass from "./my_class.jsx";
 import ActiveTeams from './activeteams.jsx';
+import Profile from "./profile.jsx";
 
 
 const StyledTabs = styled(Tabs)({
@@ -92,9 +93,10 @@ export default function VerticalTabs() {
         textColor= "primary"
         indicatorColor="primary"
       >
-        <StyledTab label="Your Class" {...a11yProps(0)} sx={{  height: 'calc((100vh - 80px)/3)', width: 130}} />
-        <StyledTab label="Active Team" {...a11yProps(1)} sx={{ height: 'calc((100vh - 80px)/3)', width: 130 }}/>
-        <StyledTab label="Past Team" {...a11yProps(2)} sx={{ height: 'calc((100vh - 80px)/3)', width: 130 }}/>
+        <StyledTab label="Your Class" {...a11yProps(0)} sx={{  height: 'calc((100vh - 80px)/4)', width: 130}} />
+        <StyledTab label="Active Team" {...a11yProps(1)} sx={{ height: 'calc((100vh - 80px)/4)', width: 130 }}/>
+        <StyledTab label="Past Team" {...a11yProps(2)} sx={{ height: 'calc((100vh - 80px)/4)', width: 130 }}/>
+        <StyledTab label="Profile" {...a11yProps(3)} sx={{ height: 'calc((100vh - 80px)/4)', width: 130 }}/>
       </StyledTabs>
       <TabPanel value={value} index={0}>
         <MyClass/>
@@ -103,7 +105,10 @@ export default function VerticalTabs() {
         <ActiveTeams />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        Past Teams
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <Profile />
       </TabPanel>
     </Box> </ThemeProvider> </div>
   );

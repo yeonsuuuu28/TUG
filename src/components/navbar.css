@@ -84,3 +84,7 @@ li a {
 body {
   margin: 0;
 }
+
+.pointer {
+  cursor: pointer;
+}

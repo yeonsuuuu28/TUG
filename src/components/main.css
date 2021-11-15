@@ -89,4 +89,175 @@
 
 .about {
   height: 100vh;
+  background-color: #f7f7f7;
+}
+
+
+
+.mySwiper {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex; */
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  z-index: -1;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+
+.zindex {
+  z-index: 999;
+  position: absolute;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background-color: #1b1e2e !important;
+}
+
+.swiper-button-prev {
+  color: #1b1e2e !important;
+}
+
+.swiper-button-next {
+  color: #1b1e2e !important;
+}
+
+.quizquiz {
+  width: 24%;
+  padding-left: 38%;
+  padding-right: 38%;
+  padding-top: 15px;
+  position: absolute;
+}
+
+.creditcredit {
+  width: 26%;
+  padding-left: 37%;
+  padding-right: 37%;
+  padding-top: 30px;
+  position: absolute;
+}
+
+.chatchat {
+  width: 28%;
+  padding-left: 36%;
+  padding-right: 36%;
+  padding-top: 35px;
+  position: absolute;
+}
+
+.service_title {
+  font-family: "Lato", sans-serif;
+  font-weight: 1000;
+  font-size: 30pt;
+  color: black;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.quizquiz_sub {
+  font-family: "Lato", sans-serif;
+  font-weight: 1000;
+  font-size: 20pt;
+  color: #1b1e2e;
+  text-align: center;
+  margin-top: 280px;
+  margin-top: 22.5%;
+  position: absolute;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+.quizquiz_exp {
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  font-size: 13pt;
+  color: #1b1e2e;
+  text-align: center;
+  /* margin-top: 20px; */
+  margin-top: 26.5%;
+  position: absolute;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+.chatchat_sub {
+  font-family: "Lato", sans-serif;
+  font-weight: 1000;
+  font-size: 20pt;
+  color: #1b1e2e;
+  text-align: center;
+  margin-top: 22.5%;
+  position: absolute;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+.chatchat_exp {
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  font-size: 13pt;
+  color: #1b1e2e;
+  text-align: center;
+  margin-top: 26.5%;
+  position: absolute;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+  
+}
+
+.creditcredit_sub {
+  font-family: "Lato", sans-serif;
+  font-weight: 1000;
+  font-size: 20pt;
+  color: #1b1e2e;
+  text-align: center;
+  /* margin-top: 285px; */
+  position: absolute;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-top: 22.5%;
+}
+
+.creditcredit_exp {
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  font-size: 13pt;
+  color: #1b1e2e;
+  text-align: center;
+  margin-top: 26.5%;
+  position: absolute;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
 }

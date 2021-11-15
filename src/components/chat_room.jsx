@@ -181,73 +181,6 @@ function getUserIdsInRoom(classId, roomId) {
     });
 }
 
-/*function getCreditHistory(userId) {
-    const db = getDatabase();
-    let outData = [];
-    
-    // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수
-    // users/id/name/pastteams/CS101/??/credits:"3" <- 얘가 모든 클래스 평균
-    get(ref(db, `users/${userId}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-
-            // iterate once sice each id has one name
-            snapshot.forEach((snapshotChild) => {
-                
-                // iterate for each class
-                snapshotChild.child("pastteams").forEach((snapshotClass) => {
-                    const res = Object.values(snapshotClass.val())[0];
-                    const meanCredit = parseInt(res['credits']);
-                    const myCredit = (Object.values(res).reduce((a,b)=>parseInt(a)+parseInt(b), 0) - meanCredit)/(Object.values(res).length-1);
-
-                    outData.push({
-                        'class': snapshotClass.key,
-                        'class average': meanCredit,
-                        'peers': myCredit,
-                    })
-                })
-            })
-
-            console.log(outData)
-        }
-    });
-}*/
-
-const getCreditHistory = (userId) => {
-    const db = getDatabase();
-    //const [classCredits, setClassCredits] = useState([]);
-    let outData = [];
-    
-    // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수
-    // users/id/name/pastteams/CS101/??/credits:"3" <- 얘가 모든 클래스 평균
-    get(ref(db, `users/${userId}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-
-            // iterate once sice each id has one name
-            snapshot.forEach((snapshotChild) => {
-                
-                // iterate for each class
-                snapshotChild.child("pastteams").forEach((snapshotClass) => {
-                    const res = Object.values(snapshotClass.val())[0];
-                    const meanCredit = parseInt(res['credits']);
-                    const myCredit = (Object.values(res).reduce((a,b)=>parseInt(a)+parseInt(b), 0) - meanCredit)/(Object.values(res).length-1);
-
-                    outData.push({
-                        'class': snapshotClass.key,
-                        'class average': meanCredit,
-                        'peers': myCredit,
-                    })
-                })
-            })
-
-            console.log(outData);
-            return outData;
-        }
-    });
-
-}
-
-
-
 const RealChat = ({ roomId, senderId, senderName}) => {
     
     // TODO: dynamic roomId from classId and senderId
@@ -411,14 +344,55 @@ const RealChat = ({ roomId, senderId, senderName}) => {
     )
 
     //// real-time plot update /////
-    const [plotUserId, setPlotUserId] = useState(-1);
-    const plotData = useRef([]);
+    const [plotUserId, setPlotUserId] = useState('');
+    const [plotData, setPlotData] = useState([]);
+    
     useEffect(() => {
-        if (plotUserId >= 0) {
-            plotData.current = getCreditHistory(plotUserId);
-        }
-        else {
-            plotData.current = [];
+        if (plotUserId.length > 0) {
+            const db = getDatabase();
+            let outData = [];
+            
+            // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수
+            // users/id/name/pastteams/CS101/??/credits:"3" <- 얘가 모든 클래스 평균
+            get(ref(db, `users/${plotUserId}`)).then((snapshot) => {
+                if (snapshot.exists()) {
+
+                    // iterate once sice each id has one name
+                    snapshot.forEach((snapshotChild) => {
+                        
+                        // iterate for each class
+                        snapshotChild.child("pastteams").forEach((snapshotClass) => {
+                            const res = Object.values(snapshotClass.val());
+                            
+                            let meanCredit = -1;
+                            let creditSum = 0;
+                            let peers = 0;
+                            
+                            for (const r of res) {
+                                console.log('credit r', r)
+                                if (Object.keys(r).includes('credits')) {
+                                    meanCredit = parseInt(r['credits'])
+                                }
+                                else {
+                                    creditSum += parseInt(r['credit'])
+                                    peers += 1;
+                                }
+                            }
+                            
+                            const myCredit = Math.round(100 * creditSum / peers) / 100;
+                            
+                            outData.push({
+                                'class': snapshotClass.key,
+                                'class average': meanCredit,
+                                'peers': myCredit,
+                            })
+                        })
+                    })
+
+                    console.log(`plot data of ${plotUserId} is`, outData)
+                    setPlotData(outData);
+                }
+            });
         }
     }, [plotUserId])
 
@@ -452,9 +426,9 @@ const RealChat = ({ roomId, senderId, senderName}) => {
     }, [timerSec]);
         
     
-    // findRoomId
+    
     return (
-        <div>
+        <div style={{ height: "100%"}}>
             <div class="column">
                 <button
                     onClick={() => getUserIdsInRoom("CS473", 0)}
@@ -462,16 +436,16 @@ const RealChat = ({ roomId, senderId, senderName}) => {
                         getUserIdsInRoom(CS473, 0)
                 </button>
                 <button
-                    onClick={() => getCreditHistory("SbkyhYXe0iMEwKFMEQEQOW6dw273", "Yeon Su Park", "CS101")}
+                    onClick={() => setPlotUserId("SbkyhYXe0iMEwKFMEQEQOW6dw273")}
                     style={{ marginBottom: "1em"}}>
-                        getCreditHistory(~, Yeon Su Park, CS101)
+                        setPlotUserId(~, Yeon Su Park, CS101)
                 </button>
                 <button
                     onClick={() => writeMessage( roomId, `${senderId} clicked me ${remoteMsgCnt.current++} times!`, remoteId )}
                     style={{ marginBottom: "1em"}}>
                         Let Moderator Speak
                 </button>
-                <div style={{ position: "relative", height: "500px" }}> 
+                <div style={{ position: "relative", height: "530px" }}> 
                 <MainContainer>
                 <ChatContainer>
                     <MessageList typingIndicator={(timerSec>0 || timerMin>0) && <TypingIndicator content={
@@ -481,11 +455,11 @@ const RealChat = ({ roomId, senderId, senderName}) => {
                             { `${g.messages[0].sender}` }
                         </MessageGroup.Header>
                         <MessageGroup.Messages key={g._id} sender={g.sender}>
-                                { g.messages.map(m => {
+                                { g.messages.map(m => (
                                     <Message
                                         key={m._id} data-id={m._id} model={m}
                                         onClick={()=>{setPlotUserId(g.messages[0].sender)}}/>
-                                }) }
+                                )) }
                         </MessageGroup.Messages>
                         
                         </MessageGroup>)}
@@ -509,21 +483,13 @@ const RealChat = ({ roomId, senderId, senderName}) => {
                 </div>
             </div>        
             <div class="column" style={{height: 200}} >
-                {plotUserId>=0 && <InfoVis data={plotData.current}/>}
+                {plotData.length > 0 && <InfoVis data={plotData}/>}
+                {plotData.length <= 0 && <h2>no history</h2>}
             </div>
         </div>
     )
 };
-/*<div class="column" style={{height: 200}} >
-                <InfoVis data={[
-                    {
-                        'class': 'CS473',
-                        'class average': 33.333,
-                        'peers': 10,
 
-                    }
-                ]}/>
-            </div> */
 
 // export default Chat
 export default GroupChatInterface

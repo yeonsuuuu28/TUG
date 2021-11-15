@@ -47,13 +47,14 @@ export default class DynamicForm extends React.Component {
         
         //loop through model data
         let model = this.props.model; //get model from credit system 
+        //console.log(model)
         let formUI = model.map((m) => {
             let key = m.key;
             let type = m.type || "text";
             let props = m.props || {};
             
             return(
-                <><tr key={key} className="form-group">
+                <><div key={key} className="form-group">
                         <td><label className="form-label"
                             key={"l + m.key"}
                             htmlFor={m.key}>
@@ -69,8 +70,8 @@ export default class DynamicForm extends React.Component {
                                 key={"i" + m.key}
                                 onChange={(e) => { this.onChange(e, key,m); } } />
                         </td>
-                    </tr></>
-               
+                    </div></>
+
                     
                     
                                );

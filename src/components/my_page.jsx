@@ -12,6 +12,7 @@ import ActiveTeams from './activeteams.jsx';
 import Profile from "./profile.jsx";
 
 
+
 const StyledTabs = styled(Tabs)({
     '& 	.MuiTabs-indicator': {
         width: "3.5px",

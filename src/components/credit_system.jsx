@@ -159,14 +159,13 @@ class readDB extends React.Component{
                 */
                 onSubmit = {(model) => {this.onSubmit(model)}}
             />
-     
-
+{/*}
             <pre style ={{width:"100"}}>
                 {JSON.stringify(this.state.test)}
                 {JSON.stringify(this.model)}
                 Inputdata: {JSON.stringify(this.state.pastteams)}    
             </pre>
-{/*}
+
             <div>
                 Output data: {JSON.stringify(this.state.output)}
             </div>  */}

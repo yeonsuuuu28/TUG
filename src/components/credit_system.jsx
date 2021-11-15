@@ -116,7 +116,7 @@ class readDB extends React.Component{
         //write to db updated values
             //1.build items to be written in DB
         
-
+        update[0] = {credits:0}
         
         for(const i in this.state.pastteams[0]){
             if (Object.keys(this.state.pastteams[0][i]).includes("name")){

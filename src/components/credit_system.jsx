@@ -127,7 +127,7 @@ class readDB extends React.Component{
         //console.log(update)
             //2.write to db
         set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/pastteams/CS2'),update);
-        alert("Updated Successfully");
+        alert("Thank you for submitting an honest review! Credits are now updated Successfully");
         
         //redirect to another page
     

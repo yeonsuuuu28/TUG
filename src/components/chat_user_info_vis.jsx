@@ -10,6 +10,7 @@ import { ResponsiveBar } from '@nivo/bar'
 
 
 const InfoVis = ({ data /* see data tab */ }) => (
+    
     <ResponsiveBar
         data={data}
         keys={[ 'class average', 'peers' ]}

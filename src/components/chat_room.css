@@ -2,6 +2,11 @@
     box-sizing: border-box;
 }
 
+.alignright {
+    display: flex;
+    justify-content: flex-end;
+}
+
 /* Create two equal columns that floats next to each other */
 .column {
     float: left;

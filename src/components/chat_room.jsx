@@ -77,7 +77,7 @@ function RoomForSender({classId, senderId, senderName}){
     const [roomId, setRoomId] = useState(-1);
 
     // userIds of group peers in the same room. used to generate random names
-    const [peerIds, setPeerIds] = useState([]);
+    const [anonNames, setAnonNames] = useState([]);
     
     const namePairs = (uids) => {
         
@@ -102,9 +102,8 @@ function RoomForSender({classId, senderId, senderName}){
                     const roomIdTemp = snapshotChild.key;
                     const snapshotUsers = snapshotChild.child("users");
                     if (snapshotUsers.val().includes(senderId)) {
-                        setRoomId(roomIdTemp)
-                        setPeerIds(snapshotUsers.val())
-                        console.log("name pairs =", namePairs(snapshotUsers.val()))
+                        setRoomId(roomIdTemp);
+                        setAnonNames(namePairs(snapshotUsers.val()));
                     }
                 })
             }
@@ -114,7 +113,7 @@ function RoomForSender({classId, senderId, senderName}){
     
     if (roomId > -1) {
         return (
-            <RealChat roomId={roomId} senderId={senderId} senderName={senderName}/>
+            <RealChat roomId={roomId} senderId={senderId} senderName={senderName} namePairs={anonNames}/>
         );
     }
     else {
@@ -143,7 +142,7 @@ function getUserIdsInRoom(classId, roomId) {
     });
 }
 
-const RealChat = ({ roomId, senderId, senderName}) => {
+const RealChat = ({ roomId, senderId, senderName, namePairs}) => {
     
     // TODO: dynamic roomId from classId and senderId
     // const roomId = 0;
@@ -159,7 +158,6 @@ const RealChat = ({ roomId, senderId, senderName}) => {
 
     // read append one chat message message and return new groups[] 
     const updatedGroups = (prevGroups, messageId, message, sender, notCancel) => {
-
         if (prevGroups.length > 0) {
             const lastGroup = prevGroups[prevGroups.length - 1];
 
@@ -414,14 +412,14 @@ const RealChat = ({ roomId, senderId, senderName}) => {
                         (timerMin>0 ? `${timerMin} minute${timerMin<2 ? "" : "s"} ` : "") + `${timerSec} second${timerSec<2 ? "" : "s"} left!`}/>}>
                         {groups.map(g => <MessageGroup key={g._id} data-id={g._id} direction={g.direction}>
                         <MessageGroup.Header>
-                            { `${g.messages[0].sender}` }
+                        { (g.sender === remoteId) ? remoteId : namePairs[g.sender] }
                         </MessageGroup.Header>
                         <MessageGroup.Messages key={g._id} sender={g.sender}>
-                                { g.messages.map(m => (
-                                    <Message
-                                        key={m._id} data-id={m._id} model={m}
-                                        onClick={()=>{setPlotUserId(g.messages[0].sender)}}/>
-                                )) }
+                            { g.messages.map(m => (
+                                <Message
+                                    key={m._id} data-id={m._id} model={m}
+                                    onClick={()=>{setPlotUserId(g.messages[0].sender)}}/>
+                            )) }
                         </MessageGroup.Messages>
                         
                         </MessageGroup>)}
@@ -445,12 +443,16 @@ const RealChat = ({ roomId, senderId, senderName}) => {
                 </div>
             </div>        
             <div class="column" style={{height: 200}} >
-                {plotData.length > 0 && <InfoVis data={plotData}/>}
-                {plotData.length <= 0 && <h2>no history</h2>}
+                {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>Click one of chat bubbles.</h1>}
+                {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>See credit history of the one who wrote it.</h1>}
+                {(plotUserId.length>0 && plotUserId !== remoteId) && <h1>Credits of { (plotUserId === remoteId) ? remoteId : namePairs[plotUserId] }</h1>}
+                {plotUserId !== remoteId && plotData.length > 0 && <InfoVis data={plotData}/>}
+                {plotUserId !== remoteId && plotData.length <= 0 && <h2>no history found</h2>}
             </div>
         </div>
     )
 };
+
 
 
 // export default Chat

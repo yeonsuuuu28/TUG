@@ -12,6 +12,7 @@ import { useList } from 'react-firebase-hooks/database';
 
 import Navbar from './navbar.jsx'
 import InfoVis from './chat_user_info_vis.jsx'
+import RandomNames from './random_names.jsx'
 
 import './chat_room.css'
 
@@ -31,9 +32,6 @@ import {
   TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
 
-
-
-
 const GroupChatInterface = () => {
     return (
         <div>
@@ -43,61 +41,6 @@ const GroupChatInterface = () => {
             </div>
         </div>
     )
-}
-
-// generate random names for # people without duplicates
-const AnimalNames = (num) => {
-    const names = [
-        "Tiger",
-        "Wombat",
-        "Opposum",
-        "Dingo",
-        "Stallion",
-        "Jaguar",
-        "Mustang",
-        "Armadillo",
-        "Camel",
-        "Badger",
-        "Addax",
-        "Steer",
-        "Lamb",
-        "Snake",
-        "Hamster",
-        "Squirrel",
-        "Hyena",
-        "Fish",
-        "Gazelle",
-        "Dog",
-        "Zebra",
-        "Rat",
-        "Mole",
-        "Canary",
-        "Ferret",
-        "Impala",
-        "Mare",
-        "Hedgehog",
-        "Nyancat",
-        "Nupjuk"
-    ]
-
-    function randomNoRepeats(array) {
-        var copy = array.slice(0);
-        return function() {
-          if (copy.length < 1) { copy = array.slice(0); }
-          var index = Math.floor(Math.random() * copy.length);
-          var item = copy[index];
-          copy.splice(index, 1);
-          return item;
-        };
-    }
-
-    var uniqueNames = [];
-    const newName = randomNoRepeats(names);
-    for (var i=0; i<num; i++) {
-        uniqueNames.push(newName());
-    }
-
-    return uniqueNames;
 }
 
 // identify the user and load RealChat component.
@@ -130,7 +73,24 @@ function UserIdentification(){
 };
 
 function RoomForSender({classId, senderId, senderName}){
+    // room of classId that contains senderId
     const [roomId, setRoomId] = useState(-1);
+
+    // userIds of group peers in the same room. used to generate random names
+    const [peerIds, setPeerIds] = useState([]);
+    
+    const namePairs = (uids) => {
+        
+        const anons = RandomNames(uids.length)
+        let outs = {}
+
+        for (let i=0; i<uids.length; i++) {
+            outs[uids[i]] = anons[i];
+        }
+
+        return outs;
+    }
+
     useEffect(() => {
         const db = getDatabase();
 
@@ -143,6 +103,8 @@ function RoomForSender({classId, senderId, senderName}){
                     const snapshotUsers = snapshotChild.child("users");
                     if (snapshotUsers.val().includes(senderId)) {
                         setRoomId(roomIdTemp)
+                        setPeerIds(snapshotUsers.val())
+                        console.log("name pairs =", namePairs(snapshotUsers.val()))
                     }
                 })
             }
@@ -436,9 +398,9 @@ const RealChat = ({ roomId, senderId, senderName}) => {
                         getUserIdsInRoom(CS473, 0)
                 </button>
                 <button
-                    onClick={() => setPlotUserId("SbkyhYXe0iMEwKFMEQEQOW6dw273")}
+                    onClick={() => setPlotUserId("r0UNsRPIzGVO99ovbeiuilpTxIp2")}
                     style={{ marginBottom: "1em"}}>
-                        setPlotUserId(~, Yeon Su Park, CS101)
+                        show plot of cheryl
                 </button>
                 <button
                     onClick={() => writeMessage( roomId, `${senderId} clicked me ${remoteMsgCnt.current++} times!`, remoteId )}

@@ -10,7 +10,61 @@ import TextField from '@mui/material/TextField';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import PropTypes from 'prop-types';
+import Fab from '@mui/material/Fab';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Zoom from '@mui/material/Zoom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
 
+const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#1b1e2e',
+      },
+    },
+  });
+
+
+function ScrollTop(props) {
+    const { children, window } = props;
+    const trigger = useScrollTrigger({
+      target: window ? window() : undefined,
+      disableHysteresis: true,
+      threshold: 100,
+    });
+  
+    const handleClick = (event) => {
+      const anchor = (event.target.ownerDocument || document).querySelector(
+        '#back-to-top-anchor',
+      );
+  
+      if (anchor) {
+        anchor.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    };
+  
+    return (
+      <Zoom in={trigger}>
+        <Box
+          onClick={handleClick}
+          role="presentation"
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+        >
+          {children}
+        </Box>
+      </Zoom>
+    );
+  }
+  
+  ScrollTop.propTypes = {
+    children: PropTypes.element.isRequired,
+    window: PropTypes.func,
+  };
+  
 
 const TextFieldSearchBar = styled(TextField)({
     '& .MuiInputBase-input': {
@@ -112,9 +166,8 @@ function dbAdd(e) {
         });
       }
   
-
         
-export default function Join() {
+export default function Join(props) {
     const [input, setInput] = useState("");
     const [classList, setClassList] = useState(classes);
 
@@ -156,7 +209,9 @@ export default function Join() {
     }
 
         return (
+            <React.Fragment>
             <div>
+            <div id="back-to-top-anchor" />
             <Navbar/>
             <br/>
             <div className="join_title">Join Your Class</div>
@@ -184,6 +239,14 @@ export default function Join() {
             </Box></div>
             {getclasses()}
             <table className = "table_setting"><tbody>{display()}</tbody></table>
+            <ThemeProvider theme={theme}>
+            <ScrollTop {...props}>
+            <Fab color="primary" size="small" aria-label="scroll back to top">
+            <KeyboardArrowUpIcon />
+            </Fab>
+            </ScrollTop>
+            </ThemeProvider>
             </div>
+            </React.Fragment>
         )
     }

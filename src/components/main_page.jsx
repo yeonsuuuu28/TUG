@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from './navbar.jsx'
+import Navbar from './navbar_copy.jsx'
 import "./main.css"
 import MAIN1 from "../images/main1.svg"
 import QUIZ from "../images/quiz.svg"

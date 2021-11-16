@@ -10,7 +10,15 @@ function handleCourseClick(course){
   const dbRef = ref(getDatabase());
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
       if (snapshot.exists()) {
-          alert("you are already building a team") //TODO
+          if (Object.values(snapshot.val())[0] === course) {
+            alert("You have not finished creating your profile")
+            window.location.href = "/profile"
+          }
+          else {
+            alert("You are already building a team for another class") //TODO
+            window.location.href = "/profile"
+          }
+          // console.log(Object.values(snapshot.val()));
           }
       else {
           push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/'), course)

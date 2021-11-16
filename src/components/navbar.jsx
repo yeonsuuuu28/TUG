@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {auth, signInWithGoogle, signOutWithGoogle} from "./firebase.jsx";
 import './navbar.css';
 import LOGO from "../images/LOGO.PNG";
-import { Link } from "react-scroll";
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 
 export class navbar extends Component {
     constructor(props) {

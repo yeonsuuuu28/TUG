@@ -10,6 +10,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 const members = [{}]
 const update = [{}]
 var isdbRead = false
+const classid = "CS101"
 
             
 class readDB extends React.Component{
@@ -20,7 +21,7 @@ class readDB extends React.Component{
             { name:"Seonghye", point:0}
           ],
         pastteams:[], //snapshot of current team gets copied here
-        model2:[],
+        userids:[],
         output:[]
     }
 
@@ -49,7 +50,7 @@ class readDB extends React.Component{
             });
         
          //get past teams 
-            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName + '/pastteams/CS2')).then((snapshot) => {
+            get(child(dbRef, 'users/' + uid + "/" + auth.currentUser.displayName + '/currentteams/' + classid)).then((snapshot) => {
                 if (snapshot.exists()){
                     //alert("copying pastteams to past")
                     //const data1 = snapshot.val()
@@ -64,7 +65,7 @@ class readDB extends React.Component{
                 } else{
                     //add in data
                     alert("no data, pushing dummy data ")
-                    set(ref(db, 'users/' + uid + "/" + auth.currentUser.displayName + '/pastteams/CS2'),
+                    set(ref(db, 'users/' + uid + "/" + auth.currentUser.displayName + '/currentteams/' + classid),
                      [
                         {credits: "0"},
                         {name:"Auejin", credit:"10"},
@@ -73,7 +74,38 @@ class readDB extends React.Component{
                     
                      ]);
                 }
-            })}
+            }
+            
+            )
+            //get all user ids
+            get(child(dbRef, 'users')).then((snapshot) => {
+                if (snapshot.exists()){
+                    //alert("copying pastteams to past")
+                    //const data1 = snapshot.val()
+                    this.setState({
+                        //copy to pastteams
+                        userids: [snapshot.val()]
+                    })
+                    //get all users keys
+                    console.log(Object.keys(this.state.userids[0]))
+
+                    /*for (const i in Object.keys(this.state.userid[0])){
+                        
+                    }*/
+                    
+
+
+                } else{
+                    
+                }
+            }
+            
+            
+            )
+        
+        
+        
+        }
     // ...
         else {
         alert("not signed in")
@@ -126,7 +158,11 @@ class readDB extends React.Component{
         }
         //console.log(update)
             //2.write to db
-        set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/pastteams/CS2'),update);
+        set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/pastteams/' + classid),update);
+
+        //delete /current teams + classid
+        set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/currentteams/' + classid),null);
+
         alert("Thank you for submitting an honest review! Credits are now updated Successfully");
         
         //redirect to another page

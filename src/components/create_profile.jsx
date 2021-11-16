@@ -11,15 +11,24 @@ function profileAdd(x, y) {
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
       if (snapshot.exists()) {
           classID = Object.values(snapshot.val());
+          // console.log(classID);
           set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID), null)
           set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID + "/profile1/"), x)
           set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID + "/profile2/"), y)
           alert("Successfully saved");
+          window.location.href = "/quizinfo/"+classID+'/1'
           }})}
+
+function setclassID() {
+  const dbRef = ref(getDatabase());
+  get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
+    classID = Object.values(snapshot.val());
+    console.log(classID);
+  })}
 
 var taglist = [];
 var taglist1 = [];
-var classID = "";
+let classID = "";
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
@@ -29,9 +38,12 @@ export default function Profile() {
   const [inputValue1, setInputValue1] = useState("");
   const [limit1, setLimit1] = useState(true)  
   
+
+
     return (
         <div>
             <Navbar/>
+            {/* {setclassID} */}
             <br/>
             <div className="join_title">Create Your Profile</div>
             <div className="tag">
@@ -130,7 +142,7 @@ export default function Profile() {
               // console.log(taglist)
               profileAdd(taglist, taglist1)
               }>Submit</button>
-        <button onClick={()=>{window.location.href = "/quizinfo/"+classID+'/1'}}></button>
+        {/* <button onClick={()=>{window.location.href = "/quizinfo/"+classID+'/1'}}></button> */}
         </div>
     )
 }

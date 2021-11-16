@@ -22,9 +22,82 @@ class readDB extends React.Component{
           ],
         pastteams:[], //snapshot of current team gets copied here
         userids:[],
-        output:[]
+        output:[],
+        localCredit:0,
+        localCount:0
     }
 
+
+    onPush = (e) =>{
+        const auth = getAuth();
+        const dbRef = ref(getDatabase()); 
+        
+        get(child(dbRef, 'users')).then((snapshot) => {
+            if (snapshot.exists()){
+                //alert("copying pastteams to past")
+                //const data1 = snapshot.val()
+                this.setState({
+                    //copy to pastteams
+                    userids: [snapshot.val()]
+                })
+                //get all users keys
+                //uid = Object.keys(this.state.userids[0])
+                //name = Object.values(this.state.userids[0])
+                //console.log(uid[0])
+                console.log("current username: " + auth.currentUser.displayName)
+                const currentUser = "Yeonsu"
+                for (const i in this.state.userids[0]){
+                    
+                    //console.log(i) //uid
+                    //console.log(Object.keys(this.state.userids[0][i])) //displaynames 
+                    get(child(dbRef, 'users/' + i + '/' + Object.keys(this.state.userids[0][i]))).then((snapshot) => {
+                        if (snapshot.exists()){ 
+                            console.log(snapshot.val().pastteams)
+
+                            for( const i in snapshot.val().pastteams){ //all items in pastteams[classid]
+                                for(const j in snapshot.val().pastteams[i]){
+                                if(snapshot.val().pastteams[i][j]){
+                                    console.log(snapshot.val().pastteams[i][j]) //pastteams[classid][index]
+                                    if (snapshot.val().pastteams[i][j].name === currentUser) {
+                                        this.setState({
+                                            localCredit: Number(this.state.localCredit) + Number(snapshot.val().pastteams[i][j].credit),
+                                           
+                                        })
+                                        this.setState({
+                                            localCount: this.state.localCount + 1
+                                        })
+                                    }
+                                    //if(snapshot.val().pastteams[i][1].name === "Auejin"){
+                                    //    console.log(snapshot.val().pastteams[i][1].credit)
+                                   // }
+                                   
+                                }
+                                
+                                
+                                }
+                            }
+                            
+                        }
+                        else{
+                        
+                        } 
+                        console.log(currentUser +" " + this.state.localCredit + " " + this.state.localCount )
+
+                })}
+
+                /*for (const i in Object.keys(this.state.userid[0])){
+                    
+                }*/
+                
+                
+
+            } else{
+                
+            }
+        }
+        )
+        
+    }
     
 
     dbRead = (e) => {
@@ -77,32 +150,7 @@ class readDB extends React.Component{
             }
             
             )
-            //get all user ids
-            get(child(dbRef, 'users')).then((snapshot) => {
-                if (snapshot.exists()){
-                    //alert("copying pastteams to past")
-                    //const data1 = snapshot.val()
-                    this.setState({
-                        //copy to pastteams
-                        userids: [snapshot.val()]
-                    })
-                    //get all users keys
-                    console.log(Object.keys(this.state.userids[0]))
-
-                    /*for (const i in Object.keys(this.state.userid[0])){
-                        
-                    }*/
-                    
-
-
-                } else{
-                    
-                }
-            }
-            
-            
-            )
-        
+            //get all user id
         
         
         }
@@ -205,6 +253,8 @@ class readDB extends React.Component{
             <div>
                 Output data: {JSON.stringify(this.state.output)}
             </div>  */}
+
+            <button onClick ={this.onPush}>Push </button>
         </div>
 {/*     
         <div className = "credit">

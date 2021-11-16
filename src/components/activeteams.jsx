@@ -1,4 +1,4 @@
-//* ActiveTeams - page '/activeteams'
+//* ActiveTeams - page '/activeteams',, component 'ActiveTeams'
 function ActiveTeams() {
 
   return(

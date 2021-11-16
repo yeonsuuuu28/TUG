@@ -14,8 +14,8 @@ function QuizWaiting(props) {
   setTimeout(setInterval(getLeftStudents(), 10000), 5000);
   
   if(leftStudents[0] == 0){
-    team_building_algorithm(course, round, 2); // TODO: should define k (the number of teams)
-    window.location.href = "/chat"; /// goto chat page
+    team_building_algorithm(course, round, 2); // TODO: should define n (the number of teams)
+    window.location.href = "/chat/" + course + "/" + round;  /// goto chat page
   }
 
   //* getLeftStudents

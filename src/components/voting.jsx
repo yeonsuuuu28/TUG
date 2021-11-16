@@ -14,10 +14,10 @@ function handleVoting(vote, course, round){
 
 //* Voting 
 function Voting(props) {
-  // const course = props.course; //TODO
-  // const round = props.round;
-  const course = 'CS473';
-  const round = 1;
+  const course = props.course; 
+  const round = props.round;
+  // const course = 'CS473'; // TODO: erase later
+  // const round = 1;
   const totalrounds = 3; // TODO: connect to quizinfo page
   const leftchances = totalrounds - round + 1;
 

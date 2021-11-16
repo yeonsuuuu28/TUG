@@ -94,7 +94,7 @@ function team_building_algorithm(c, round, n) {
     });
 
     console.log("final", user_list, dataset);
-    const result = kmeans(dataset, 2); // TODO: change 2 -> n
+    const result = kmeans(dataset, n); 
     console.log(result.clusters);
 
     /// make teams with clustered result

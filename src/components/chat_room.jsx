@@ -32,7 +32,12 @@ import {
   TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
 
-const GroupChatInterface = () => {
+const GroupChatInterface = (props) => {
+  ////////////////////// added by Seonghye /////////////////////////
+  const course = props.match.params.course; 
+  const round = props.match.params.round;
+  ////////////////////// added by Seonghye /////////////////////////
+
     return (
         <div>
             <Navbar />

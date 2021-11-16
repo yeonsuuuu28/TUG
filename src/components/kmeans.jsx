@@ -1,4 +1,4 @@
-//* https://medium.com/geekculture/implementing-k-means-clustering-from-scratch-in-javascript-13d71fbcb31e
+//* copied from https://medium.com/geekculture/implementing-k-means-clustering-from-scratch-in-javascript-13d71fbcb31e
 
 const MAX_ITERATIONS = 50;
 

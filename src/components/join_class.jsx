@@ -136,7 +136,7 @@ function dbAdd(e) {
             if (snapshot.exists()) {
                 if (!(Object.values(snapshot.val()).includes(e))) {
                     alert("Successfully joined");
-                    push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/'), e)
+                    push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + e), "no profile")
                 }
                 else {
                     alert("Already joined")
@@ -144,7 +144,7 @@ function dbAdd(e) {
             }
             else {
                 alert("Successfully joined");
-                push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/'), e)
+                push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + e), "no profile")
             }});
 
         get(child(dbRef, 'classes/' + e + '/user/')).then((snapshot) => {

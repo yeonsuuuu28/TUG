@@ -15,8 +15,9 @@ function handleCourseClick(course){
           }
       else {
           push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/'), course)
+          window.location.href = "/profile"
       }})
-      window.location.href = "/profile"
+      
       // window.location.href = "/quizinfo/"+course+'/1'; //Make Profile First and Enter Quiz. 
 }
 
@@ -54,7 +55,7 @@ function GetCourseList({ uid, username }){
     const route = '/users/' + uid + '/' + username + '/class/';
     get(child(dbRef, route)).then((snapshot) => {
       if(snapshot.exists() && courseObjects == 'loading...'){
-        const courseid = Object.values(snapshot.val());
+        const courseid = Object.keys(snapshot.val());
         
         get(child(dbRef, '/classes/')).then((s)=> {
           if(s.exists()){

@@ -29,7 +29,7 @@ export class navbar extends Component {
                         <li><a href="/mypage">MAKE TEAM</a></li>
                         <li><a href="/join">JOIN CLASS</a></li>
                         <li><div className="pointer"><Link to="about" spy={true} smooth={true}>ABOUT</Link></div></li>
-                        <li><a href="/">HOME</a></li>
+                        {/* <li><a href="/">HOME</a></li> */}
                         <ul style={{float: "left"}}>
                             <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
                             <li><a href="/" className = "title">TUG</a></li>
@@ -55,7 +55,7 @@ export class navbar extends Component {
                         <li><a href="/mypage">MAKE TEAM</a></li>
                         <li><a href="/join">JOIN CLASS</a></li>
                         <li><div className="pointer"><Link to="about" spy={true} smooth={true}>ABOUT</Link></div></li>
-                        <li><a href="/">HOME</a></li>
+                        {/* <li><a href="/">HOME</a></li> */}
                         <ul style={{float: "left"}}>
                             <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
                             <li><a href="/" className = "title">TUG</a></li>

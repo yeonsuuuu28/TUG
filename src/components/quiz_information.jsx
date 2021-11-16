@@ -1,5 +1,5 @@
 import { essenQcandidates } from './question_candidates.jsx';
-import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import { getDatabase, ref, get, child } from "firebase/database";
 import { Titlebar } from './random_quiz.jsx';
 
 function handleGetStarted(course, round){
@@ -17,8 +17,8 @@ function QuizInformation(props){
   const totalrounds = 3;
   const leftrounds = totalrounds - round + 1;
   const questions = essenQcandidates.length; //TODO funQcandidates for 2~ rounds
-  const k = 2; //TODO: number of teams
-  let users; // Number of students joined in the class
+  // const k = 2; //TODO: number of teams
+  // let users; // Number of students joined in the class
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/';
   get(child(dbRef, route)).then((snapshot) => {
@@ -31,7 +31,7 @@ function QuizInformation(props){
   const [minN, maxN] = [1, 2] // TODO
 
   const title = () => {
-    if(round == 1) return "It's Quiz Time!";
+    if(round === 1) return "It's Quiz Time!";
     else return "Quiz Round " + round;
   }
 

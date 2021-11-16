@@ -1,19 +1,16 @@
 import React, {useState} from 'react'
 import Navbar from './navbar.jsx'
-import Chip from '@mui/material/Chip';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import "./create_profile.css"
 import {auth, db} from "./firebase.jsx";
-import { getDatabase, ref, push, get, child, set } from "firebase/database";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getDatabase, ref, get, child, set } from "firebase/database";
 
 function profileAdd(x, y) {
   const dbRef = ref(getDatabase());
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
       if (snapshot.exists()) {
-          const classID = Object.values(snapshot.val());
+          classID = Object.values(snapshot.val());
           set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID), null)
           set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID + "/profile1/"), x)
           set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID + "/profile2/"), y)
@@ -22,6 +19,7 @@ function profileAdd(x, y) {
 
 var taglist = [];
 var taglist1 = [];
+var classID = "";
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
@@ -132,6 +130,7 @@ export default function Profile() {
               // console.log(taglist)
               profileAdd(taglist, taglist1)
               }>Submit</button>
+        <button onClick={()=>{window.location.href = "/quizinfo/"+classID+'/1'}}></button>
         </div>
     )
 }

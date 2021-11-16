@@ -1,10 +1,9 @@
-import React, { useEffect, useState, Link } from 'react'
-import Navbar from './navbar.jsx'
+import React, { useEffect, useState } from 'react'
 import {auth, db} from "./firebase.jsx";
-import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import { getDatabase, ref, push, get, child } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import './start_team_building.css';
-import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
+// import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 
 //* handleCourseClick - go to quiz session when the course 'open' button is clicked.
 function handleCourseClick(course){
@@ -34,7 +33,7 @@ function UserIdentification(){
         console.log("identified ", uid, username);
       }
     });
-  }, [])
+  }, [uid, username])
 
   return (
     <GetCourseList uid={uid} username={username} />
@@ -54,7 +53,7 @@ function GetCourseList({ uid, username }){
     const dbRef = ref(getDatabase());
     const route = '/users/' + uid + '/' + username + '/class/';
     get(child(dbRef, route)).then((snapshot) => {
-      if(snapshot.exists() && courseObjects == 'loading...'){
+      if(snapshot.exists() && courseObjects === 'loading...'){
         const courseid = Object.keys(snapshot.val());
         
         get(child(dbRef, '/classes/')).then((s)=> {

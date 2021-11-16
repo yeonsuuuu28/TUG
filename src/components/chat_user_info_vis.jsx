@@ -1,9 +1,9 @@
 import React from 'react'
-import {
-    useRef,
-    useState,
-    useEffect
-} from 'react';
+// import {
+//     useRef,
+//     useState,
+//     useEffect
+// } from 'react';
 
 // yarn add @nivo/core @nivo/bar
 import { ResponsiveBar } from '@nivo/bar'

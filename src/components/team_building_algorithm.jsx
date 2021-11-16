@@ -1,5 +1,5 @@
-import { auth, db } from "./firebase.jsx";
-import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import { db } from "./firebase.jsx";
+import { getDatabase, ref, get, child, set } from "firebase/database";
 import kmeans from './kmeans.jsx';
 
 //* calculateRandomParameter
@@ -13,22 +13,22 @@ function calculateRandomParameter(fun_scores){
 //* PCA
 /// input: dataset - dataset is a two-dimensional array where rows represent the samples and columns the features
 /// output: dataset after PCA dimension reduction
-function PCA(dataset) {
-  const { PCA } = require('ml-pca');
-  const a = [[0,0,0,0,0], [1,1,1,1,1], [20,20,20,20,20], [23,23,23,23,23]];
-  const b = a[0].map((_, colIndex) => a.map(row => row[colIndex])); // transpose
+// function PCA(dataset) {
+//   const { PCA } = require('ml-pca');
+//   const a = [[0,0,0,0,0], [1,1,1,1,1], [20,20,20,20,20], [23,23,23,23,23]];
+//   const b = a[0].map((_, colIndex) => a.map(row => row[colIndex])); // transpose
 
-  const pca = new PCA(a);
+//   const pca = new PCA(a);
   // const pca = new PCA(dataset);
   // console.log("hello", pca.getExplainedVariance());
-  console.log(pca);
+  // console.log(pca);
   // const newPoints = [
   //   [4.9, 3.2, 1.2, 0.4],
   //   [5.4, 3.3, 1.4, 0.9],
   // ];
   // console.log('nice', pca.predict(newPoints)); // project new points into the PCA space
-  return pca.U.data;
-}
+//   return pca.U.data;
+// }
 
 //* importance
 /// input: s - snapshot of db of the .../(userid)/essen_questions/

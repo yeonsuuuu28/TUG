@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
-import { getDatabase, ref, push, get, child, set } from "firebase/database";
+import { getDatabase, ref, get, child, set } from "firebase/database";
 import LOGO from "../images/LOGO.PNG"
 import Voting from './voting.jsx';
-import { isImportEqualsDeclaration } from 'typescript';
+// import { isImportEqualsDeclaration } from 'typescript';
 
 //* handleAnswerClick: event handler when the answer button is clicked
 /// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button, fun - true if the round>=2
@@ -68,7 +68,7 @@ function GetAnswers({course, id, fun}){
   else{
     let flip = false;
     const answerTexts = shuffle(essenAcandidates[id].answers).map(x => {// shuffle: randomize the order of buttons
-      if(x.score == 2) flip = true; // set flip
+      if(x.score === 2) flip = true; // set flip
       return(
         <div>
           {x.answer}
@@ -103,7 +103,7 @@ function GetRandomFunQuestions({course, round, number}){
   get(child(dbRef, route)).then((snapshot) => {
     if(snapshot.exists()) {
       const history = Object.values(snapshot.val());
-      if(questions.length == 0){
+      if(questions.length === 0){
         setQuestions(history.slice(Math.min((round-2) * number, N), Math.min((round-1) * number, N)));
       }
     }
@@ -115,7 +115,7 @@ function GetRandomFunQuestions({course, round, number}){
       randArr.sort();
       const history = randArr.map(x => x[1]);
       set(ref(db, route), history);
-      if(questions.length == 0){
+      if(questions.length === 0){
         setQuestions(history.slice(Math.min((round-2) * number, N), Math.min((round-1) * number, N)));
       }
     }
@@ -174,14 +174,14 @@ function handleDoneClick(course, round, funNumber){
   get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
     set(ref(db, route + 'essen_questions/done/'), "no");
     const answeredquestions = Object.keys(snapshot.val());
-    if(snapshot.exists() && answeredquestions.length - 1 == essenQcandidates.length) {
+    if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
       set(ref(db, route + 'essen_questions/done/'), "yes");
-      if(round == 1) { /// done
+      if(round === 1) { /// done
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }
     }
     else{
-      if(round == 1) alert("not done"); //TODO
+      if(round === 1) alert("not done"); //TODO
     }
   });
 
@@ -190,15 +190,15 @@ function handleDoneClick(course, round, funNumber){
     get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
       set(ref(db, route + 'fun_questions/done/'), "no");
       const answeredquestions = Object.keys(snapshot.val());
-      if(snapshot.exists() && answeredquestions.length - 1 == Math.min(funNumber*(round - 1), funQcandidates.length)) {
+      if(snapshot.exists() && answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length)) {
         set(ref(db, route + 'fun_questions/done/'), "yes");
-        console.log("What: ",answeredquestions.length - 1 == Math.min(funNumber*(round - 1), funQcandidates.length));
+        console.log("What: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
         
         /// done
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }
       else{
-        console.log("Whatf: ",answeredquestions.length - 1 == Math.min(funNumber*(round - 1), funQcandidates.length));
+        console.log("Whatf: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
 
         alert("not done"); //TODO
       }

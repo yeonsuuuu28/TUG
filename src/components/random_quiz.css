@@ -26,3 +26,9 @@ button .importance_check {
   background-color: white;
   color: black;
 }
+
+.quiz_question_table {
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+}

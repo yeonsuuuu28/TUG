@@ -3,8 +3,19 @@ import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
-import LOGO from "../images/LOGO.PNG"
+import Checkbox from '@mui/material/Checkbox';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import FlagIcon from '@mui/icons-material/Flag';
+import Navbar from "./navbar_quiz.jsx";
 import Voting from './voting.jsx';
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
+
 // import { isImportEqualsDeclaration } from 'typescript';
 
 //* handleAnswerClick: event handler when the answer button is clicked
@@ -77,7 +88,8 @@ function GetAnswers({course, id, fun}){
     });
     const scorearr = flip ? [2, 1, 0, -1, -2] : [-2, -1, 0, 1, 2];
     const answerButtons = scorearr.map(score => // shuffle: randomize the order of buttons
-      <button key={score} className="answer" onClick = {() => handleAnswerClick(course, id, score, fun)}></button>
+      <Checkbox {...label} icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} onClick = {() => handleAnswerClick(course, id, score, fun)} />
+      // <button key={score} className="answer" onClick = {() => handleAnswerClick(course, id, score, fun)}></button>
     );
 
     return(
@@ -148,11 +160,20 @@ function GetEssentialQuestions({course}){
   randArr.sort(); // randomly mix the essential questions
 
   const QAobjects = randArr.map(x => // list of the html object of each question and answer set (+ importance-check button. only exists in the first round for essential questions)
+    <div>
     <li className = "question" key = {x[1]}>
       <button onClick={() => handleImportanceClick(course, x[1])} className='importance_check'></button>
       {essenQcandidates[x[1]].question}
       <GetAnswers course = {course} id = {x[1]} fun = {false}/>
     </li>
+    <table className="quiz_question_table" style={{border: "1px solid black"}}>
+      <tr>
+        <td>
+        {essenQcandidates[x[1]].question}
+        </td>
+      </tr>
+    </table>
+    </div>
   );
 
   return (
@@ -208,21 +229,6 @@ function handleDoneClick(course, round, funNumber){
 
 
 
-//* Titlebar
-function Titlebar({title}){
-  return(
-    <div className = "nav_bar">
-      <ul>
-          <li>{title}</li>
-          <ul style={{float: "left"}}>
-              <a href="/"><img src={LOGO} alt = "" className='logo'/></a>
-              <li><a href="/" className = "title">TUG</a></li>
-          </ul>
-      </ul>
-    </div>
-  )
-}
-
 //* Quiz - '/quiz/:course/:round' page
 function Quiz(props) {
   const course = props.match.params.course; //TODO if the user is not joined in this course or already finished building team, go to the main page or start_quiz page
@@ -242,7 +248,7 @@ function Quiz(props) {
 
   return(
     <div>
-      <Titlebar title="Quiz Time" />
+      <Navbar />
       <QAlist />
       <button onClick={() => handleDoneClick(course, round, funNumber)}>Done</button>
     </div>
@@ -250,4 +256,3 @@ function Quiz(props) {
 };
 
 export default Quiz;
-export { Titlebar };

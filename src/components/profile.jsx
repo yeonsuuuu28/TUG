@@ -52,6 +52,10 @@ user_credit() {
           this.setState({level: 5});
         }
       }
+      else {
+        this.setState({picture: PROFILE1});
+        this.setState({level: 1});
+      }
   }) ;
 }
 

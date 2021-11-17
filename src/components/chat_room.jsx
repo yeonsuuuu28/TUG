@@ -152,7 +152,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
             }
         });
         
-    }, [errorCode])
+    }, [])
     
     if (roomId > -1) {
         return (

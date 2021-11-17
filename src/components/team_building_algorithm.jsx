@@ -113,6 +113,7 @@ function team_building_algorithm(c, round, n) {
     teams.forEach((team, index) => {
       set(ref(db, route2 + index + '/users'), team);
     });
+    console.log(teams);
   });
 
   

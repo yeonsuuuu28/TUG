@@ -91,7 +91,7 @@ function ActiveTeams() {
             <div>
               {prof}
             </div>
-            <button onClick={(c, name) => <ActiveTeamInfo course={c} name={name} />}>go</button>
+            <button onClick={() => <ActiveTeamInfo course={c} name={name} />}>go</button>
           </div>);
         }));
       })

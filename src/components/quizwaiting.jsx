@@ -9,13 +9,19 @@ function QuizWaiting(props) {
   const round = props.match.params.round;
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/';
-  let totalStudents = 1;
   let rooms = 1;
   const [leftStudents, setLeftStudents] = useState('loading...');
 
   setTimeout(setInterval(getLeftStudents(), 10000), 5000);
   
   if(leftStudents[0] === '0'){
+    const totalStudents = leftStudents.split(' / ')[1];
+    if(totalStudents >= 11) rooms = Math.round(totalStudents/4); // 11~: [totalStudents/4] rooms
+    else if(totalStudents >= 6) rooms = Math.round(totalStudents/3); // ~3: 1 room, 4~7: 2 rooms, 8~10: 3 rooms
+    else if(totalStudents >= 4) rooms = Math.round(totalStudents/2);  
+    
+    // console.log("leftStudents", leftStudents.split(' / ')[1]);
+    // console.log("rooms: ", round, rooms);
     team_building_algorithm(course, round, rooms ); // TODO: should define n (the number of teams)
     window.location.href = "/chat/" + course + "/" + round;  /// goto chat page
   }
@@ -25,10 +31,7 @@ function QuizWaiting(props) {
   /// set number of rooms to divide students
   function getLeftStudents() {
     get(child(dbRef, route)).then((s) => {
-      totalStudents = Object.keys(s.val()).length;
-      if(totalStudents >= 11) rooms = Math.round(totalStudents/4); // 11~: [totalStudents/4] rooms
-      else if(totalStudents >= 6) rooms = Math.round(totalStudents/3); // ~3: 1 room, 4~7: 2 rooms, 8~10: 3 rooms
-      else if(totalStudents >= 4) rooms = Math.round(totalStudents/2);  
+      const totalStudents = Object.keys(s.val()).length;
       let leftStudents = totalStudents;
       s.forEach((user) => {
         if(user.child('/essen_questions/done/').val() === 'yes') { // essential questions

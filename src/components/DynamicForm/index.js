@@ -49,7 +49,7 @@ export default class DynamicForm extends React.Component {
         let model = this.props.model; //get model from credit system 
         //console.log(model)
         let formUI = model.map((m) => {
-            console.log(m)
+            //console.log(m)
             let key = m.key;
             let type = m.type || "text";
             let props = m.props || {};

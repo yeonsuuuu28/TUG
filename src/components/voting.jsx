@@ -16,6 +16,7 @@ function handleVoting(vote, course, round){
      //TODO: store the current team in DB
     
     */
+   
     window.location.href = "/quizinfo/" + course + "/" + nextRound;
   }
 }

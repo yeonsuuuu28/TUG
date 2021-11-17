@@ -62,6 +62,7 @@ function team_building_algorithm(c, round, n) {
   let dataset = [];
 
   get(child(dbRef, route)).then((s) => {
+
     s.forEach((user) => {
       console.log("user: ", user.key)
       /// essential questions
@@ -110,10 +111,15 @@ function team_building_algorithm(c, round, n) {
 
     /// store into DB
     const route2 = '/classes/' + c + '/rooms/';
-    teams.forEach((team, index) => {
-      set(ref(db, route2 + index + '/users'), team);
-      set(ref(db, route2 + index + '/vote/total'), team.length);
-      set(ref(db, route2 + index + '/vote/accept'), 0);
+    get(child(dbRef, route2)).then((s) => {
+      if(s.child('/0/round/').val() != round) {
+        teams.forEach((team, index) => {
+          set(ref(db, route2 + index + '/users'), team);
+          set(ref(db, route2 + index + '/round'), round);
+          set(ref(db, route2 + index + '/vote/total'), team.length);
+          set(ref(db, route2 + index + '/vote/accept'), 0);
+        });
+      }
     });
   });
 

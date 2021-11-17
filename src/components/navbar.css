@@ -80,3 +80,16 @@ body {
 .pointer {
   cursor: pointer;
 }
+
+.navbar_quiztime {
+  display: block;
+  color: white;
+  background-color: #1b1e2e;
+  padding: 30px;
+  padding-right: 50px;
+  text-decoration: none;
+  text-align: center;
+  font-family: Lato;
+  font-size: 15pt;
+}
+

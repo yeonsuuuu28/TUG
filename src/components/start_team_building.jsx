@@ -15,7 +15,8 @@ function handleCourseClick(course){
             window.location.href = "/profile"
           }
           else {
-            alert("You are already building a team for another class") //TODO
+            alert("You are already building a team for " + Object.values(snapshot.val())[0] + "."
+            + "\nRedirecting to " + Object.values(snapshot.val())[0] + "...") //TODO
             window.location.href = "/profile"
           }
           // console.log(Object.values(snapshot.val()));

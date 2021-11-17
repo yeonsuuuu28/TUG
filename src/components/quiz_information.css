@@ -1,0 +1,52 @@
+.quiz_main_title {
+    font-family: "Lato", sans-serif;
+    font-weight: 1000;
+    font-size: 25pt;
+    color: black;
+    text-align: center;
+    margin-top: 100px;
+}
+.quiz_round_title {
+    font-family: "Lato", sans-serif;
+    font-weight: 1000;
+    font-size: 15pt;
+    color: black;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 35px;
+}
+
+.quiz_description_align {
+    text-align: center;
+}
+
+.quiz_description {
+    font-family: "Lato", sans-serif;
+    text-align: left;
+    display: inline-block;
+    font-size: 13pt;
+    line-height: 1.25;
+    letter-spacing: 0.5px;
+}
+
+.button3 {
+    /* position: absolute; */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    height: 45px;
+    margin-left: 43%;
+    margin-right: 43%;
+    margin-top: 40px;
+    width: 14%;
+    background: #1b1e2e;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+  }

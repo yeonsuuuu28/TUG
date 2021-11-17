@@ -511,16 +511,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     return (
         <div style={{ height: "100%"}}>
             <div className="column">
-                <button
-                    onClick={() => setPlotUserId("r0UNsRPIzGVO99ovbeiuilpTxIp2")}
-                    style={{ marginBottom: "1em"}}>
-                        show plot of cheryl
-                </button>
-                <button
-                    onClick={() => writeMessage( roomId, `${senderId} clicked me ${remoteMsgCnt.current++} times!`, remoteId )}
-                    style={{ marginBottom: "1em"}}>
-                        Let Moderator Speak
-                </button>
                 <div style={{ position: "relative", height: "530px" }}> 
                 <MainContainer>
                 <ChatContainer>

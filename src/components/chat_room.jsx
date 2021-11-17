@@ -230,7 +230,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
         // if sent by myself, sender = localSender = auth.currentUser.uid
         const db = getDatabase();
-        set(ref(db, `rooms/${roomId}/messages/${messageId}`), {
+        set(ref(db, `rooms/${classId}/${roomId}/messages/${messageId}`), {
           id: `${messageId}`,
           message: message,
           sender : sender
@@ -250,7 +250,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     function updateRoomInfo(roomId) {
         const db = getDatabase();
 
-        get(ref(db, `rooms/${roomId}/info`)).then((snapshot) => {
+        get(ref(db, `rooms/${classId}/${roomId}/info`)).then((snapshot) => {
 
             if (snapshot.exists()) {
                 const roomInfo = snapshot.val();
@@ -267,7 +267,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 
                 // must check again even if not finished on the server
                 if (roomInfo['chatFinished'] === false && timeLeft < 0) {
-                    set(ref(db, `rooms/${roomId}/info/chatFinished`), true);
+                    set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
                 }
             }
             
@@ -281,7 +281,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 setTimerMin(parseInt(secLeft.current / 60));
                 setTimerSec(parseInt(secLeft.current % 60));
                 
-                set(ref(db, `rooms/${roomId}/info`), {
+                set(ref(db, `rooms/${classId}/${roomId}/info`), {
                     initTime: nowTime,
                     chatFinished: false,
                 });
@@ -291,7 +291,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
     ///// real-time chat update /////
     
-    const route = `rooms/${roomId}/messages/`
+    const route = `rooms/${classId}/${roomId}/messages/`
     const [snapshots, loading, error] = useList(ref(db, route));
     const messages = snapshots.map(doc => doc.val())
     useEffect( () => {
@@ -384,7 +384,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     useEffect( () => {
         if (secLeft.current < 0){
             console.log("타임 아웃");
-            set(ref(db, `rooms/${roomId}/info/chatFinished`), true);
+            set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
             clearInterval(timerId.current);
         }
     }, [timerSec]);

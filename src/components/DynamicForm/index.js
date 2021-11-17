@@ -49,19 +49,20 @@ export default class DynamicForm extends React.Component {
         let model = this.props.model; //get model from credit system 
         //console.log(model)
         let formUI = model.map((m) => {
+            console.log(m)
             let key = m.key;
             let type = m.type || "text";
             let props = m.props || {};
             
             return(
-                <><div key={key} className="form-group">
-                        <td><label className="form-label"
-                            key={"l + m.key"}
+                <div key={key} className="form-group">
+                        <label className="form-label"
+                            key={"l" + m.key}
                             htmlFor={m.key}>
                             {m.label}
                         </label>
-                        </td>
-                        <td>
+                       
+                        
                             <input {...props}
                                 //reference all input element this.name, bla blla
                                 ref={(key) => { this[m.key] = key; } }
@@ -69,8 +70,8 @@ export default class DynamicForm extends React.Component {
                                 type={type}
                                 key={"i" + m.key}
                                 onChange={(e) => { this.onChange(e, key,m); } } />
-                        </td>
-                    </div></>
+                    
+                    </div>
 
                     
                     
@@ -85,7 +86,7 @@ export default class DynamicForm extends React.Component {
             <div className = {this.props.className}>
                 <h3>{title}</h3>
                 <h4> Remaining points to distribute: {this.state.count} </h4>
-                <h4>Submitting honest reviews will help you and other classmates in selecting a team mate with a good fit.</h4>
+                <h5>Submitting honest reviews will help you and other classmates in selecting a team mate with a good fit.</h5>
                 
                 <form className = "dynamic-form" onSubmit ={(e)=>{this.onSubmit(e)}}>
                     {this.renderForm()}

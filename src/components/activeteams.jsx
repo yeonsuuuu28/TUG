@@ -50,41 +50,34 @@ function ActiveTeamInfo({course, name}){
   
 }
 
-function ActiveClass(props){
-  console.log("activeclass:",props.course);
-  const c = props.course;
-  const dbRef = ref(getDatabase());
-  const [ret, setRet] = useState('loading...');
-  get(child(dbRef, '/classes/'+c+'/')).then((s)=> {
-    const name = s.child('/name/').val();
-    const prof =  s.child('/professor/').val();
-    if(ret === 'loading...'){
-      setRet(<div className = "activeclass" key={c+Math.random()}>
-        <div>
-          {name}
-        </div>
-        <div>
-          {prof}
-        </div>
-        <button onClick={(c, name) => <ActiveTeamInfo course={c} name={name} />}>go</button>
-      </div>);
-    }
-  });  
+// function ActiveClass(props){
+//   console.log("activeclass:",props.course);
+//   const c = props.course;
+//   const dbRef = ref(getDatabase());
+//   const [ret, setRet] = useState('loading...');
+//   get(child(dbRef, '/classes/'+c+'/')).then((s)=> {
+//     const name = s.child('/name/').val();
+//     const prof =  s.child('/professor/').val();
+//     if(ret === 'loading...'){
+//       setRet(<div className = "activeclass" key={c+Math.random()}>
+//         <div>
+//           {name}
+//         </div>
+//         <div>
+//           {prof}
+//         </div>
+//         <button onClick={(c, name) => <ActiveTeamInfo course={c} name={name} />}><i class="far fa-arrow-right"></i></button>
+//       </div>);
+//     }
+//   });  
 
   
-  return(
-    <div>
-      {ret}
-    </div> 
-  );
-}
-
-function handleClick(course, name){
-  console.log("sdkfsdlkfsf");
-  return(
-<ActiveTeamInfo course={course} name={name} /> 
-)
-}
+//   return(
+//     <div>
+//       {ret}
+//     </div> 
+//   );
+// }
 
 //* ActiveTeams - page '/activeteams',, component 'ActiveTeams' in mypage
 function ActiveTeams() {

@@ -6,8 +6,9 @@ import {
 } from 'react';
 
 import { auth, db } from "./firebase.jsx";
+
 import { getDatabase, ref, set, get } from "firebase/database";
-import { onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useList } from 'react-firebase-hooks/database';
 
 import Navbar from './navbar.jsx'
@@ -43,7 +44,7 @@ const GroupChatInterface = (props) => {
         <div>
             <Navbar />
             <div className="row">
-                <UserIdentification />
+                <UserIdentification classId={String(course)} chatRound={parseInt(round)} />
             </div>
         </div>
     )
@@ -51,22 +52,19 @@ const GroupChatInterface = (props) => {
 
 // identify the user and load RealChat component.
 function UserIdentification({classId, chatRound}){
+    const auth = getAuth();
     const [uid, setUid] = useState('');
     const [username, setUserName] = useState('');
     
-  
-    useEffect(() => {
-        // get uid and username from auth
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUid(String(auth.currentUser.uid));
-                setUserName(String(auth.currentUser.displayName));
-                console.log("Hello", auth.currentUser.uid, auth.currentUser.displayName);
-            }
-        });
-    }, [])
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUid(String(auth.currentUser.uid));
+            setUserName(String(auth.currentUser.displayName));
+            console.log("Hello", auth.currentUser.uid, auth.currentUser.displayName);
+        }
+    });
 
-    if (uid && username) {
+    if (uid.length * username.length > 0) {
         return (
             <RoomForSender classId={classId} senderId={uid} senderName={username} chatRound={chatRound}/>
         );
@@ -109,6 +107,8 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
         })
     }
 
+    console.log(`room for sender=${senderId} in ${classId}`)
+
     // run this once when creating the room
     useEffect(() => {
         // read room info for sender: classes/CS473/rooms/0/users/{idx:userId}
@@ -118,6 +118,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
                 snapshotRoom.forEach((snapshotChild) => {
                     const roomIdTemp = snapshotChild.key;
                     const snapshotUsers = snapshotChild.child("users");
+                    console.log(`looking at room ${roomIdTemp}`, senderId, snapshotUsers.val())
                     if (snapshotUsers.val().includes(senderId)) {
                         setRoomId(roomIdTemp);
                         updateAnonsIfNone(roomIdTemp, snapshotUsers.val());
@@ -510,16 +511,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     return (
         <div style={{ height: "100%"}}>
             <div className="column">
-                <button
-                    onClick={() => setPlotUserId("r0UNsRPIzGVO99ovbeiuilpTxIp2")}
-                    style={{ marginBottom: "1em"}}>
-                        show plot of cheryl
-                </button>
-                <button
-                    onClick={() => writeMessage( roomId, `${senderId} clicked me ${remoteMsgCnt.current++} times!`, remoteId )}
-                    style={{ marginBottom: "1em"}}>
-                        Let Moderator Speak
-                </button>
                 <div style={{ position: "relative", height: "530px" }}> 
                 <MainContainer>
                 <ChatContainer>

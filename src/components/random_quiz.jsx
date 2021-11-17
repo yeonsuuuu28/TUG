@@ -245,7 +245,6 @@ function Quiz(props) {
       <Titlebar title="Quiz Time" />
       <QAlist />
       <button onClick={() => handleDoneClick(course, round, funNumber)}>Done</button>
-      <Voting course={course} round={round} /> {/*//TODO erase later*/}
     </div>
   )
 };

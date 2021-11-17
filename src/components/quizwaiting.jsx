@@ -2,6 +2,7 @@ import { Titlebar } from "./random_quiz.jsx";
 import React, { useState } from 'react'
 import { getDatabase, ref, get, child } from "firebase/database";
 import team_building_algorithm from './team_building_algorithm';
+import Voting from "./voting.jsx";
 
 //* QuizWaiting - '/quizwaiting/:course/:round' page
 function QuizWaiting(props) {
@@ -23,6 +24,7 @@ function QuizWaiting(props) {
     // console.log("leftStudents", leftStudents.split(' / ')[1]);
     // console.log("rooms: ", round, rooms);
     team_building_algorithm(course, round, rooms ); // TODO: should define n (the number of teams)
+    return(<Voting course={course} round={round} />); //TODO: erase later
     window.location.href = "/chat/" + course + "/" + round;  /// goto chat page
   }
 

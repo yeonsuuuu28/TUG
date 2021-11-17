@@ -177,6 +177,7 @@ function handleDoneClick(course, round, funNumber){
     if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
       set(ref(db, route + 'essen_questions/done/'), "yes");
       if(round === 1) { /// done
+        console.log("hpapp");
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }
     }
@@ -193,7 +194,7 @@ function handleDoneClick(course, round, funNumber){
       if(snapshot.exists() && answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length)) {
         set(ref(db, route + 'fun_questions/done/'), "yes");
         console.log("What: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
-        
+
         /// done
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }

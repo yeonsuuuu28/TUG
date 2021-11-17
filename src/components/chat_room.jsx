@@ -410,11 +410,9 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     }, [plotUserId])
 
 
-    ///// moderator /////
+    ///// chat timer /////    
     
-    const secToRemind = [10, 20, 60, 120];
-    const maxChatSec = 120; // time to chat for each group (unit:s)
-    //const chatFinished = useRef(true);
+    const maxChatSec = 100; // time to chat for each group (unit:s)
     const secLeft = useRef(0); // time left to chat with group members (unit:s)
     const timerId = useRef(null);
     const [timerSec, setTimerSec] = useState(parseInt(maxChatSec / 60));
@@ -437,7 +435,76 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             clearInterval(timerId.current);
         }
     }, [timerSec]);
+
+
+    ///// global chat moderator /////
+
+    // sec left to send messages to all room members (ascending order)
+    const whenToRemind = [80, 70, 60, 10].sort((a,b) => b-a);
+    const reminders = [
+        "Chat with your potential group members. Click each chat bubble to see profiles of its author.",
+        "You have two minutes before voting!",
+        "One minute left! Share your last comments to people.",
+        "Ten seconds left! Get ready to vote!",
+    ]
+    const checkReminderFrom = useRef(0);
+    const newCheckReminderFrom = useRef(-1);
+
+    useEffect( () => {
+        /*get(ref(db, `rooms/${classId}/${roomId}/messages`)).then((snapshot) => {
+            snapshot.forEach((s) => {
+                const sender = s.val()['sender'];
+                const mid = parseInt(s.val()['id']);
+                if (sender === remoteId && idsToRemind.includes(mid)) {
+                    remindStep += 1;
+                }
+                setSkills(s.child(`class/${classId}/profile1`).val())
+                setHobbies(s.child(`class/${classId}/profile2`).val())
+
+                console.log(`skills of ${plotUserId} are`, skills)
+                console.log(`hobbies of ${plotUserId} are`,hobbies)
+            })
+        })*/
+        if (roomInitTime.current && roomInitTime.current > 0) {
+            let breakLoop = false;
+            newCheckReminderFrom.current = -1;
+
+            for (let i=checkReminderFrom.current; i<whenToRemind.length && !breakLoop; i++) {
+                
+                let sec = whenToRemind[i];
+                let mid = 1000 * (maxChatSec - sec) + roomInitTime.current;
+                let msg = reminders[i];
+                console.log(i, sec, mid, msg);
+
+                if (secLeft.current >= sec) {
+                    // not ready to send message
+                    breakLoop = true;
+                }
+                else {
+                    get(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`)).then((snapshot) => {
+                        // TODO: others could write message with same mid
+                        if (!snapshot.exists()) {
+                            set(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`), {
+                                id: `${mid}`,
+                                message: msg,
+                                sender : remoteId
+                            });
+                            
+                            newCheckReminderFrom.current = i;
+                        }
+                        
+                    })
+                }
+            }
+            
+            if (newCheckReminderFrom > 0) {
+                checkReminderFrom.current = newCheckReminderFrom;
+            }
+            
+        }
+
         
+    }, [timerSec]);
     
     
     return (

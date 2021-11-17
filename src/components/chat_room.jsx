@@ -77,7 +77,10 @@ function UserIdentification({classId, chatRound}){
 };
 
 function RoomForSender({classId, senderId, senderName, chatRound}){
-    // room of classId that contains senderId {-1: loading, -2: room distribution not made}
+    // error when reading room distribution {0: loading, 1: no classId in room distribution, 2: no room distribution}
+    const errorCode = useRef(0);
+
+    // room of classId that contains senderId {-1: loading or error, otherwise: found your room}
     const [roomId, setRoomId] = useState(-1);
 
     // userIds of group peers in the same room. used to generate random names
@@ -91,6 +94,19 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
             outs[uids[i]] = anons[i];
         }
         return outs;
+    }
+
+    
+    // reset finished chat room to prevent reusing it
+    const resetRoomIfDone = (roomId) => {
+        get(ref(db, `rooms/${classId}/${roomId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const finished = snapshot.child('info/chatFinished').val();
+                if (finished) {
+                    set(ref(db, `rooms/${classId}/${roomId}`), null);
+                }
+            }
+        })
     }
 
     // read global {uid: anonName} dictionary of this room, create one if not found
@@ -111,27 +127,29 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
 
     // run this once when creating the room
     useEffect(() => {
+
         // read room info for sender: classes/CS473/rooms/0/users/{idx:userId}
         get(ref(db, `classes/${classId}/rooms`)).then((snapshotRoom) => {
             if (snapshotRoom.exists()) {
+                // senderId is not assigned to any rooms
+                errorCode.current = 1;
+
                 // check every rooms in classId
                 snapshotRoom.forEach((snapshotChild) => {
                     const roomIdTemp = snapshotChild.key;
                     const snapshotUsers = snapshotChild.child("users");
-                    console.log(`looking at room ${roomIdTemp}`, senderId, snapshotUsers.val())
                     if (snapshotUsers.val().includes(senderId)) {
+                        console.log(`your room is ${roomIdTemp}`)
+                        errorCode.current = 0;
+                        resetRoomIfDone(roomIdTemp);
                         setRoomId(roomIdTemp);
                         updateAnonsIfNone(roomIdTemp, snapshotUsers.val());
                     }
                 })
-                if (roomId < 0) {
-                    // senderId is not assigned to any rooms
-                    setRoomId(-3);
-                }
             }
             else {
                 // room distribution is not created
-                setRoomId(-2);
+                errorCode.current = 2;
             }
         });
         
@@ -143,12 +161,12 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
         );
     }
     else {
-        if (roomId === -1) {
+        if (errorCode.current === 0) {
             return (
                 <div> Loading Room ... </div>
             );
         }
-        else if (roomId === -2) {
+        else if (errorCode.current === 1) {
             return (
                 <div>
                     <h1>Error</h1>
@@ -156,7 +174,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
                 </div>
             );
         }
-        else if (roomId === -3) {
+        else if (errorCode.current === 2) {
             return (
                 <div>
                     <h1>Error</h1>

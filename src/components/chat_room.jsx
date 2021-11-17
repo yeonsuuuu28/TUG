@@ -322,7 +322,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     function updateRoomInfo(roomId) {
         get(ref(db, `rooms/${classId}/${roomId}/info`)).then((snapshot) => {
 
-            if (snapshot.exists()) {
+            if (snapshot.exists() && snapshot.val()['chatFinished'] === false) {
                 const roomInfo = snapshot.val();
                 console.log(snapshot.val());
 

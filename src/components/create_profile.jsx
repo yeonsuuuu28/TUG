@@ -19,12 +19,12 @@ function profileAdd(x, y) {
           window.location.href = "/quizinfo/"+classID+'/1'
           }})}
 
-function setclassID() {
-  const dbRef = ref(getDatabase());
-  get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
-    classID = Object.values(snapshot.val());
-    console.log(classID);
-  })}
+// function setclassID() {
+//   const dbRef = ref(getDatabase());
+//   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
+//     classID = Object.values(snapshot.val());
+//     console.log(classID);
+//   })}
 
 var taglist = [];
 var taglist1 = [];

@@ -1,0 +1,23 @@
+.table_settingsetting {
+    /* width: calc(100vw - 200px); */
+    padding-left: 50px;
+    margin-left: 0;
+    margin-top: 20px;
+}
+
+.profile_info {
+    font-family: "Lato", sans-serif;
+    font-size: 12pt;
+    padding-left: 50px;
+}
+
+.profile_name {
+    font-size: 22pt;
+    font-weight: bold;
+    padding-bottom: 15px;
+}
+
+.level {
+    font-size: 13pt;
+    /* padding-top: 10px; */
+}

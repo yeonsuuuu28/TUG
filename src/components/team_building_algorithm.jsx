@@ -63,7 +63,7 @@ function team_building_algorithm(c, round, n) {
 
   get(child(dbRef, route)).then((s) => {
     s.forEach((user) => {
-      // console.log("user: ", user.key)
+      console.log("user: ", user.key)
       /// essential questions
       if(user.child('/essen_questions/done/').val() === 'yes') {
         user_list.push(user.key);

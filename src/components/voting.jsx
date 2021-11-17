@@ -13,7 +13,7 @@ function handleVoting(vote, course, round){
     /// store the current team in the DB goto quizinfo page of next round
     const nextRound = parseInt(round) + 1;
     // const route2 = '/classes/' + c + '/rooms/';
-    // teams.forEach((team, index) => {
+    // teams.forEach((team, index) => {//TODO
     //   set(ref(db, route2 + index + '/users'), team);
     // });
     // const dbRef = ref(getDatabase());

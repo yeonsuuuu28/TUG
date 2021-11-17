@@ -176,30 +176,29 @@ function handleDoneClick(course, round, funNumber){
     const answeredquestions = Object.keys(snapshot.val());
     if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
       set(ref(db, route + 'essen_questions/done/'), "yes");
-      if(round === 1) { /// done
-        console.log("hpapp");
+      console.log(course, round, route, round==1); 
+      if(round === '1') { /// done
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }
     }
     else{
-      if(round === 1) alert("not done"); //TODO
+      if(round === '1') alert("not done"); //TODO
     }
   });
 
   if(round > 1){ /// fun questions
-    // alert("yes"); // TODO: erase later
     get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
       set(ref(db, route + 'fun_questions/done/'), "no");
       const answeredquestions = Object.keys(snapshot.val());
       if(snapshot.exists() && answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length)) {
         set(ref(db, route + 'fun_questions/done/'), "yes");
-        console.log("What: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
+        // console.log("What: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
 
         /// done
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }
       else{
-        console.log("Whatf: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
+        // console.log("Whatf: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
 
         alert("not done"); //TODO
       }

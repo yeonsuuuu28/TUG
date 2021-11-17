@@ -41,7 +41,7 @@ const GroupChatInterface = (props) => {
     return (
         <div>
             <Navbar />
-            <div class="row">
+            <div className="row">
                 <UserIdentification />
             </div>
         </div>
@@ -394,7 +394,7 @@ const RealChat = ({ roomId, senderId, senderName, namePairs}) => {
     
     return (
         <div style={{ height: "100%"}}>
-            <div class="column">
+            <div className="column">
                 <button
                     onClick={() => getUserIdsInRoom("CS473", 0)}
                     style={{ marginBottom: "1em"}}>
@@ -447,7 +447,7 @@ const RealChat = ({ roomId, senderId, senderName, namePairs}) => {
                 </MainContainer>
                 </div>
             </div>        
-            <div class="column" style={{height: 200}} >
+            <div className="column" style={{height: 200}} >
                 {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>Click one of chat bubbles.</h1>}
                 {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>See credit history of the one who wrote it.</h1>}
                 {(plotUserId.length>0 && plotUserId !== remoteId) && <h1>Credits of { (plotUserId === remoteId) ? remoteId : namePairs[plotUserId] }</h1>}

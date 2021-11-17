@@ -11,7 +11,8 @@ function storeTeamInDB(course, userarr){
   get(child(dbRef, 'users/')).then((snapshot) => {
     if(snapshot.exists()) {
       const username = userarr.map(user => Object.keys(snapshot.child('/'+user+'/').val())[0]);
-      // console.log("username: ", username, userarr);
+      const emails = userarr.map((user, index) => snapshot.child('/'+user+'/'+username[index] + '/email/').val());
+      // console.log("emails: ", username, userarr, emails);
       userarr.forEach((user,index) => {
         // const username = Object.keys(snapshot.child('/'+user+'/').val())[0];
         // console.log("lastpang: ", Object.keys(snapshot.child('/'+user+'/').val()));
@@ -22,14 +23,18 @@ function storeTeamInDB(course, userarr){
         const username2 = username.slice();
         username2.splice(index - username.length, 1);
         username2.splice(0,0,username[index]);
-        // console.log("data: ", userarr2, userarr2, username, username2);
+        const emails2 = emails.slice();
+        emails2.splice(index - emails.length, 1);
+        emails2.splice(0,0,emails[index]);
+                // console.log("data: ", userarr2, userarr2, username, username2);
         const data2 = userarr2.map((user, i) => {
           return({
             name: username2[i],
-            id: user
+            id: user,
+            email: emails2[i]
           })
         })
-        // console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/");
+        console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/", data2);
         set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"), data2); /// store current team in DB
         set(ref(db, 'classes/' + course + '/user/' + user + "/finished/"), 'yes');
       });
@@ -40,11 +45,11 @@ function storeTeamInDB(course, userarr){
 
 //* voteResult - return the html of the vote result and redirect to next page
 function voteResult(formed, course, round){
-  if(formed) { /// goto Active Team page
+  if(formed === true) { /// goto Active Team page
     alert("Your team is formed! ^V^\nmore than 2/3 of your teammates agreed to be in this team! :)");
     window.location.href = "/mypage";
   }
-  else{ /// store the current team in the DB goto quizinfo page of next round
+  else if(formed === false){ /// store the current team in the DB goto quizinfo page of next round
     if(alert("Less than 2/3 of your teammates agreed to be in this team :(\n Let's go to the next round! :)"));
     const nextRound = parseInt(round) + 1;
     window.location.href = "/quizinfo/" + course + "/" + nextRound;
@@ -68,8 +73,9 @@ function handleVoting(vote, course, round){
           storeTeamInDB(course, room.users);
           return voteResult(true, course, round);
         }
-        else if(!vote){
-          voteResult(false, course, round);
+        else if((curracceptance/total) < 2/3 && !vote){
+          // console.log("dkdk",curracceptance/total);
+          return voteResult(false, course, round);
         }
         else if(vote && room.users.includes(auth.currentUser.uid)) { /// +1 to room.vote.accept if user voted as 'true'
           set(ref(db, route + index + '/vote/accept/'), curracceptance + 1);
@@ -79,6 +85,7 @@ function handleVoting(vote, course, round){
             return voteResult(true, course, round);
           }
           else{
+            // console.log("d2222kdk",curracceptance/total);
             return voteResult(false, course, round);
           }
         }

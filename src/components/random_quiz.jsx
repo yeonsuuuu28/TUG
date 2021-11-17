@@ -225,7 +225,7 @@ function Titlebar({title}){
 
 //* Quiz - '/quiz/:course/:round' page
 function Quiz(props) {
-  const course = props.match.params.course; //TODO if the user is not joined in this course, go to the main page or start_quiz page
+  const course = props.match.params.course; //TODO if the user is not joined in this course or already finished building team, go to the main page or start_quiz page
   const round = props.match.params.round;
   let fun = false; // value 'false' only for the first round 
   if(round > 1) fun = true;  // set true at 2~ rounds

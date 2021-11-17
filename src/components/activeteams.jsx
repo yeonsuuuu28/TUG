@@ -18,9 +18,10 @@ function ActiveTeamInfo({course, name}){
             <td>{i.name}</td>
             <td>{i.email}</td>
           </tr>
-        )
+        );
       }));
-    }});
+    }
+  });
 
   if(onClick){ /// when the user clicked 'back' button
     return(

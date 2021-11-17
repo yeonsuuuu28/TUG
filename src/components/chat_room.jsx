@@ -78,7 +78,7 @@ function UserIdentification({classId, chatRound}){
 
 function RoomForSender({classId, senderId, senderName, chatRound}){
     // error when reading room distribution {0: loading, 1: no classId in room distribution, 2: no room distribution}
-    const errorCode = useRef(0);
+    const [errorCode, setErrorCode] = useState(0);
 
     // room of classId that contains senderId {-1: loading or error, otherwise: found your room}
     const [roomId, setRoomId] = useState(-1);
@@ -123,7 +123,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
         })
     }
 
-    console.log(`room for sender=${senderId} in ${classId}`)
+    console.log(`finding room for sender=${senderId} in ${classId}`)
 
     // run this once when creating the room
     useEffect(() => {
@@ -132,15 +132,14 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
         get(ref(db, `classes/${classId}/rooms`)).then((snapshotRoom) => {
             if (snapshotRoom.exists()) {
                 // senderId is not assigned to any rooms
-                errorCode.current = 1;
+                setErrorCode(1);
 
                 // check every rooms in classId
                 snapshotRoom.forEach((snapshotChild) => {
                     const roomIdTemp = snapshotChild.key;
                     const snapshotUsers = snapshotChild.child("users");
                     if (snapshotUsers.val().includes(senderId)) {
-                        console.log(`your room is ${roomIdTemp}`)
-                        errorCode.current = 0;
+                        setErrorCode(0);
                         resetRoomIfDone(roomIdTemp);
                         setRoomId(roomIdTemp);
                         updateAnonsIfNone(roomIdTemp, snapshotUsers.val());
@@ -149,11 +148,11 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
             }
             else {
                 // room distribution is not created
-                errorCode.current = 2;
+                setErrorCode(2);
             }
         });
         
-    }, [])
+    }, [errorCode])
     
     if (roomId > -1) {
         return (
@@ -161,12 +160,12 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
         );
     }
     else {
-        if (errorCode.current === 0) {
+        if (errorCode === 0) {
             return (
                 <div> Loading Room ... </div>
             );
         }
-        else if (errorCode.current === 1) {
+        else if (errorCode === 1) {
             return (
                 <div>
                     <h1>Error</h1>
@@ -174,7 +173,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
                 </div>
             );
         }
-        else if (errorCode.current === 2) {
+        else if (errorCode === 2) {
             return (
                 <div>
                     <h1>Error</h1>

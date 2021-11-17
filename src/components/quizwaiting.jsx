@@ -24,7 +24,6 @@ function QuizWaiting(props) {
     // console.log("leftStudents", leftStudents.split(' / ')[1]);
     // console.log("rooms: ", round, rooms);
     team_building_algorithm(course, round, rooms ); // TODO: should define n (the number of teams)
-    return(<Voting course={course} round={round} />); //TODO: erase later
     window.location.href = "/chat/" + course + "/" + round;  /// goto chat page
   }
 

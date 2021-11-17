@@ -12,21 +12,10 @@ function handleVoting(vote, course, round){
   else{
     /// store the current team in the DB goto quizinfo page of next round
     const nextRound = parseInt(round) + 1;
-    // const route2 = '/classes/' + c + '/rooms/';
-    // teams.forEach((team, index) => {//TODO
-    //   set(ref(db, route2 + index + '/users'), team);
-    // });
-    // const dbRef = ref(getDatabase());
-    // const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-    // get(child(dbRef, route)).then((snapshot) => {
-    //   if(snapshot.exists()) {
-    //       alert("Success!!!!");
-    //       set(ref(db, route + 'essen_questions/' + qnum + '/importance/'), "yes");
-    //   }
-    //   else{
-    //     alert("something is wrong"); // TODO go out to the main page
-    //   }
-    // });
+    /* 
+     //TODO: store the current team in DB
+    
+    */
     window.location.href = "/quizinfo/" + course + "/" + nextRound;
   }
 }

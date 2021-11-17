@@ -85,22 +85,33 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
     // userIds of group peers in the same room. used to generate random names
     const [anonNames, setAnonNames] = useState([]);
     
+    // returns {uid: anonName} dictionary
     const namePairs = (uids) => {
-        
         const anons = RandomNames(uids.length)
         let outs = {}
-
         for (let i=0; i<uids.length; i++) {
             outs[uids[i]] = anons[i];
         }
-
         return outs;
     }
 
-    useEffect(() => {
-        const db = getDatabase();
+    // read global {uid: anonName} dictionary of this room, create one if not found
+    const updateAnonsIfNone = (roomId, userList) => {
+        get(ref(db, `rooms/${classId}/${roomId}/anons`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                setAnonNames(snapshot.val());
+            }
+            else {
+                const pairs = namePairs(userList);
+                set(ref(db, `rooms/${classId}/${roomId}/anons`), pairs);
+                setAnonNames(pairs);
+            }
+        })
+    }
 
-        // classes/CS473/rooms/0/users/{idx:userId}
+    // run this once when creating the room
+    useEffect(() => {
+        // read room info for sender: classes/CS473/rooms/0/users/{idx:userId}
         get(ref(db, `classes/${classId}/rooms`)).then((snapshotRoom) => {
             if (snapshotRoom.exists()) {
                 // check every rooms in classId
@@ -109,7 +120,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
                     const snapshotUsers = snapshotChild.child("users");
                     if (snapshotUsers.val().includes(senderId)) {
                         setRoomId(roomIdTemp);
-                        setAnonNames(namePairs(snapshotUsers.val()));
+                        updateAnonsIfNone(roomIdTemp, snapshotUsers.val());
                     }
                 })
             }
@@ -131,8 +142,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
 
 // return list of (str) userId for roomId
 function getUserIdsInRoom(classId, roomId) {
-    const db = getDatabase();
-
+    
     // classes/CS473/rooms/0/users/{idx:userId}
     get(ref(db, `classes/${classId}/rooms/${roomId}/users`)).then((snapshot) => {
         if (snapshot.exists()) {
@@ -266,8 +276,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
     // write room info with no messages when initialized 
     function updateRoomInfo(roomId) {
-        const db = getDatabase();
-
         get(ref(db, `rooms/${classId}/${roomId}/info`)).then((snapshot) => {
 
             if (snapshot.exists()) {

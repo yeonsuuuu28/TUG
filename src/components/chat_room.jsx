@@ -77,7 +77,7 @@ function UserIdentification({classId, chatRound}){
 };
 
 function RoomForSender({classId, senderId, senderName, chatRound}){
-    // room of classId that contains senderId
+    // room of classId that contains senderId {-1: loading, -2: room distribution not made}
     const [roomId, setRoomId] = useState(-1);
 
     // userIds of group peers in the same room. used to generate random names
@@ -124,6 +124,14 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
                         updateAnonsIfNone(roomIdTemp, snapshotUsers.val());
                     }
                 })
+                if (roomId < 0) {
+                    // senderId is not assigned to any rooms
+                    setRoomId(-3);
+                }
+            }
+            else {
+                // room distribution is not created
+                setRoomId(-2);
             }
         });
         
@@ -135,9 +143,27 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
         );
     }
     else {
-        return (
-            <div> Loading Room... </div>
-        );
+        if (roomId === -1) {
+            return (
+                <div> Loading Room ... </div>
+            );
+        }
+        else if (roomId === -2) {
+            return (
+                <div>
+                    <h1>Error</h1>
+                    <p>Chat rooms are not distributed for {classId}.</p>
+                </div>
+            );
+        }
+        else if (roomId === -3) {
+            return (
+                <div>
+                    <h1>Error</h1>
+                    <p>You are not assigned to any room in {classId}.</p>
+                </div>
+            );
+        }
     }
 }
 
@@ -323,7 +349,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     const messages = snapshots.map(doc => doc.val())
     useEffect( () => {
         if (messages.length === 0) {
-            // TODO: start timer for this group
+            // timer starts for this group
             updateRoomInfo(roomId);
         }
         var emptyGroup = [];

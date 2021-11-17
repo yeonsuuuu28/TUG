@@ -121,7 +121,7 @@ export default function main(props) {
                     <br/>
                     Answer fun quiz questions from TUG!
                     <br/>
-                    We will find teammate candidates for you.
+                    Discover new possible teammate candidates.
                 </div>
             </SwiperSlide>
             <SwiperSlide>

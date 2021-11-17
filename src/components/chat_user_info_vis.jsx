@@ -9,7 +9,7 @@ import React from 'react'
 import { ResponsiveBar } from '@nivo/bar'
 
 
-const InfoVis = ({ data /* see data tab */ }) => (
+const CreditPlot = ({ data /* see data tab */ }) => (
     
     <ResponsiveBar
         data={data}
@@ -106,4 +106,4 @@ const InfoVis = ({ data /* see data tab */ }) => (
     />
 )
 
-export default InfoVis
+export default CreditPlot

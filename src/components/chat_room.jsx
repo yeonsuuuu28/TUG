@@ -12,6 +12,7 @@ import { useList } from 'react-firebase-hooks/database';
 
 import Navbar from './navbar.jsx'
 import InfoVis from './chat_user_info_vis.jsx'
+import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
 
 import './chat_room.css'
@@ -42,14 +43,14 @@ const GroupChatInterface = (props) => {
         <div>
             <Navbar />
             <div class="row">
-                <UserIdentification />
+                <UserIdentification classId={course} chatRound={round} />
             </div>
         </div>
     )
 }
 
 // identify the user and load RealChat component.
-function UserIdentification(){
+function UserIdentification({classId, chatRound}){
     const [uid, setUid] = useState('');
     const [username, setUserName] = useState('');
     
@@ -67,7 +68,7 @@ function UserIdentification(){
 
     if (uid && username) {
         return (
-            <RoomForSender classId={"CS473"} senderId={uid} senderName={username}/>
+            <RoomForSender classId={classId} senderId={uid} senderName={username} chatRound={chatRound}/>
         );
     }
     else {
@@ -77,7 +78,7 @@ function UserIdentification(){
     }    
 };
 
-function RoomForSender({classId, senderId, senderName}){
+function RoomForSender({classId, senderId, senderName, chatRound}){
     // room of classId that contains senderId
     const [roomId, setRoomId] = useState(-1);
 
@@ -118,7 +119,7 @@ function RoomForSender({classId, senderId, senderName}){
     
     if (roomId > -1) {
         return (
-            <RealChat roomId={roomId} senderId={senderId} senderName={senderName} namePairs={anonNames}/>
+            <RealChat classId={classId} roomId={roomId} senderId={senderId} senderName={senderName} namePairs={anonNames} chatRound={chatRound}/>
         );
     }
     else {
@@ -147,10 +148,8 @@ function getUserIdsInRoom(classId, roomId) {
     });
 }
 
-const RealChat = ({ roomId, senderId, senderName, namePairs}) => {
-    
-    // TODO: dynamic roomId from classId and senderId
-    // const roomId = 0;
+const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}) => {
+    // TODO: use classId, chatRound. luclily, no local variables have same name with these
 
     ///// chat interface /////
 
@@ -448,6 +447,7 @@ const RealChat = ({ roomId, senderId, senderName, namePairs}) => {
                 </div>
             </div>        
             <div class="column" style={{height: 200}} >
+                {(timerSec<=0 && timerMin<=0) && <Voting course={classId} round={chatRound}/> }
                 {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>Click one of chat bubbles.</h1>}
                 {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>See credit history of the one who wrote it.</h1>}
                 {(plotUserId.length>0 && plotUserId !== remoteId) && <h1>Credits of { (plotUserId === remoteId) ? remoteId : namePairs[plotUserId] }</h1>}

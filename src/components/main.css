@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'LEMON MILK';
   font-style: normal;
-  font-weight: normal;
-  src: url("../fonts/LemonMilk.otf") format('truetype')
+  font-weight: 500;
+  src: url("../fonts/LemonMilkbold.otf") format('truetype')
 }
 
 :root {

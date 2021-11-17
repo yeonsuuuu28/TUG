@@ -1,5 +1,5 @@
 .table_settingsetting {
-    /* width: calc(100vw - 200px); */
+    width: calc(100vw - 200px);
     padding-left: 50px;
     margin-left: 0;
     margin-top: 20px;
@@ -20,4 +20,24 @@
 .level {
     font-size: 13pt;
     /* padding-top: 10px; */
+}
+
+.levels_nubjuk {
+    /* margin-top: 5px; */
+    margin-bottom: 7px;
+    margin-left: 20px;
+}
+
+.levels_nubjuk1 {
+    /* margin-top: 5px; */
+    /* margin-bottom: 7px; */
+    margin-left: 20px;
+}
+
+.level_description {
+    text-align: left;
+    font-family: "Lato", sans-serif;
+    font-size: 9pt;
+    padding-left: 10px;
+    padding-bottom: 10px;
 }

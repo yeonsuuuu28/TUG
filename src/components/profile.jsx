@@ -83,7 +83,51 @@ user_credit() {
                   <div className="level">You are <b>level {this.state.level}</b> Nubjuki!</div>
                 </td>
                 <td style={{borderLeft: "1px solid black", height: "calc(100vh - 175px)"}}>
-                  
+                  <tr>
+                    <td>
+                    <img src = {PROFILE1} alt="" style={{height:"70px", width:"auto", border:"1px solid black"}} className="levels_nubjuk"/>
+                    </td>
+                    <td className="level_description">
+                      <b>Level 1</b><br/>
+                      Newcomer
+                    </td>
+                  </tr>                
+                  <tr>
+                    <td>
+                    <img src = {PROFILE2} alt="" style={{height:"70px", width:"auto", border:"1px solid black"}} className="levels_nubjuk"/>
+                    </td>
+                    <td className="level_description">
+                      <b>Level 2</b><br/>
+                      Hard-Worker
+                    </td>
+                  </tr>       
+                  <tr>
+                    <td>
+                    <img src = {PROFILE3} alt="" style={{height:"70px", width:"auto", border:"1px solid black"}} className="levels_nubjuk"/>
+                    </td>
+                    <td className="level_description">
+                      <b>Level 3</b><br/>
+                      Average Worker
+                    </td>
+                  </tr>       
+                  <tr>
+                    <td>
+                    <img src = {PROFILE4} alt="" style={{height:"70px", width:"auto", border:"1px solid black"}} className="levels_nubjuk"/>
+                    </td>
+                    <td className="level_description">
+                      <b>Level 4</b><br/>
+                      Proficient Worker
+                    </td>
+                  </tr>       
+                  <tr>
+                    <td>
+                    <img src = {PROFILE5} alt="" style={{height:"70px", width:"auto", border:"1px solid black"}} className="levels_nubjuk1"/>
+                    </td>
+                    <td className="level_description">
+                      <b>Level 5</b><br/>
+                      Teamwork Master
+                    </td>
+                  </tr>       
                 </td>
               </tr>
               

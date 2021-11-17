@@ -11,7 +11,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useList } from 'react-firebase-hooks/database';
 
 import Navbar from './navbar.jsx'
-import InfoVis from './chat_user_info_vis.jsx'
+import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
 
@@ -148,8 +148,26 @@ function getUserIdsInRoom(classId, roomId) {
     });
 }
 
+const ProfileTags = ({skills, hobbies}) => {
+    if (skills.length * hobbies.length > 0) {
+        return (
+            <div>
+                {<h3>Skills</h3>}
+                {skills.map(tag => `#${tag}\t`)}
+                {<h3>Hobbies</h3>}
+                {hobbies.map(tag => `#${tag}\t`)}
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>Illegal Request of Profiles</div>
+        )
+    }
+}
+
 const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}) => {
-    // TODO: use classId, chatRound. luclily, no local variables have same name with these
+    // TODO: use chatRound. luclily, no local variables have same name with these
 
     ///// chat interface /////
 
@@ -311,9 +329,10 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     const [plotUserId, setPlotUserId] = useState('');
     const [plotData, setPlotData] = useState([]);
     
+    // update for each click
     useEffect(() => {
-        if (plotUserId.length > 0) {
-            const db = getDatabase();
+        if (plotUserId.length > 0 && plotUserId !== remoteId) {
+
             let outData = [];
             
             // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수
@@ -361,6 +380,28 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     }, [plotUserId])
 
 
+    //// real-time profile update /////
+    const [skills, setSkills] = useState([]);
+    const [hobbies, setHobbies] = useState([]);
+
+    // update for each click
+    useEffect(()=>{
+        if (plotUserId.length > 0 && plotUserId !== remoteId) {
+            
+            // read tag array: users/${userId}/${userName}/class/${classId}/profile1
+            get(ref(db, `users/${plotUserId}`)).then((snapshot) => {
+                snapshot.forEach((s) => {
+                    setSkills(s.child(`class/${classId}/profile1`).val())
+                    setHobbies(s.child(`class/${classId}/profile2`).val())
+
+                    console.log(`skills of ${plotUserId} are`, skills)
+                    console.log(`hobbies of ${plotUserId} are`,hobbies)
+                })
+            })
+        }
+    }, [plotUserId])
+
+
     ///// moderator /////
     
     const secToRemind = [10, 20, 60, 120];
@@ -394,11 +435,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     return (
         <div style={{ height: "100%"}}>
             <div class="column">
-                <button
-                    onClick={() => getUserIdsInRoom("CS473", 0)}
-                    style={{ marginBottom: "1em"}}>
-                        getUserIdsInRoom(CS473, 0)
-                </button>
                 <button
                     onClick={() => setPlotUserId("r0UNsRPIzGVO99ovbeiuilpTxIp2")}
                     style={{ marginBottom: "1em"}}>
@@ -445,20 +481,29 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 </ChatContainer>
                 </MainContainer>
                 </div>
-            </div>        
+            </div>
+            
             <div class="column" style={{height: 200}} >
-                {(timerSec<=0 && timerMin<=0) && <Voting course={classId} round={chatRound}/> }
-                {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>Click one of chat bubbles.</h1>}
-                {(plotUserId.length<=0 || plotUserId === remoteId) && <h1>See credit history of the one who wrote it.</h1>}
-                {(plotUserId.length>0 && plotUserId !== remoteId) && <h1>Credits of { (plotUserId === remoteId) ? remoteId : namePairs[plotUserId] }</h1>}
-                {plotUserId !== remoteId && plotData.length > 0 && <InfoVis data={plotData}/>}
-                {plotUserId !== remoteId && plotData.length <= 0 && <h2>no history found</h2>}
+                {(timerSec<=0 && timerMin<=0) &&
+                    <Voting course={classId} round={chatRound}/>
+                }
+                {(timerSec>0 || timerMin>0) && 
+                    ((plotUserId.length<=0 || plotUserId === remoteId) && 
+                        <h1>Click one of chat bubbles to see profile.</h1>)
+                }
+                {(timerSec>0 || timerMin>0) && 
+                    (plotUserId.length>0 && plotUserId !== remoteId) && 
+                    <div>
+                        <h1>{namePairs[plotUserId]}</h1> 
+                        <ProfileTags skills={skills} hobbies={hobbies} />
+                        {(plotData.length > 0 && <CreditPlot data={plotData}/>) ||
+                        (plotData.length <= 0 && <h2>no history found</h2>)}
+                    </div>
+                }
             </div>
         </div>
     )
 };
 
 
-
-// export default Chat
 export default GroupChatInterface

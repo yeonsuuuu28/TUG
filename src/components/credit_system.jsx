@@ -23,21 +23,19 @@ const ReadDB = ({ params }) => {
   // const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
   const [tnames,setTnames] = useState([]);
+  // const [invert,setInvert] = useState([])
 
-  const onPush = (e) => {
+
+
+  const onPush = async(model) => {
     const auth = getAuth();
     const dbRef = ref(getDatabase());
 
-    get(child(dbRef, "users")).then((snapshot) => {
+    get(child(dbRef, "/users")).then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val())
         setUserIds(snapshot.val());
 
-        //get all users keys
-        //uid = Object.keys(.userids[0])
-        //name = Object.values(.userids[0])
-        //console.log(uid[0])
-        console.log(Object.keys(userids))
        
         //const tempName =  userids.map((x) => userids[x])
         //console.log(tempName)
@@ -46,17 +44,117 @@ const ReadDB = ({ params }) => {
         // const currentUser = "Yeonsu";
         console.log(userids)
         const tempName = Object.keys(userids) //all user ids in the system 
-        console.log(tnames)
+        //console.log(Object.values(userids))
         tempName.map((element) => {
-          //console.log(element) 
+          //userids[element] //displayname
+          //element  //hashname
+
+        //---------looks for the updated user in the db----------//
+          //checks if there is a pastteams under user
+          console.log(userids[element][Object.keys(userids[element])]) //print all users 
+
+          if("pastteams" in userids[element][Object.keys(userids[element])]){ //pastteams
+            //checks if there is a class id in user
+            //console.log(userids[element][Object.keys(userids[element])].pastteams)
+            if(classid in userids[element][Object.keys(userids[element])].pastteams ){ //class id CS 101
+              console.log(userids[element][Object.keys(userids[element])].pastteams[classid]) //array of all CS 101
+               //for loop?
+
+               userids[element][Object.keys(userids[element])].pastteams[classid].map((index)=>{
+                console.log(index)
+                
+               //names in pastteams that have data
+               if(Object.keys(index).includes("name")){
+                tnames.map((team) => {
+                  console.log(team)
+                  console.log(index.name)
+                  console.log(index.id)
+                  //if name of user is inside the class id, update the original user
+                  if (index.name === team){
+                    console.log("Yes")
+                    //get current value
+                    const target = "users/" +
+                    index.id +
+                    "/" +
+                    index.name +
+                    "/pastteams/" +
+                    classid +"/0"
+                    console.log("target:" + target)
+                    console.log("credits: " + model[index.name])
+                    get(child(dbRef,target)).then((snapshot) =>
+                    {
+                      if (snapshot.exists()) 
+                        console.log(snapshot.val().credits)
+                        set(
+                          ref(
+                            db,
+                            target
+                          ),
+                          {credits: Number(snapshot.val().credits) + Number(model[index.name])}
+                        );
+                    })
+                  }
+                  return(<></>);
+                }
+                )
+                console.log(index)
+               }
+              
+              //console.log(index.name,index.credit)
+               if(userids[element].toString() === [index.name].toString()){
+                 console.log("match")
+                 
+               }
+               return(<></>);
+             })
+              }
+            }
+              
+          
+          
+        
           tnames.map((team) => {
+
             if(Object.keys(userids[element]).toString() === [team].toString()){ //if userid == teammate name
-              console.log(Object.keys(userids[element]),[team])
+              console.log ("users/" +
+                    element +
+                    "/" +
+                    team +
+                    "/pastteams/" +
+                    classid +"/0")
+                //compute for user's credit 
+            //  console.log(userids[element][team].pastteams[classid][0])
+//set credit to some number
+              // set(
+              //   ref(
+              //     db,
+              //     "users/" +
+              //       element +
+              //       "/" +
+              //       team +
+              //       "/pastteams/" +
+              //       classid +"/0"
+              //   ),
+              //   {credits:10}
+              // );
+              
+              //console.log(Object.keys(userids[element]),[team])
+              //console.log(element)
+              element = "r0UNsRPIzGVO99ovbeiuilpTxIp2"
+              team = "Cheryl Siy"
+              get(child(dbRef, "/users")).then((snapshot) =>{ 
+                if(snapshot.exists()){
+                  //contains value of pastteams 
+                 // console.log(snapshot.val())
+
+                }
+                else{
+                  console.log("nodata")
+                }
+
+              })
               //update credits
-              //const updates = {};
-              //updates['/users/' + element +'/' + team + '/' + classid + '/0/credits'] = 10;
-              //set(ref(db), '/users/' + element +'/' + team + '/' + classid + '/0/credits',10);
-              return(<></>); 
+             
             }
             return(<></>);
           })
@@ -187,9 +285,9 @@ const ReadDB = ({ params }) => {
               ),
               [
                 { credits: "0" },
-                { name: "Uxer Ham", credit: "0" },
-                { name: "Yeon Su Park", credit: "0" },
-                { name: "조성혜", credit: "0" },
+                { name: "Uxer Ham", credit: "0", id:"bPNyFc0pLFaNa2EB3NaIMK0CVZC2" },
+                { name: "Yeon Su Park", credit: "0", id:"SbkyhYXe0iMEwKFMEQEQOW6dw273" },
+                { name: "함어진", credit: "0", id:"n1ArKxSwv9ZoGoNU5guajQ6Ftq63" },
               ]
             );
           }
@@ -235,24 +333,11 @@ const ReadDB = ({ params }) => {
   }, [pastteams]);
 
   const onSubmit = (model) => {
-    //alert(JSON.stringify(model[.pastteams[0][1].name])); // displays points allocated for 1st person
-
-    //debugging stuff
-    /*this.setState({
-            data:[model, ....data]
-        })
-        this.setState({
-            output:[model]
-        })
-       
-        alert(JSON.stringify(.output[0]));
-        console.log(.pastteams[0][3].credit)
-        */
-    //redirect
-    window.location.assign("./mypage");
+    //window.location.assign("./mypage");
 
     //write to db updated values
     //1.build items to be written in DB
+    onPush(model)
 
     update[0] = { credits: 0 };
 
@@ -262,6 +347,7 @@ const ReadDB = ({ params }) => {
         update[i] = {
           name: pastteams[0][i].name,
           credit: model[pastteams[0][i].name],
+          id:pastteams[0][i].id
         };
       }
     }
@@ -279,6 +365,8 @@ const ReadDB = ({ params }) => {
       ),
       update
     );
+    
+
 
     //update past average
 

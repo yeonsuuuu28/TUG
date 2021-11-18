@@ -67,23 +67,20 @@ function UserIdentification(){
 /// input: none
 /// output: <html> - set of courses
 function GetCourseList({ uid, username }){
-
   const [courseObjects, setCourseObjects] = useState('loading...');
   const [courseName, setCourseName] = useState([]);
   const [courseProf, setCourseProf] = useState([]);
 
-  if(uid && username) {
+  if (uid && username) {
     const dbRef = ref(getDatabase());
     const route = '/users/' + uid + '/' + username + '/class/';
     get(child(dbRef, route)).then((snapshot) => {
       if(snapshot.exists() && courseObjects === 'loading...'){
         const courseid = Object.keys(snapshot.val());
-        
         get(child(dbRef, '/classes/')).then((s)=> {
           if(s.exists()){
             setCourseName(courseid.map(id => s.child(id + '/name/').val()));
             setCourseProf(courseid.map(id => s.child(id + '/professor/').val()));  
-
             setCourseObjects((courseid).map((id, index) => 
               <li className = "course" key = {id}>
                 <ul>
@@ -97,9 +94,6 @@ function GetCourseList({ uid, username }){
                 </ul>
               </li>
             ));
-            // console.log(courseObjects);
-            // console.log(courseName, courseProf);
-
           }
           else{
             alert("no class"); //TODO
@@ -115,6 +109,75 @@ function GetCourseList({ uid, username }){
     </ul>
   )
 };
+
+function GetCourseList2({ uid, username }){
+  const [courseObjects, setCourseObjects] = useState('loading...');
+  const [courseName, setCourseName] = useState([]);
+  const [classList, setClassList] = useState([]);
+  const dbRef = ref(getDatabase());
+
+  
+  get(child(dbRef, "users/" + uid + "/" + username + "/class/")).then((snapshot => {
+      if(snapshot.exists() && courseObjects === 'loading...') {
+        //console.log(Object.keys(snapshot.val()))
+        setCourseName(Object.keys(snapshot.val()))
+        console.log(courseName)
+      }
+      // else{
+      //   alert("no class"); //TODO
+      // }
+    }))
+  
+
+  var temp = [];
+
+
+  return (
+    <div>
+    </div>
+  )
+}
+
+
+//   let table = [];
+  
+
+
+//     const route = '/users/' + uid + '/' + username + '/class/';
+//     get(child(dbRef, route)).then((snapshot) => {
+//       if(snapshot.exists() && courseObjects === 'loading...'){
+//         const courseid = Object.keys(snapshot.val());
+//         get(child(dbRef, '/classes/')).then((s)=> {
+//           if(s.exists()){
+//             setCourseName(courseid.map(id => s.child(id + '/name/').val()));
+//             setCourseProf(courseid.map(id => s.child(id + '/professor/').val()));  
+//             setCourseObjects((courseid).map((id, index) => 
+//               <li className = "course" key = {id}>
+//                 <ul>
+//                   <li className='coursedescription'>
+//                     <div className = "coursename">{id}: {courseName[index]}</div>
+//                     <div className='courseprof'>{courseProf[index]}</div>
+//                   </li>
+//                   <li>
+//                     <button onClick={() => handleCourseClick(id)} className='join_quiz'>Start</button> {/*//TODO Start only when it's ready to start quiz */}
+//                   </li>
+//                 </ul>
+//               </li>
+//             ));
+//           }
+//           else{
+//             alert("no class"); //TODO
+//           }
+//         });
+//       }
+//     });
+
+//   return(
+//     <ul id="course-list">
+//       {courseObjects}
+//     </ul>
+//   )
+// };
 
 const start_team_building = () => {
   return(

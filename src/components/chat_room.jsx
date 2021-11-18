@@ -16,7 +16,7 @@ import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
 
-import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+//import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import './chat_room.css'
 
 
@@ -624,7 +624,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         <div style={{ height: "100%"}}>
             <div className="column">
                 <div style={{ position: "relative", height: "530px" }}> 
-                <MainContainer style={styles}>
+                <MainContainer>
                 <ChatContainer>
                     <MessageList typingIndicator={(timerSec>0 || timerMin>0) && <TypingIndicator content={
                         (timerMin>0 ? `${timerMin} minute${timerMin<2 ? "" : "s"} ` : "") + `${timerSec} second${timerSec<2 ? "" : "s"} left!`}/>}>

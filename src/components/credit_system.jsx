@@ -20,8 +20,8 @@ const ReadDB = ({ params }) => {
   // ]);
   const [pastteams, setPastTeams] = useState([]);
   //const [userids, setUserIds] = useState([]);
-  const [localCredit, setLocalCredit] = useState();
-  const [localCount, setLocalCount] = useState(0);
+  // const [localCredit, setLocalCredit] = useState();
+  // const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
   const [tnames,setTnames] = useState([]);
   // const [invert,setInvert] = useState([])
@@ -49,6 +49,7 @@ const ReadDB = ({ params }) => {
         console.log(userids)
         const tempName = Object.keys(userids) //all user ids in the system 
         //console.log(Object.values(userids))
+        // eslint-disable-next-line array-callback-return
         tempName.map((element) => {
           //userids[element] //displayname
           //element  //hashname

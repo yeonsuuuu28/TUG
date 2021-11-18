@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {auth} from "./firebase.jsx";
-import { getDatabase, ref, get, child } from "firebase/database";
+import { set, getDatabase, ref, get, child } from "firebase/database";
 import PROFILE1 from "../images/Level1.png"
 import PROFILE2 from "../images/Level2.png"
 import PROFILE3 from "../images/Level3.png"
@@ -27,7 +27,7 @@ componentDidMount() {
 
 user_credit() {
   const dbRef = ref(getDatabase());
-  // set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 400);
+  // set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 300);
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/')).then((snapshot) => {
       if (snapshot.exists()) {
         this.setState({ credit: Object.values(snapshot.val()) });

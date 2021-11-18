@@ -15,7 +15,7 @@ import Navbar from './navbar.jsx'
 import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
-
+//import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import './chat_room.css'
 
 
@@ -23,7 +23,7 @@ import './chat_room.css'
 // https://chatscope.io/storybook/react/?path=/story/components-chatcontainer--live-controlled-example-with-grouped-messages
 // might use this one too https://github.com/chatscope/use-chat, https://github.com/chatscope/use-chat-example
 
-// import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+
 import {
   MainContainer,
   ChatContainer,

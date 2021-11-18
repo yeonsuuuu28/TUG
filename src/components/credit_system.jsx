@@ -305,6 +305,8 @@ const ReadDB = ({ params }) => {
 
     //write to db updated values
     //1.build items to be written in DB
+     //add 10 to total credit
+
 
     update[0] = { credits: 0, count: 0};
 

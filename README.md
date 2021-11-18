@@ -35,6 +35,7 @@ Our system is unique in the sense that it
 
 ## Task 3: Credit distribution session
 - **credit_system.jsx & credit.css:** main part of credit system
+- **Dynamic Form/index.js & form.css :** Dynamic Form component used in credit system
 
 ## My Page
 - **my_page.jsx:** my page tabs at the left side

@@ -8,6 +8,12 @@ Our system is unique in the sense that it
 3) promotes each users to gamble their chances where they accept the current team or take another chance, 
 4) provides information of each candidates through our distinctive credit system that is used to acknowledge their overall participation on group projects.
 
+## Quick Start
+*git clone this repository
+*npm install
+*npm start
+
+
 ## Main page & Navigation bar
 - **main_page.jsx & main.css:** main page
 - **navbar.jsx & navbar.css & navbar_copy.jsx:** navigation bar for the main page

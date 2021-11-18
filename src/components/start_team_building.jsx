@@ -12,30 +12,35 @@ function handleCourseClick(course){
       if (snapshot.exists()) {
           if (Object.values(snapshot.val())[0] === course) {
             get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + course)).then((snapshot) => {
+            if (Object.keys(snapshot.val())[0] === "profile1") {
+              alert("You are already building a team for " + course + "."
+              + "\nRedirecting to " + course + " quiz page...")
+              window.location.href = "/quizinfo/"+course+'/1';
+              }
+            else {
+              alert("You have not finished creating your profile for " + course + "."
+              + "\nRedirecting to " + course + " profile page...")
+              window.location.href = "/profile"
+              }});
+            }
+          else {
+              get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + course)).then((snapshot) => {
               if (Object.keys(snapshot.val())[0] === "profile1") {
                 alert("You are already building a team for " + course + "."
                 + "\nRedirecting to " + course + " quiz page...")
-                window.location.href = "/quizinfo/"+course+'/1';
-              }
+                window.location.href = "/quizinfo/"+ Object.keys(snapshot.val())[0] +'/1';
+                }
               else {
-                alert("You have not finished creating your profile for" + course + "."
+                alert("You have not finished creating your profile for " + course + "."
                 + "\nRedirecting to " + course + " profile page...")
                 window.location.href = "/profile"
+                }});
               }
-            });
           }
-          else {
-            alert("You are already building a team for " + Object.values(snapshot.val())[0] + "."
-            + "\nRedirecting to " + Object.values(snapshot.val())[0] + "...") //TODO
-            window.location.href = "/profile"
-          }}
-          // console.log(Object.values(snapshot.val()));
       else {
           push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/'), course)
           window.location.href = "/profile"
       }})
-      
-      // window.location.href = "/quizinfo/"+course+'/1'; //Make Profile First and Enter Quiz. 
 }
 
 //* UserIdentification - identify the user and load the GetCourseList component.

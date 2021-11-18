@@ -18,7 +18,7 @@ const ReadDB = ({ params }) => {
     { name: "조성혜", point: 0 },
   ]);
   const [pastteams, setPastTeams] = useState([]);
-  const [userids, setUserIds] = useState([]);
+  //const [userids, setUserIds] = useState([]);
   const [localCredit, setLocalCredit] = useState();
   const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
@@ -34,8 +34,10 @@ const ReadDB = ({ params }) => {
     get(child(dbRef, "/users")).then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val())
-        setUserIds(snapshot.val());
-
+        const userids = snapshot.val()
+        //setUserIds(snapshot.val());
+        console.log(userids)
+        //onsole.log(userdd)
        
         //console.log("current username: " + auth.currentUser.displayName)
         //console.log(userids)
@@ -54,7 +56,6 @@ const ReadDB = ({ params }) => {
             //console.log(userids[element][Object.keys(userids[element])].pastteams)
             if(classid in userids[element][Object.keys(userids[element])].pastteams ){ //class id CS 101
               console.log(userids[element][Object.keys(userids[element])].pastteams[classid]) //array of all CS 101
-               //for loop?
 
                userids[element][Object.keys(userids[element])].pastteams[classid].map((index)=>{
                 console.log(index)
@@ -78,15 +79,25 @@ const ReadDB = ({ params }) => {
                     console.log("credits: " + model[index.name])
                     get(child(dbRef,target)).then((snapshot) =>
                     {
-                      if (snapshot.exists()) 
-                        console.log(snapshot.val().credits)
+                      if (snapshot.exists()){ 
+                        console.log(snapshot.val())
                         set(
                           ref(
                             db,
                             target
                           ),
-                          {credits: Number(snapshot.val().credits) + Number(model[index.name])}
+                          {credits: (Number(snapshot.val().credits)*snapshot.val().count + Number(model[index.name]))/(snapshot.val().count +1), count: snapshot.val().count + 1}
                         );
+                          }
+                          else{
+                            //write fresh
+                            set(
+                              ref(
+                                db,
+                                target
+                              ),
+                              {credits: Number(model[index.name]), count:1} )
+                          }
                     })
                   }
                 }
@@ -102,54 +113,7 @@ const ReadDB = ({ params }) => {
               }
             }
               
-          
-          
         
-          tnames.map((team) => {
-
-            if(Object.keys(userids[element]).toString() === [team].toString()){ //if userid == teammate name
-              console.log ("users/" +
-                    element +
-                    "/" +
-                    team +
-                    "/pastteams/" +
-                    classid +"/0")
-                //compute for user's credit 
-            //  console.log(userids[element][team].pastteams[classid][0])
-//set credit to some number
-              // set(
-              //   ref(
-              //     db,
-              //     "users/" +
-              //       element +
-              //       "/" +
-              //       team +
-              //       "/pastteams/" +
-              //       classid +"/0"
-              //   ),
-              //   {credits:10}
-              // );
-              
-              //console.log(Object.keys(userids[element]),[team])
-              //console.log(element)
-              element = "r0UNsRPIzGVO99ovbeiuilpTxIp2"
-              team = "Cheryl Siy"
-              get(child(dbRef, "/users")).then((snapshot) =>{ 
-                if(snapshot.exists()){
-                  //contains value of pastteams 
-                 // console.log(snapshot.val())
-
-                }
-                else{
-                  console.log("nodata")
-                }
-
-              })
-              //update credits
-             
-            }
-            
-          })
          })
 
        
@@ -207,6 +171,7 @@ const ReadDB = ({ params }) => {
                     
                 }*/
       } else {
+        console.log("nodata")
       }
     });
   };
@@ -275,10 +240,10 @@ const ReadDB = ({ params }) => {
                   classid
               ),
               [
-                { credits: "0" },
+                { credits: 0, count:0 },
                 { name: "Uxer Ham", credit: "0", id:"bPNyFc0pLFaNa2EB3NaIMK0CVZC2" },
                 { name: "Yeon Su Park", credit: "0", id:"SbkyhYXe0iMEwKFMEQEQOW6dw273" },
-                { name: "함어진", credit: "0", id:"n1ArKxSwv9ZoGoNU5guajQ6Ftq63" },
+                { name: "Juan Mail", credit: "0", id:"Cjf0eQkTCOPYRs1Hud5P62HSWq53" },
               ]
             );
           }
@@ -328,9 +293,8 @@ const ReadDB = ({ params }) => {
 
     //write to db updated values
     //1.build items to be written in DB
-    onPush(model)
 
-    update[0] = { credits: 0 };
+    update[0] = { credits: 0, count: 0};
 
     for (const i in pastteams[0]) {
       
@@ -356,7 +320,9 @@ const ReadDB = ({ params }) => {
       ),
       update
     );
-    
+    onPush(model)
+    //onPush(model)
+
 
 
     //update past average

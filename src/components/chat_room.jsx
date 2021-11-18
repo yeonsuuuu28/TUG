@@ -15,7 +15,7 @@ import Navbar from './navbar.jsx'
 import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
-// import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import './chat_room.css'
 
 

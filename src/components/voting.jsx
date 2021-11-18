@@ -37,6 +37,7 @@ function storeTeamInDB(course, userarr){
         console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/", data2);
         set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"), data2); /// store current team in DB
         set(ref(db, 'classes/' + course + '/user/' + user + "/finished/"), 'yes');
+        set(ref(db, "users/" + user + '/' + username[index] + "/teambuilding/"), null);
       });
     }
   });

@@ -1,8 +1,10 @@
-import { Titlebar } from "./random_quiz.jsx";
+// import { Titlebar } from "./random_quiz.jsx";
+import Navbar from "./navbar_quiz.jsx";
 import React, { useState } from 'react'
 import { getDatabase, ref, get, child } from "firebase/database";
 import team_building_algorithm from './team_building_algorithm';
 import Voting from "./voting.jsx";
+import "./quizwaiting.css";
 
 //* QuizWaiting - '/quizwaiting/:course/:round' page
 function QuizWaiting(props) {
@@ -53,17 +55,19 @@ function QuizWaiting(props) {
 
   return(
     <div>
-      <Titlebar title="Quiz Time" />
-      <div>
+      <Navbar/>
+      <div className="waiting_main_title">
         Waiting for Other Students...
       </div>
-      <div>
-        Please wait for your peers to finish the quiz!
-        Round {round} will start soon. Who will be your first team?
-        We hope you could find your suitable teammates!
+      <div className="waiting_description_align">
+      <div className="waiting_description">
+        Please wait for your peers to finish the quiz!<br/>
+        Round {round} will start soon. Who will be your first team?<br/>
+        We hope you could find your suitable teammates!<br/>
       </div>
-      <div>
-        {leftStudents}
+      <div className="waiting_number">
+        <b>{leftStudents}</b>
+      </div>
       </div>
     </div>
   );

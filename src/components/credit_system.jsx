@@ -22,6 +22,7 @@ const ReadDB = ({ params }) => {
   const [localCredit, setLocalCredit] = useState();
   const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
+  const [tnames,setTnames] = useState([]);
 
   const onPush = (e) => {
     const auth = getAuth();
@@ -29,57 +30,88 @@ const ReadDB = ({ params }) => {
 
     get(child(dbRef, "users")).then((snapshot) => {
       if (snapshot.exists()) {
-        setUserIds([snapshot.val()]);
+        console.log(snapshot.val())
+        setUserIds(snapshot.val());
 
         //get all users keys
         //uid = Object.keys(.userids[0])
         //name = Object.values(.userids[0])
         //console.log(uid[0])
+        console.log(Object.keys(userids))
+       
+        //const tempName =  userids.map((x) => userids[x])
+        //console.log(tempName)
         var j = 0;
         console.log("current username: " + auth.currentUser.displayName);
         const currentUser = "Yeonsu";
-        for (const i in userids[0]) {
-          //for i in all user ids
-          //if user is credited:
-          //for (const j in tnames.lengt){}
-          console.log("tnames:" + tnames[j]);
-          console.log(Object.keys(userids[0][i]));
-          if (Object.keys(userids[0][i]) === tnames[j]) {
-            console.log("Success");
-            console.log("tnames:" + tnames[j]);
-            console.log(Object.keys(userids[0][i]));
-          }
-          //console.log(i) //uid
-          //console.log(Object.keys(.userids[0][i])) //displaynames
-          get(
-            child(dbRef, "users/" + i + "/" + Object.keys(userids[0][i]))
-          ).then((snapshot) => {
-            if (snapshot.exists()) {
-              console.log(snapshot.val().pastteams);
-
-              for (const i in snapshot.val().pastteams) {
-                //all items in pastteams[classid]
-                for (const j in snapshot.val().pastteams[i]) {
-                  if (snapshot.val().pastteams[i][j]) {
-                    console.log(snapshot.val().pastteams[i][j]); //pastteams[classid][index]
-                    if (snapshot.val().pastteams[i][j].name === currentUser) {
-                      setLocalCredit(
-                        Number(localCredit) +
-                          Number(snapshot.val().pastteams[i][j].credit)
-                      );
-                      setLocalCount((prevCount) => prevCount + 1);
-                    }
-                    //if(snapshot.val().pastteams[i][1].name === "Auejin"){
-                    //    console.log(snapshot.val().pastteams[i][1].credit)
-                    // }
-                  }
-                }
-              }
-            } else {
+        console.log(userids)
+        const tempName = Object.keys(userids) //all user ids in the system 
+        console.log(tnames)
+        tempName.map((element) => {
+          //console.log(element) 
+          tnames.map((team) => {
+            if(Object.keys(userids[element]).toString() === [team].toString()){ //if userid == teammate name
+              console.log(Object.keys(userids[element]),[team])
+              //update credits
+              //const updates = {};
+              //updates['/users/' + element +'/' + team + '/' + classid + '/0/credits'] = 10;
+              //set(ref(db), '/users/' + element +'/' + team + '/' + classid + '/0/credits',10);
+              
             }
-            console.log(currentUser + " " + localCredit + " " + localCount);
-          });
-        }
+            
+          })
+         })
+
+       
+        // for (const i in tempName) {
+        //   console.log(i)
+        //   for (const j in tnames){
+        //     if (i === j) //if name is in updated teammates
+        //     console.log(i,j)
+        //   }
+        //   //for i in all user ids
+        //   //if user is credited:
+        //   //for (const j in tnames.lengt){}
+        //   //console.log(i)
+
+        //   //console.log("tnames:" + tnames[j]);
+        //   //console.log(Object.keys(userids[0][i]));
+        //   // if (Object.keys(userids[i]) === tnames[j]) {
+        //   //   console.log("Success");
+        //   //   console.log("tnames:" + tnames[j]);
+        //   //   console.log(Object.keys(userids[0][i]));
+        //   // }
+        //   //console.log(i) //uid
+        //   //console.log(Object.keys(.userids[0][i])) //displaynames
+        //   get(
+        //     child(dbRef, "users/" + i + "/" + Object.keys(userids[i]))
+        //   ).then((snapshot) => {
+        //     if (snapshot.exists()) {
+        //       //console.log(snapshot.val().pastteams);
+
+        //       for (const i in snapshot.val().pastteams) {
+        //         //all items in pastteams[classid]
+        //         for (const j in snapshot.val().pastteams[i]) {
+        //           if (snapshot.val().pastteams[i][j]) {
+        //             //console.log(snapshot.val().pastteams[i][j]); //pastteams[classid][index]
+        //             if (snapshot.val().pastteams[i][j].name === currentUser) {
+        //               setLocalCredit(
+        //                 Number(localCredit) +
+        //                   Number(snapshot.val().pastteams[i][j].credit)
+        //               );
+        //               setLocalCount((prevCount) => prevCount + 1);
+        //             }
+        //             //if(snapshot.val().pastteams[i][1].name === "Auejin"){
+        //             //    console.log(snapshot.val().pastteams[i][1].credit)
+        //             // }
+        //           }
+        //         }
+        //       }
+        //     } else {
+        //     }
+        //     //console.log(currentUser + " " + localCredit + " " + localCount);
+        //   });
+        // }
 
         /*for (const i in Object.keys(.userid[0])){
                     
@@ -176,14 +208,16 @@ const ReadDB = ({ params }) => {
   const fillModel = useCallback(() => {
     console.log("fill");
     let tempMembers = [];
-    console.log(pastteams[0]);
+    let tempNames = [];
+    //console.log(pastteams[0]);
     if (pastteams[0].length > 0) {
+      // eslint-disable-next-line array-callback-return
       pastteams[0].map((element, index) => {
-        console.log(element);
+        //console.log(element);
         if ("name" in element) {
-          tnames.push(element.name);
+          tempNames.push(element.name);
           tempMembers.push({
-            key: "user" + index,
+            key: element.name,
             label: element.name,
             type: "number",
             props: {
@@ -195,6 +229,7 @@ const ReadDB = ({ params }) => {
         }
       });
       setMembers(tempMembers);
+      setTnames(tempNames);
     }
   }, [pastteams]);
 
@@ -221,6 +256,7 @@ const ReadDB = ({ params }) => {
     update[0] = { credits: 0 };
 
     for (const i in pastteams[0]) {
+      
       if (Object.keys(pastteams[0][i]).includes("name")) {
         update[i] = {
           name: pastteams[0][i].name,
@@ -297,43 +333,11 @@ const ReadDB = ({ params }) => {
             onSubmit(model);
           }}
         />
-        {/*}
-            <pre style ={{width:"100"}}>
-                {JSON.stringify(.test)}
-                {JSON.stringify(this.model)}
-                Inputdata: {JSON.stringify(.pastteams)}    
-            </pre>
-
-            <div>
-                Output data: {JSON.stringify(.output)}
-            </div>  */}
+       
 
         <button onClick={onPush}>Push </button>
       </div>
-      {/*     
-        <div className = "credit">
-        <table>
-        <tr>
-          <th>Members</th>
-          <th>Points</th>
-        </tr>
-        {data.map((val, key) => {
-          return (
-            <tr key={key}>
-              <td>{val.name}</td>
-              <td><form>
-                <label>{val.name}
-                    <NameForm/>
-                    <input type="number" onChange="" placeholder="0" />
-                </label>
-                </form>
-     </td>
-            </tr>
-          )
-        })}
-      </table>
-            </div>
-            */}
+  
     </>
   );
 };

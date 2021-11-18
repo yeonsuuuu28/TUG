@@ -14,10 +14,12 @@ function ActiveTeamInfo({course, name}){
       console.log(s.val());
       setInfo(s.val().map((i)=>{
         return(
+          <table>
           <tr key={i.name + i.email}>
             <td>{i.name}</td>
             <td>{i.email}</td>
           </tr>
+          </table>
         );
       }));
     }

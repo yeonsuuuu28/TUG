@@ -18,15 +18,9 @@ const ReadDB = ({ params }) => {
   //   { name: "조성혜", point: 0 },
   // ]);
   const [pastteams, setPastTeams] = useState([]);
-<<<<<<< HEAD
-  //const [userids, setUserIds] = useState([]);
-  const [localCredit, setLocalCredit] = useState();
-  const [localCount, setLocalCount] = useState(0);
-=======
   const [userids, setUserIds] = useState([]);
   // const [localCredit, setLocalCredit] = useState();
   // const [localCount, setLocalCount] = useState(0);
->>>>>>> 4c76d1d9ccb8b8b49774768603997b2b9946b72e
   const [members, setMembers] = useState([]);
   const [tnames,setTnames] = useState([]);
   // const [invert,setInvert] = useState([])
@@ -128,9 +122,6 @@ const ReadDB = ({ params }) => {
             }
               
         
-<<<<<<< HEAD
-         })
-=======
           tnames.map((team) => {
 
             if(Object.keys(userids[element]).toString() === [team].toString()){ //if userid == teammate name
@@ -178,7 +169,6 @@ const ReadDB = ({ params }) => {
           })
           return(<></>); 
         })
->>>>>>> 4c76d1d9ccb8b8b49774768603997b2b9946b72e
 
        
         // for (const i in tempName) {

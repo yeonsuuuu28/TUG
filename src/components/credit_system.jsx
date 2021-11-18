@@ -8,19 +8,19 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const update = [{}];
 const classid = "CS101";
-const tnames = [];
+// const tnames = [];
 
 const ReadDB = ({ params }) => {
   // const course = params.course
-  const [data, setData] = useState([
-    { name: "Uxer Ham", point: 0 },
-    { name: "Yeon Su Park", point: 0 },
-    { name: "조성혜", point: 0 },
-  ]);
+  // const [data, setData] = useState([
+  //   { name: "Uxer Ham", point: 0 },
+  //   { name: "Yeon Su Park", point: 0 },
+  //   { name: "조성혜", point: 0 },
+  // ]);
   const [pastteams, setPastTeams] = useState([]);
   const [userids, setUserIds] = useState([]);
-  const [localCredit, setLocalCredit] = useState();
-  const [localCount, setLocalCount] = useState(0);
+  // const [localCredit, setLocalCredit] = useState();
+  // const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
   const [tnames,setTnames] = useState([]);
 
@@ -41,9 +41,9 @@ const ReadDB = ({ params }) => {
        
         //const tempName =  userids.map((x) => userids[x])
         //console.log(tempName)
-        var j = 0;
+        // var j = 0;
         console.log("current username: " + auth.currentUser.displayName);
-        const currentUser = "Yeonsu";
+        // const currentUser = "Yeonsu";
         console.log(userids)
         const tempName = Object.keys(userids) //all user ids in the system 
         console.log(tnames)
@@ -56,11 +56,12 @@ const ReadDB = ({ params }) => {
               //const updates = {};
               //updates['/users/' + element +'/' + team + '/' + classid + '/0/credits'] = 10;
               //set(ref(db), '/users/' + element +'/' + team + '/' + classid + '/0/credits',10);
-              
+              return(<></>); 
             }
-            
+            return(<></>);
           })
-         })
+          return(<></>); 
+        })
 
        
         // for (const i in tempName) {

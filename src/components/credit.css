@@ -12,9 +12,10 @@
 
 .form {
     width: 100%;
+    padding-top:60px;
     padding-left: 20px;
     text-align: center;
-    
+    font-family: "Lato", sans-serif; 
 }
     
   table {

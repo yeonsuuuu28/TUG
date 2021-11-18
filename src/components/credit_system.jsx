@@ -8,22 +8,28 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const update = [{}];
 const classid = "CS101";
-const tnames = [];
+// const tnames = [];
 
 const ReadDB = ({ params }) => {
   // const course = params.course
-  const [data, setData] = useState([
-    { name: "Uxer Ham", point: 0 },
-    { name: "Yeon Su Park", point: 0 },
-    { name: "조성혜", point: 0 },
-  ]);
+  // const [data, setData] = useState([
+  //   { name: "Uxer Ham", point: 0 },
+  //   { name: "Yeon Su Park", point: 0 },
+  //   { name: "조성혜", point: 0 },
+  // ]);
   const [pastteams, setPastTeams] = useState([]);
+<<<<<<< HEAD
   //const [userids, setUserIds] = useState([]);
   const [localCredit, setLocalCredit] = useState();
   const [localCount, setLocalCount] = useState(0);
+=======
+  const [userids, setUserIds] = useState([]);
+  // const [localCredit, setLocalCredit] = useState();
+  // const [localCount, setLocalCount] = useState(0);
+>>>>>>> 4c76d1d9ccb8b8b49774768603997b2b9946b72e
   const [members, setMembers] = useState([]);
   const [tnames,setTnames] = useState([]);
-  const [invert,setInvert] = useState([])
+  // const [invert,setInvert] = useState([])
 
 
 
@@ -39,8 +45,12 @@ const ReadDB = ({ params }) => {
         console.log(userids)
         //onsole.log(userdd)
        
-        //console.log("current username: " + auth.currentUser.displayName)
-        //console.log(userids)
+        //const tempName =  userids.map((x) => userids[x])
+        //console.log(tempName)
+        // var j = 0;
+        console.log("current username: " + auth.currentUser.displayName);
+        // const currentUser = "Yeonsu";
+        console.log(userids)
         const tempName = Object.keys(userids) //all user ids in the system 
         //console.log(Object.values(userids))
         tempName.map((element) => {
@@ -59,6 +69,7 @@ const ReadDB = ({ params }) => {
 
                userids[element][Object.keys(userids[element])].pastteams[classid].map((index)=>{
                 console.log(index)
+                
                //names in pastteams that have data
                if(Object.keys(index).includes("name")){
                 tnames.map((team) => {
@@ -100,6 +111,7 @@ const ReadDB = ({ params }) => {
                           }
                     })
                   }
+                  return(<></>);
                 }
                 )
                 console.log(index)
@@ -108,13 +120,65 @@ const ReadDB = ({ params }) => {
               //console.log(index.name,index.credit)
                if(userids[element].toString() === [index.name].toString()){
                  console.log("match")
+                 
                }
+               return(<></>);
              })
               }
             }
               
         
+<<<<<<< HEAD
          })
+=======
+          tnames.map((team) => {
+
+            if(Object.keys(userids[element]).toString() === [team].toString()){ //if userid == teammate name
+              console.log ("users/" +
+                    element +
+                    "/" +
+                    team +
+                    "/pastteams/" +
+                    classid +"/0")
+                //compute for user's credit 
+            //  console.log(userids[element][team].pastteams[classid][0])
+//set credit to some number
+              // set(
+              //   ref(
+              //     db,
+              //     "users/" +
+              //       element +
+              //       "/" +
+              //       team +
+              //       "/pastteams/" +
+              //       classid +"/0"
+              //   ),
+              //   {credits:10}
+              // );
+              
+              //console.log(Object.keys(userids[element]),[team])
+              //console.log(element)
+              element = "r0UNsRPIzGVO99ovbeiuilpTxIp2"
+              team = "Cheryl Siy"
+              get(child(dbRef, "/users")).then((snapshot) =>{ 
+                if(snapshot.exists()){
+                  //contains value of pastteams 
+                 // console.log(snapshot.val())
+
+                }
+                else{
+                  console.log("nodata")
+                }
+
+              })
+              //update credits
+             
+            }
+            return(<></>);
+          })
+          return(<></>); 
+        })
+>>>>>>> 4c76d1d9ccb8b8b49774768603997b2b9946b72e
 
        
         // for (const i in tempName) {

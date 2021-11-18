@@ -110,33 +110,33 @@ function GetCourseList({ uid, username }){
   )
 };
 
-function GetCourseList2({ uid, username }){
-  const [courseObjects, setCourseObjects] = useState('loading...');
-  const [courseName, setCourseName] = useState([]);
-  const [classList, setClassList] = useState([]);
-  const dbRef = ref(getDatabase());
+// function GetCourseList2({ uid, username }){
+//   const [courseObjects, setCourseObjects] = useState('loading...');
+//   const [courseName, setCourseName] = useState([]);
+//   const [classList, setClassList] = useState([]);
+//   const dbRef = ref(getDatabase());
 
   
-  get(child(dbRef, "users/" + uid + "/" + username + "/class/")).then((snapshot => {
-      if(snapshot.exists() && courseObjects === 'loading...') {
-        //console.log(Object.keys(snapshot.val()))
-        setCourseName(Object.keys(snapshot.val()))
-        console.log(courseName)
-      }
-      // else{
-      //   alert("no class"); //TODO
-      // }
-    }))
+//   get(child(dbRef, "users/" + uid + "/" + username + "/class/")).then((snapshot => {
+//       if(snapshot.exists() && courseObjects === 'loading...') {
+//         //console.log(Object.keys(snapshot.val()))
+//         setCourseName(Object.keys(snapshot.val()))
+//         console.log(courseName)
+//       }
+//       // else{
+//       //   alert("no class"); //TODO
+//       // }
+//     }))
   
 
-  var temp = [];
+//   var temp = [];
 
 
-  return (
-    <div>
-    </div>
-  )
-}
+//   return (
+//     <div>
+//     </div>
+//   )
+// }
 
 
 //   let table = [];

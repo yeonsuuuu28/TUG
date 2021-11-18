@@ -1,7 +1,7 @@
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
-import { useState } from "react";
-import { AppPlatform } from "firebase-admin/lib/project-management/app-metadata";
+// import { useState } from "react";
+// import { AppPlatform } from "firebase-admin/lib/project-management/app-metadata";
 
 
 //* storeTeamInDB
@@ -92,6 +92,7 @@ function handleVoting(vote, course, round){
         }
         else{
           console.log("not in this room: ", room.users, auth.currentUser.uid);
+          return(<></>);
         }
       });
     }
@@ -105,7 +106,7 @@ function Voting(props) {
   const totalrounds = 3; // TODO: connect to quizinfo page
   const leftchances = totalrounds - round + 1;
 
-  if(leftchances == 0) {
+  if(leftchances === 0) {
     return(
       <div className="popup">
       <div>

@@ -3,18 +3,18 @@ import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
-import Checkbox from '@mui/material/Checkbox';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
-import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
-import FlagIcon from '@mui/icons-material/Flag';
+// import Checkbox from '@mui/material/Checkbox';
+// import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+// import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+// import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+// import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+// import FlagIcon from '@mui/icons-material/Flag';
 import Navbar from "./navbar_quiz.jsx";
-import Voting from './voting.jsx';
+// import Voting from './voting.jsx';
 import Radio from '@mui/material/Radio'
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+// const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 
 // import { isImportEqualsDeclaration } from 'typescript';
@@ -210,7 +210,7 @@ function handleDoneClick(course, round, funNumber){
     const answeredquestions = Object.keys(snapshot.val());
     if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
       set(ref(db, route + 'essen_questions/done/'), "yes");
-      console.log(course, round, route, round==1); 
+      console.log(course, round, route, round===1); 
       if(round === '1') { /// done
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }

@@ -11,16 +11,25 @@ function handleCourseClick(course){
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
       if (snapshot.exists()) {
           if (Object.values(snapshot.val())[0] === course) {
-            alert("You have not finished creating your profile")
-            window.location.href = "/profile"
+            get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + course)).then((snapshot) => {
+              if (Object.keys(snapshot.val())[0] === "profile1") {
+                alert("You are already building a team for " + course + "."
+                + "\nRedirecting to " + course + " quiz page...")
+                window.location.href = "/quizinfo/"+course+'/1';
+              }
+              else {
+                alert("You have not finished creating your profile for" + course + "."
+                + "\nRedirecting to " + course + " profile page...")
+                window.location.href = "/profile"
+              }
+            });
           }
           else {
             alert("You are already building a team for " + Object.values(snapshot.val())[0] + "."
             + "\nRedirecting to " + Object.values(snapshot.val())[0] + "...") //TODO
             window.location.href = "/profile"
-          }
+          }}
           // console.log(Object.values(snapshot.val()));
-          }
       else {
           push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/'), course)
           window.location.href = "/profile"
@@ -39,7 +48,7 @@ function UserIdentification(){
       if (user) {
         setUid(user.uid);
         setUserName(user.displayName);
-        console.log("identified ", uid, username);
+        // console.log("identified ", uid, username);
       }
     });
   }, [uid, username])
@@ -83,8 +92,8 @@ function GetCourseList({ uid, username }){
                 </ul>
               </li>
             ));
-            console.log(courseObjects);
-            console.log(courseName, courseProf);
+            // console.log(courseObjects);
+            // console.log(courseName, courseProf);
 
           }
           else{

@@ -391,6 +391,22 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
             let outData = [];
             
+            // this creates dummy data
+            const classList = ["CS101", "CS204", "CS220", "CS230", "CS330"]
+            const meanCredits = [32.5, 28.3, 20.4, 36.3, 24.6]
+            const myCredits = [43.2, 41.3, 38.0, 23.1, 40.7]
+            
+            for (let i=0; i<5; i++) {
+                outData.push({
+                    'class': classList[i],
+                    'received': meanCredits[i],
+                    'given': myCredits[i],
+                })
+            }
+            console.log(`plot data of ${plotUserId} is`, outData)
+            setPlotData(outData);
+
+            /*// this is the original code but disable to render report images
             // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수
             // users/id/name/pastteams/CS101/??/credits:"3" <- 얘가 모든 클래스 평균
             get(ref(db, `users/${plotUserId}`)).then((snapshot) => {
@@ -422,7 +438,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                             
                             outData.push({
                                 'class': snapshotClass.key,
-                                'class average': meanCredit,
+                                'received': meanCredit,
                                 'peers': myCredit,
                             })
                         })
@@ -431,7 +447,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     console.log(`plot data of ${plotUserId} is`, outData)
                     setPlotData(outData);
                 }
-            });
+            });//*/
         }
     }, [plotUserId])
 
@@ -614,6 +630,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                         (plotData.length <= 0 && <h2>no history found</h2>)}
                     </div>
                 }
+                <CreditPlot data={plotData}/>
             </div>
         </div>
     )

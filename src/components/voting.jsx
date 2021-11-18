@@ -2,6 +2,7 @@ import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 // import { useState } from "react";
 // import { AppPlatform } from "firebase-admin/lib/project-management/app-metadata";
+import "./voting.css"
 
 
 //* storeTeamInDB
@@ -122,14 +123,16 @@ function Voting(props) {
 
   return(
     <div className="popup">
-      <div>
+      <div style={{textAlign: "center", fontFamily: "Lato", fontSize: "17pt", paddingTop: "190px", fontWeight: "bold", paddingBottom: "20px"}}>
         Discussion Time has Passed!
       </div>
-      <div>
+      <div style={{textAlign: "center", fontFamily: "Lato", fontSize: "12pt"}}>
         Do you want to make team with current members?
       </div>
-      <button onClick={() => handleVoting(true, course, round)}>Yes</button>
-      <button onClick={() => handleVoting(false, course, round)}>Try Again ({leftchances}/{totalrounds})</button>
+      <div>
+        <span className="button30" onClick={() => handleVoting(true, course, round)}>Yes</span>
+        <span className="button31" onClick={() => handleVoting(false, course, round)}>Try Again ({leftchances}/{totalrounds})</span>
+      </div>
     </div>
   )
 }

@@ -207,9 +207,9 @@ const ProfileTags = ({skills, hobbies}) => {
     if (skills.length * hobbies.length > 0) {
         return (
             <div>
-                {<h3>Skills</h3>}
+                {<h3>Skill-Sets</h3>}
                 {skills.map(tag => `#${tag}\t`)}
-                {<h3>Hobbies</h3>}
+                {<h3>Interesting Facts</h3>}
                 {hobbies.map(tag => `#${tag}\t`)}
             </div>
         )

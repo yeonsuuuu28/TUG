@@ -78,7 +78,7 @@
   }
   .quizTable{
       border: 0px;
-      border-bottom: 2px solid #1b1e2e;;
+      border-bottom: 2px solid #1b1e2e;
       width: 80%;
       margin-lefT: 10%; 
       height: 15px;
@@ -92,4 +92,35 @@
       width: 100%;
       text-align: center;
       margin-bottom: 20px;
+  }
+
+  .button100 {
+    /* position: absolute; */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 14pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    height: 50px;
+    margin-left: 43%;
+    margin-right: 43%;
+    margin-top: 50px;
+    margin-bottom: 70px;
+    width: 200px;
+    background: #1b1e2e;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .button101 {
+      padding-left: 40px;
+      text-align: center;
+    display: grid;
+    grid-template-columns: 0.3fr 0.3fr 0.3fr;
+    grid-gap: 0px;
   }

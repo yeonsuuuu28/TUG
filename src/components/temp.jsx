@@ -41,10 +41,10 @@ export default function Quiz(){
                     </tr>
                     <tr>
                         <td className = "question_title12">
-                            <b>Q1</b>. How comfortable are you with your English skills?
+                            <b>Q1</b>. Do you like pineapple pizza?
                         </td>
                         <td className = "checkboxQuiz">
-                            <Checkbox
+                        <Checkbox
                                 checked={checked}
                                 onChange={handleChange}
                                 inputProps={{ 'aria-label': 'controlled' }}
@@ -54,77 +54,7 @@ export default function Quiz(){
                     </tr>
                 </tbody>
             </table>
-            <div className = "centerAlign">
-            <FormControl component="fieldset">
-                                            <RadioGroup row aria-label="position" name="position" value={Q1} onChange={(e) => setQ1(e.target.value)} sx={{
-    '& .MuiSvgIcon-root': {
-      fontSize: 35,
-    },
-  }}> 
-                                                <FormControlLabel
-                                                value="1"
-                                                control={<Radio color="primary" />}
-                                                label="Not Confident &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                className = "radioform"
-                                                sx={{
-                                                    '.MuiFormControlLabel-label': {
-                                                      fontSize: 20,
-                                                    },
-                                                  }}
-                                                />
-                                                <FormControlLabel
-                                                value="2"
-                                                control={<Radio color="primary" />}
-                                                label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                className = "radioform"
-                                                sx={{
-                                                    '& .MuiSvgIcon-root': {
-                                                      fontSize: 35,
-                                                    },
-                                                  }}
-                                                />
-                                                <FormControlLabel
-                                                value="3"
-                                                control={<Radio color="primary" />}
-                                                label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                sx={{
-                                                    '& .MuiSvgIcon-root': {
-                                                      fontSize: 35,
-                                                    },
-                                                  }}
-                                                className = "radioform"
-                                                />
-                                                <FormControlLabel
-                                                value="4"
-                                                control={<Radio color="primary" />}
-                                                label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                sx={{
-                                                    '& .MuiSvgIcon-root': {
-                                                      fontSize: 35,
-                                                    },
-                                                  }}
-                                                className = "radioform"
-                                                />
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <FormControlLabel
-                                                value="5"
-                                                control={<Radio color="primary" />}
-                                                sx={{
-                                                    '.MuiFormControlLabel-label': {
-                                                      fontSize: 20,
-                                                    },
-                                                  }}
-                                                label=" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Very Fluent"
-                                                labelPlacement="end"
-                                                className = "radioform"
-                                                />
-                                            </RadioGroup>
-                                        </FormControl>
-                                        </div>
+            <div className="button101"><span className="button100">Never</span><span className="button100">Maybe</span><span className="button100">Absolutely</span></div>
             <table className = "quizTable">
                 <tbody>
                     <tr>
@@ -136,10 +66,10 @@ export default function Quiz(){
                     </tr>
                     <tr>
                         <td className = "question_title12">
-                            <b>Q2</b>. What teammate do you prefer? An ethusiastic person or a relaxed person?                        </td>
+                            <b>Q2</b>. Do you like mint-chocolate?                     </td>
                         <td className = "checkboxQuiz">
-                            <Checkbox
-                                checked={checked2}
+                        <Checkbox
+                                checked={checked}
                                 onChange={handleChange}
                                 inputProps={{ 'aria-label': 'controlled' }}
                                  sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
@@ -148,76 +78,9 @@ export default function Quiz(){
                     </tr>
                 </tbody>
             </table>
+            <div className="button101"><span className="button100">Never</span><span className="button100">Maybe</span><span className="button100">Absolutely</span></div>
             <div className = "centerAlign">
-            <FormControl component="fieldset">
-                                            <RadioGroup row aria-label="position" name="position" value={Q2} onChange={(e) => setQ2(e.target.value)} sx={{
-    '& .MuiSvgIcon-root': {
-      fontSize: 35,
-    },
-  }}> 
-                                                <FormControlLabel
-                                                value="1"
-                                                control={<Radio color="primary" />}
-                                                label="Very Enthusiastic &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                className = "radioform"
-                                                sx={{
-                                                    '.MuiFormControlLabel-label': {
-                                                      fontSize: 20,
-                                                    },
-                                                  }}
-                                                />
-                                                <FormControlLabel
-                                                value="2"
-                                                control={<Radio color="primary" />}
-                                                label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                className = "radioform"
-                                                sx={{
-                                                    '& .MuiSvgIcon-root': {
-                                                      fontSize: 35,
-                                                    },
-                                                  }}
-                                                />
-                                                <FormControlLabel
-                                                value="3"
-                                                control={<Radio color="primary" />}
-                                                label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                sx={{
-                                                    '& .MuiSvgIcon-root': {
-                                                      fontSize: 35,
-                                                    },
-                                                  }}
-                                                className = "radioform"
-                                                />
-                                                <FormControlLabel
-                                                value="4"
-                                                control={<Radio color="primary" />}
-                                                label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-                                                labelPlacement="start"
-                                                sx={{
-                                                    '& .MuiSvgIcon-root': {
-                                                      fontSize: 35,
-                                                    },
-                                                  }}
-                                                className = "radioform"
-                                                />
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <FormControlLabel
-                                                value="5"
-                                                control={<Radio color="primary" />}
-                                                sx={{
-                                                    '.MuiFormControlLabel-label': {
-                                                      fontSize: 20,
-                                                    },
-                                                  }}
-                                                label=" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Very Relaxed"
-                                                labelPlacement="end"
-                                                className = "radioform"
-                                                />
-                                            </RadioGroup>
-                                        </FormControl>
+            
                                         </div>
         </div>
     )

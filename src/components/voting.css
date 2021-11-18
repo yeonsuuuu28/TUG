@@ -1,0 +1,40 @@
+.button30 {
+    position: absolute;
+    top: 380px;
+
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    height: 40px;
+    width: 145px;
+    background: #1b1e2e;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    left: 780px;
+  }
+
+.button31 {
+    position: absolute;
+    top: 380px;
+    right: 150px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    height: 40px;
+    width: 145px;
+    background: #1b1e2e;
+    border-radius: 10px;
+    cursor: pointer;
+  }

@@ -5,13 +5,13 @@ To solve this problem, our team created a real-time web platform that creates a 
 Our system is unique in the sense that it 
 1) deploys a fun quiz session to discover the most suitable teammates through a premade algorithm, 
 2) provides a chatting session where people can interact freely with the help of a moderator chatbot, 
-3) promotes each users to gamble their chances where they accept the current team or take another chance, 
+3) promotes each users to make their choices where they accept the current team or take another chance,
 4) provides information of each candidates through our distinctive credit system that is used to acknowledge their overall participation on group projects.
 
 ## Quick Start
-*git clone this repository
-*npm install
-*npm start
+- git clone this repository
+- npm install
+- npm start
 
 
 ## Main page & Navigation bar

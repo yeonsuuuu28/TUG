@@ -12,7 +12,7 @@
 
 .form {
     width: 100%;
-    padding-top:60px;
+    padding-top:30px;
     padding-left: 20px;
     text-align: center;
     font-family: "Lato", sans-serif; 
@@ -32,4 +32,20 @@
     text-align: center;
   }
 
+
+  .proftitle {
+    font-family: "Lato", sans-serif;
+    font-weight: 1000;
+    font-size: 25pt;
+    color: black;
+    text-align: center;
+    margin-top: 50px;
+}
+.profile_description {
+  padding-top: 20px;
+  padding-bottom: 15px;
+  font-family: "Lato", sans-serif;
+  font-size: 12pt;
+  width: auto;
+}
  

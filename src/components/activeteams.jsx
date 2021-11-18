@@ -1,6 +1,7 @@
 import { auth } from "./firebase.jsx";
 import { getDatabase, ref, get, child } from "firebase/database";
 import { useState } from "react";
+import "./activeteams.css"
 
 //* ActiveTeamInfo - subpage to show team information of each course
 function ActiveTeamInfo({course, name}){
@@ -103,15 +104,37 @@ function ActiveTeams() {
         setCourseComponent(courses.map((c) => {
           const name = s.child('/'+c+'/name/').val();
           const prof =  s.child('/'+c+'/professor/').val();
-          return(<div className = "activeclass" key={c+Math.random()}>
-            <div>
-              {name}
-            </div>
-            <div>
-              {prof}
-            </div>
-            <button onClick={() => setOnClick([true, c, name])}>go</button>
-          </div>);
+          return(
+          <table className="hahahatest">
+            <tbody>
+              <tr>
+                <td className ="collapse">
+                  {name}
+                </td>
+              </tr>
+              <tr>
+                <td className="hahatest">
+                  {prof}&nbsp;&nbsp;&nbsp;<i className="fas fa-arrow-alt-circle-right"></i>
+                  <button onClick={() => setOnClick([true, c, name])}>go</button>
+                </td>
+              </tr>
+              {/* <tr>
+                <td>
+                </td>
+              </tr> */}
+            </tbody>
+          </table>
+          // <div key={c+Math.random()}>
+          //   <div>
+          //     {name}
+          //   </div>
+          //   <div>
+          //     {prof}
+          //   </div>
+          //   <button onClick={() => setOnClick([true, c, name])}>go</button>
+          // </div>
+          
+          );
         }));
       })
     }

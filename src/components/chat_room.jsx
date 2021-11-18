@@ -16,7 +16,6 @@ import Navbar from './navbar.jsx'
 import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
-
 import './chat_room.css'
 
 

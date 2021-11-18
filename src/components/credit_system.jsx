@@ -5,6 +5,7 @@ import DynamicForm from "./DynamicForm";
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {useHistory} from "react-router-dom"
 
 const update = [{}];
 const classid = "CS101";
@@ -18,18 +19,13 @@ const ReadDB = ({ params }) => {
   //   { name: "조성혜", point: 0 },
   // ]);
   const [pastteams, setPastTeams] = useState([]);
-<<<<<<< HEAD
   //const [userids, setUserIds] = useState([]);
   const [localCredit, setLocalCredit] = useState();
   const [localCount, setLocalCount] = useState(0);
-=======
-  const [userids, setUserIds] = useState([]);
-  // const [localCredit, setLocalCredit] = useState();
-  // const [localCount, setLocalCount] = useState(0);
->>>>>>> 4c76d1d9ccb8b8b49774768603997b2b9946b72e
   const [members, setMembers] = useState([]);
   const [tnames,setTnames] = useState([]);
   // const [invert,setInvert] = useState([])
+  const history = useHistory()
 
 
 
@@ -128,57 +124,7 @@ const ReadDB = ({ params }) => {
             }
               
         
-<<<<<<< HEAD
          })
-=======
-          tnames.map((team) => {
-
-            if(Object.keys(userids[element]).toString() === [team].toString()){ //if userid == teammate name
-              console.log ("users/" +
-                    element +
-                    "/" +
-                    team +
-                    "/pastteams/" +
-                    classid +"/0")
-                //compute for user's credit 
-            //  console.log(userids[element][team].pastteams[classid][0])
-//set credit to some number
-              // set(
-              //   ref(
-              //     db,
-              //     "users/" +
-              //       element +
-              //       "/" +
-              //       team +
-              //       "/pastteams/" +
-              //       classid +"/0"
-              //   ),
-              //   {credits:10}
-              // );
-              
-              //console.log(Object.keys(userids[element]),[team])
-              //console.log(element)
-              element = "r0UNsRPIzGVO99ovbeiuilpTxIp2"
-              team = "Cheryl Siy"
-              get(child(dbRef, "/users")).then((snapshot) =>{ 
-                if(snapshot.exists()){
-                  //contains value of pastteams 
-                 // console.log(snapshot.val())
-
-                }
-                else{
-                  console.log("nodata")
-                }
-
-              })
-              //update credits
-             
-            }
-            return(<></>);
-          })
-          return(<></>); 
-        })
->>>>>>> 4c76d1d9ccb8b8b49774768603997b2b9946b72e
 
        
         // for (const i in tempName) {
@@ -353,7 +299,8 @@ const ReadDB = ({ params }) => {
   }, [pastteams]);
 
   const onSubmit = (model) => {
-    //window.location.assign("./mypage");
+    //
+    onPush(model)
 
     //write to db updated values
     //1.build items to be written in DB
@@ -384,10 +331,7 @@ const ReadDB = ({ params }) => {
       ),
       update
     );
-    onPush(model)
-    //onPush(model)
-
-
+   
 
     //update past average
 
@@ -410,6 +354,8 @@ const ReadDB = ({ params }) => {
     );
 
     //redirect to another page
+    //window.location.assign("./mypage");
+    history.push("/mypage")
   };
 
   useEffect(() => {
@@ -444,8 +390,6 @@ const ReadDB = ({ params }) => {
           }}
         />
        
-
-        <button onClick={onPush}>Push </button>
       </div>
   
     </>

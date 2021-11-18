@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {auth} from "./firebase.jsx";
-import { set, getDatabase, ref, get, child } from "firebase/database";
+import { getDatabase, ref, get, child } from "firebase/database";
 import PROFILE1 from "../images/Level1.png"
 import PROFILE2 from "../images/Level2.png"
 import PROFILE3 from "../images/Level3.png"

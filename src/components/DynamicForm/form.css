@@ -6,11 +6,13 @@
     padding-bottom: 5px;
     margin: auto;
     max-width: 300px;
+    text-align: center;
 }
 .dynamic-form .form-group {
     padding: .5em;
     flex-direction: column;
     justify-content: space-between;
+    margin-bottom: 10px;
 }
 
     
@@ -20,7 +22,7 @@
     color: #1b1e2e;
 }
 .dynamic-form .form-input{
-    margin-top: 5px;
+    margin-top: 12px;
     margin-left: 10px;
     line-height: 1.5em;
     width: 150px;

@@ -124,3 +124,21 @@
     grid-template-columns: 0.3fr 0.3fr 0.3fr;
     grid-gap: 0px;
   }
+
+  .profileprofile_title {
+    font-family: "Lato", sans-serif;
+    font-weight: 1000;
+    font-size: 25pt;
+    color: black;
+    text-align: center;
+    margin-top: 70px;
+    margin-left: 150px;
+}
+
+.backspace{
+    font-size: 40px;
+    color: lightgray;
+    position:absolute;
+    top:100px;
+    left:150px;
+}

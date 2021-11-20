@@ -104,7 +104,6 @@
 .mySwiper {
   width: 100%;
   height: 100%;
-  z-index: -1;
 }
 
 .swiper-slide {
@@ -124,7 +123,6 @@
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
-  z-index: -1;
 }
 
 .swiper-slide img {
@@ -132,7 +130,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -1;
 }
 
 

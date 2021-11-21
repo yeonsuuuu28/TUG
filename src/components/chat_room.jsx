@@ -625,11 +625,12 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     <div>
                         <h1>{namePairs[plotUserId]}</h1> 
                         <ProfileTags skills={skills} hobbies={hobbies} />
-                        {(plotData.length > 0 && <CreditPlot data={plotData}/>) ||
-                        (plotData.length <= 0 && <h2>no history found</h2>)}
                     </div>
                 }
-                <CreditPlot data={plotData}/>
+                {(timerSec>0 || timerMin>0) && 
+                    (plotUserId.length>0 && plotUserId !== remoteId) && 
+                    (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <h2>No Credit History Found</h2>))
+                }
             </div>
         </div>
     )

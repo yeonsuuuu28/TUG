@@ -9,7 +9,6 @@ import { styled } from '@mui/material/styles';
 
 const TagsTags = styled(Autocomplete)({
   '& 	label': {
-      // fontSize: 14,
       fontFamily: "Lato",
       alignContent: "center",
       color: "#bebebe"
@@ -34,16 +33,7 @@ function profileAdd(x, y) {
             window.location.href = "/profile"
             }
           }})
-
   }
-
-
-// function setclassID() {
-//   const dbRef = ref(getDatabase());
-//   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
-//     classID = Object.values(snapshot.val());
-//     console.log(classID);
-//   })}
 
 var taglist = [];
 var taglist1 = [];
@@ -57,12 +47,9 @@ export default function Profile() {
   const [inputValue1, setInputValue1] = useState("");
   const [limit1, setLimit1] = useState(true)  
   
-
-
     return (
         <div>
             <Navbar/>
-            {/* {setclassID} */}
             <br/>
             <div className="profile_title">Create Your Profile</div><br/>
             <div className="tag">
@@ -76,13 +63,10 @@ export default function Profile() {
                 options={taglist}
                 disableClearable={false}
                 onChange={(event, value) => {
-                  // console.log(taglist);
                   if (value.length >= 3) {
                     value = value.slice(0, 3)
                     setLimit(false)
-                    // console.log(value);
                     taglist = value
-                    // console.log(taglist);
                   }
                   else {
                     setLimit(true)
@@ -120,7 +104,6 @@ export default function Profile() {
             <div className="profile_description">Write <b>3 Tags</b> to Share Interesting Facts about You!</div>
             <TagsTags
                 open={open1}
-                // size="small"
                 multiple
                 freeSolo={limit1}
                 autoSelect
@@ -134,6 +117,7 @@ export default function Profile() {
                   }
                   else {
                     setLimit1(true)
+                    taglist1 = value
                   }
                   }}
                 onOpen={() => {
@@ -147,7 +131,6 @@ export default function Profile() {
                 onClose={() => setOpen1(false)}
                 onInputChange={(e, value, reason) => {
                     setInputValue1(value);
-          
                     if (!value) {
                       setOpen(false);
                     }

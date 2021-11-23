@@ -106,6 +106,7 @@ function handleVoting(vote, course, round){
         }
         else{
           console.log("not in this room: ", room.users, auth.currentUser.uid);
+          return(<></>);
         }
       });
     }
@@ -119,7 +120,7 @@ function Voting(props) {
   const totalrounds = 3; // TODO: connect to quizinfo page
   const leftchances = totalrounds - round + 1;
 
-  if(leftchances == 0) {
+  if(leftchances === 0) {
     return(
       <div className="popup">
       <div>

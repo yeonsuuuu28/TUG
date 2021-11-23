@@ -5,7 +5,7 @@ import {
     useEffect
 } from 'react';
 
-import { auth, db } from "./firebase.jsx";
+import { db } from "./firebase.jsx";
 
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -16,6 +16,7 @@ import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
 
+//import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import './chat_room.css'
 
 
@@ -23,7 +24,7 @@ import './chat_room.css'
 // https://chatscope.io/storybook/react/?path=/story/components-chatcontainer--live-controlled-example-with-grouped-messages
 // might use this one too https://github.com/chatscope/use-chat, https://github.com/chatscope/use-chat-example
 
-import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+
 import {
   MainContainer,
   ChatContainer,
@@ -98,6 +99,24 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
 
     
     // reset finished chat room to prevent reusing it
+    // const resetRoomIfDone = (roomId) => {
+    //     get(ref(db, `rooms/${classId}/${roomId}`)).then((snapshot) => {
+    //         if (snapshot.exists()) {
+    //             const finished = snapshot.child('info/chatFinished').val();
+    //             if (finished) {
+    //                 set(ref(db, `rooms/${classId}/${roomId}`), null);
+    //             }
+    //         }
+    //     })
+    // }
+
+
+
+    console.log(`finding room for sender=${senderId} in ${classId}`)
+
+    // run this once when creating the room
+    useEffect(() => {
+            // reset finished chat room to prevent reusing it
     const resetRoomIfDone = (roomId) => {
         get(ref(db, `rooms/${classId}/${roomId}`)).then((snapshot) => {
             if (snapshot.exists()) {
@@ -108,26 +127,19 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
             }
         })
     }
-
-    // read global {uid: anonName} dictionary of this room, create one if not found
-    const updateAnonsIfNone = (roomId, userList) => {
-        get(ref(db, `rooms/${classId}/${roomId}/anons`)).then((snapshot) => {
-            if (snapshot.exists()) {
-                setAnonNames(snapshot.val());
-            }
-            else {
-                const pairs = namePairs(userList);
-                set(ref(db, `rooms/${classId}/${roomId}/anons`), pairs);
-                setAnonNames(pairs);
-            }
-        })
-    }
-
-    console.log(`finding room for sender=${senderId} in ${classId}`)
-
-    // run this once when creating the room
-    useEffect(() => {
-
+        // read global {uid: anonName} dictionary of this room, create one if not found
+        const updateAnonsIfNone = (roomId, userList) => {
+            get(ref(db, `rooms/${classId}/${roomId}/anons`)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    setAnonNames(snapshot.val());
+                }
+                else {
+                    const pairs = namePairs(userList);
+                    set(ref(db, `rooms/${classId}/${roomId}/anons`), pairs);
+                    setAnonNames(pairs);
+                }
+            })
+        }
         // read room info for sender: classes/CS473/rooms/0/users/{idx:userId}
         get(ref(db, `classes/${classId}/rooms`)).then((snapshotRoom) => {
             if (snapshotRoom.exists()) {
@@ -152,7 +164,7 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
             }
         });
         
-    }, [])
+    }, [classId, senderId])
     
     if (roomId > -1) {
         return (
@@ -185,22 +197,22 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
 }
 
 // return list of (str) userId for roomId
-function getUserIdsInRoom(classId, roomId) {
+// function getUserIdsInRoom(classId, roomId) {
     
-    // classes/CS473/rooms/0/users/{idx:userId}
-    get(ref(db, `classes/${classId}/rooms/${roomId}/users`)).then((snapshot) => {
-        if (snapshot.exists()) {
-            const userIds = snapshot.val();
-            console.log(userIds)
-            return userIds // 이거 왜 undefined?
-        }
-        else {
-            // no room info found
-            alert(`No Room ${roomId} in ${classId}`);
-            return []
-        }
-    });
-}
+//     // classes/CS473/rooms/0/users/{idx:userId}
+//     get(ref(db, `classes/${classId}/rooms/${roomId}/users`)).then((snapshot) => {
+//         if (snapshot.exists()) {
+//             const userIds = snapshot.val();
+//             console.log(userIds)
+//             return userIds // 이거 왜 undefined?
+//         }
+//         else {
+//             // no room info found
+//             alert(`No Room ${roomId} in ${classId}`);
+//             return []
+//         }
+//     });
+// }
 
 const ProfileTags = ({skills, hobbies}) => {
     if (skills.length * hobbies.length > 0) {
@@ -226,7 +238,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     ///// chat interface /////
 
     const remoteId = 'Moderator';
-    const remoteMsgCnt = useRef(0);
+    // const remoteMsgCnt = useRef(0);
     
     const inputRef = useRef();
     const [msgInputValue, setMsgInputValue] = useState("");
@@ -318,7 +330,16 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     // time when room first got created (unit:ms)
     const roomInitTime = useRef(0);
 
-    // write room info with no messages when initialized 
+
+
+    ///// real-time chat update /////
+    
+    const route = `rooms/${classId}/${roomId}/messages/`
+    const [snapshots, loading, error] = useList(ref(db, route));
+    console.log(loading, error)
+    const messages = snapshots.map(doc => doc.val())
+    useEffect( () => {
+            // write room info with no messages when initialized 
     function updateRoomInfo(roomId) {
         get(ref(db, `rooms/${classId}/${roomId}/info`)).then((snapshot) => {
 
@@ -359,12 +380,59 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         });
     }
 
-    ///// real-time chat update /////
+        // read append one chat message message and return new groups[] 
+        const updatedGroups = (prevGroups, messageId, message, sender, notCancel) => {
+            if (prevGroups.length > 0) {
+                const lastGroup = prevGroups[prevGroups.length - 1];
     
-    const route = `rooms/${classId}/${roomId}/messages/`
-    const [snapshots, loading, error] = useList(ref(db, route));
-    const messages = snapshots.map(doc => doc.val())
-    useEffect( () => {
+                if (lastGroup.sender === sender) {
+                    // Add to group
+                    const newMessages = [...lastGroup.messages].concat({
+                        _id: `${messageId}`,
+                        message,
+                        sender: sender
+                    });
+                    const newGroup = { ...lastGroup,
+                        messages: newMessages
+                    };
+                    const newGroups = prevGroups.slice(0, -1).concat(newGroup);
+                    
+                    return newGroups;
+                }
+                
+                else {
+                    // Sender different than last sender - create new group 
+                    const newGroup = {
+                        _id: `${messageId}`,
+                        direction: sender === senderId ? "outgoing" : "incoming",
+                        messages: [{
+                            _id: `${messageId}`,
+                            message,
+                            sender: sender
+                        }],
+                        sender: sender
+                    };
+                    
+                    return prevGroups.concat(newGroup);
+                }
+            }
+            
+            else {
+                const newGroup = {
+                    _id: `${messageId}`,
+                    direction: sender === senderId ? "outgoing" : "incoming",
+                    messages: [{
+                        _id: `${messageId}`,
+                        message,
+                        sender: sender
+                    }],
+                    sender: sender
+                };
+                
+                return [newGroup];
+            }
+        }
+    
         if (messages.length === 0) {
             // timer starts for this group
             updateRoomInfo(roomId);
@@ -374,7 +442,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             emptyGroup = updatedGroups(emptyGroup, messages[i]['id'], messages[i]['message'], messages[i]['sender']);
         }
         setGroups(emptyGroup);
-        }, [snapshots]
+        }, [snapshots, messages, roomId, classId, senderId]
     )
 
     //// real-time plot update /////
@@ -451,7 +519,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 })
             })
         }
-    }, [plotUserId])
+    }, [plotUserId, classId, roomId, hobbies, skills])
 
 
     ///// chat timer /////    
@@ -478,23 +546,24 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
             clearInterval(timerId.current);
         }
-    }, [timerSec]);
+    }, [timerSec, classId, roomId]);
 
 
     ///// global chat moderator /////
 
     // sec left to send messages to all room members (ascending order)
     const whenToRemind = [80, 70, 60, 10].sort((a,b) => b-a);
-    const reminders = [
+
+    const checkReminderFrom = useRef(0);
+    const newCheckReminderFrom = useRef(-1);
+
+    useEffect( () => {
+            const reminders = [
         "Chat with your potential group members. Click each chat bubble to see profiles of its author.",
         "You have two minutes before voting!",
         "One minute left! Share your last comments to people.",
         "Ten seconds left! Get ready to vote!",
     ]
-    const checkReminderFrom = useRef(0);
-    const newCheckReminderFrom = useRef(-1);
-
-    useEffect( () => {
         /*get(ref(db, `rooms/${classId}/${roomId}/messages`)).then((snapshot) => {
             snapshot.forEach((s) => {
                 const sender = s.val()['sender'];
@@ -548,7 +617,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         }
 
         
-    }, [timerSec]);
+    }, [timerSec, classId, roomId, whenToRemind]);
     
     
     return (

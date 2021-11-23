@@ -3,7 +3,7 @@ import Navbar from "./navbar_quiz.jsx";
 import React, { useState } from 'react'
 import { getDatabase, ref, get, child } from "firebase/database";
 import team_building_algorithm from './team_building_algorithm';
-import Voting from "./voting.jsx";
+// import Voting from "./voting.jsx";
 import "./quizwaiting.css";
 
 //* QuizWaiting - '/quizwaiting/:course/:round' page

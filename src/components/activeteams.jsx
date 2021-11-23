@@ -1,5 +1,5 @@
-import { auth, db } from "./firebase.jsx";
-import { getDatabase, ref, get, child, set } from "firebase/database";
+import { auth } from "./firebase.jsx";
+import { getDatabase, ref, get, child } from "firebase/database";
 import { useState } from "react";
 
 //* ActiveTeamInfo - subpage to show team information of each course
@@ -14,10 +14,12 @@ function ActiveTeamInfo({course, name}){
       console.log(s.val());
       setInfo(s.val().map((i)=>{
         return(
+          <table>
           <tr key={i.name + i.email}>
             <td>{i.name}</td>
             <td>{i.email}</td>
           </tr>
+          </table>
         );
       }));
     }
@@ -87,7 +89,7 @@ function ActiveTeams() {
   const [onClick, setOnClick] = useState([false, '', '']);
 
   get(child(dbRef, route)).then((s)=> {
-    if (s.exists() && courseComponent == 'Loading...') {
+    if (s.exists() && courseComponent === 'Loading...') {
       const courses = Object.keys(s.val());
       console.log('courses:', courses);
       get(child(dbRef, '/classes/')).then((s)=>{

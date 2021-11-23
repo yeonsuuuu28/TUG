@@ -112,7 +112,7 @@ function team_building_algorithm(c, round, n) {
     /// store into DB
     const route2 = '/classes/' + c + '/rooms/';
     get(child(dbRef, route2)).then((s) => {
-      if(s.child('/0/round/').val() != round) {
+      if(s.child('/0/round/').val() !== round) {
         teams.forEach((team, index) => {
           set(ref(db, route2 + index + '/users'), team);
           set(ref(db, route2 + index + '/round'), round);

@@ -3,17 +3,18 @@ import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
-import Checkbox from '@mui/material/Checkbox';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
-import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
-import FlagIcon from '@mui/icons-material/Flag';
+// import Checkbox from '@mui/material/Checkbox';
+// import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+// import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+// import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+// import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+// import FlagIcon from '@mui/icons-material/Flag';
 import Navbar from "./navbar_quiz.jsx";
-import Voting from './voting.jsx';
+// import Voting from './voting.jsx';
+import Radio from '@mui/material/Radio'
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+// const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 
 // import { isImportEqualsDeclaration } from 'typescript';
@@ -22,7 +23,6 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 /// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button, fun - true if the round>=2
 /// stores the clicked answer data into DB
 function handleAnswerClick(course, qnum, score, fun){
-  alert("good");
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
   get(child(dbRef, route)).then((snapshot) => {
@@ -63,6 +63,13 @@ function GetAnswers({course, id, fun}){
     return arr.slice().sort(() => Math.random() - 0.5);
   }
 
+  const [selectedValue, setSelectedValue] = React.useState();
+  const handleChange = (event, course, id, score ,fun) => {
+    setSelectedValue(event.target.value);
+    handleAnswerClick(course, id, score, fun)
+  };
+
+
   if(fun){
     const answerButtons = shuffle(funAcandidates[id].answers).map(x => // shuffle: randomize the order of buttons
       <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, fun)}>
@@ -88,7 +95,13 @@ function GetAnswers({course, id, fun}){
     });
     const scorearr = flip ? [2, 1, 0, -1, -2] : [-2, -1, 0, 1, 2];
     const answerButtons = scorearr.map(score => // shuffle: randomize the order of buttons
-      <Checkbox {...label} icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} onClick = {() => handleAnswerClick(course, id, score, fun)} />
+
+      <Radio
+        checked = {selectedValue === (score + "")}
+        onChange = {(e) => handleChange(e, course, id, score, fun)}
+        value = {score + ""}
+        name = "radio-buttons"
+      />
       // <button key={score} className="answer" onClick = {() => handleAnswerClick(course, id, score, fun)}></button>
     );
 
@@ -197,7 +210,7 @@ function handleDoneClick(course, round, funNumber){
     const answeredquestions = Object.keys(snapshot.val());
     if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
       set(ref(db, route + 'essen_questions/done/'), "yes");
-      console.log(course, round, route, round==1); 
+      console.log(course, round, route, round===1); 
       if(round === '1') { /// done
         window.location.href = "/quizwaiting/" + course + "/" + round;
       }

@@ -27,7 +27,7 @@ componentDidMount() {
 
 user_credit() {
   const dbRef = ref(getDatabase());
-  // set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 400);
+  // set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 300);
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/')).then((snapshot) => {
       if (snapshot.exists()) {
         this.setState({ credit: Object.values(snapshot.val()) });

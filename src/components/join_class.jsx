@@ -65,7 +65,6 @@ function ScrollTop(props) {
     window: PropTypes.func,
   };
   
-
 const TextFieldSearchBar = styled(TextField)({
     '& .MuiInputBase-input': {
         fontSize: 15,
@@ -81,9 +80,6 @@ const TextFieldSearchBar = styled(TextField)({
         fontSize: 13,
         fontFamily: "Lato",
     },
-
-
-
   });
 
 const getclasses = () => {
@@ -190,7 +186,6 @@ export default function Join(props) {
         }
     } 
     
-
     const display = () => {
         let table = [];
         for (var i = 0; i < classList.length; i++) {

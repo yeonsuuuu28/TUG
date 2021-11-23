@@ -5,61 +5,126 @@ import DynamicForm from "./DynamicForm";
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {useHistory} from "react-router-dom"
 
 const update = [{}];
 const classid = "CS101";
-const tnames = [];
+// const tnames = [];
 
 const ReadDB = ({ params }) => {
   // const course = params.course
-  const [data, setData] = useState([
-    { name: "Uxer Ham", point: 0 },
-    { name: "Yeon Su Park", point: 0 },
-    { name: "조성혜", point: 0 },
-  ]);
+  // const [data, setData] = useState([
+  //   { name: "Uxer Ham", point: 0 },
+  //   { name: "Yeon Su Park", point: 0 },
+  //   { name: "조성혜", point: 0 },
+  // ]);
   const [pastteams, setPastTeams] = useState([]);
-  const [userids, setUserIds] = useState([]);
-  const [localCredit, setLocalCredit] = useState();
-  const [localCount, setLocalCount] = useState(0);
+  //const [userids, setUserIds] = useState([]);
+  // const [localCredit, setLocalCredit] = useState();
+  // const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
   const [tnames,setTnames] = useState([]);
+  // const [invert,setInvert] = useState([])
+  const history = useHistory()
 
-  const onPush = (e) => {
+
+
+  const onPush = async(model) => {
     const auth = getAuth();
     const dbRef = ref(getDatabase());
 
-    get(child(dbRef, "users")).then((snapshot) => {
+    get(child(dbRef, "/users")).then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val())
-        setUserIds(snapshot.val());
-
-        //get all users keys
-        //uid = Object.keys(.userids[0])
-        //name = Object.values(.userids[0])
-        //console.log(uid[0])
-        console.log(Object.keys(userids))
+        const userids = snapshot.val()
+        //setUserIds(snapshot.val());
+        console.log(userids)
+        //onsole.log(userdd)
        
         //const tempName =  userids.map((x) => userids[x])
         //console.log(tempName)
-        var j = 0;
+        // var j = 0;
         console.log("current username: " + auth.currentUser.displayName);
-        const currentUser = "Yeonsu";
+        // const currentUser = "Yeonsu";
         console.log(userids)
         const tempName = Object.keys(userids) //all user ids in the system 
-        console.log(tnames)
+        //console.log(Object.values(userids))
+        // eslint-disable-next-line array-callback-return
         tempName.map((element) => {
-          //console.log(element) 
-          tnames.map((team) => {
-            if(Object.keys(userids[element]).toString() === [team].toString()){ //if userid == teammate name
-              console.log(Object.keys(userids[element]),[team])
-              //update credits
-              //const updates = {};
-              //updates['/users/' + element +'/' + team + '/' + classid + '/0/credits'] = 10;
-              //set(ref(db), '/users/' + element +'/' + team + '/' + classid + '/0/credits',10);
+          //userids[element] //displayname
+          //element  //hashname
+
+        //---------looks for the updated user in the db----------//
+          //checks if there is a pastteams under user
+          console.log(userids[element][Object.keys(userids[element])]) //print all users 
+
+          if("pastteams" in userids[element][Object.keys(userids[element])]){ //pastteams
+            //checks if there is a class id in user
+            //console.log(userids[element][Object.keys(userids[element])].pastteams)
+            if(classid in userids[element][Object.keys(userids[element])].pastteams ){ //class id CS 101
+              console.log(userids[element][Object.keys(userids[element])].pastteams[classid]) //array of all CS 101
+
+               userids[element][Object.keys(userids[element])].pastteams[classid].map((index)=>{
+                console.log(index)
+                
+               //names in pastteams that have data
+               if(Object.keys(index).includes("name")){
+                tnames.map((team) => {
+                  console.log(team)
+                  console.log(index.name)
+                  console.log(index.id)
+                  //if name of user is inside the class id, update the original user
+                  if (index.name === team){
+                    console.log("Yes")
+                    //get current value
+                    const target = "users/" +
+                    index.id +
+                    "/" +
+                    index.name +
+                    "/pastteams/" +
+                    classid +"/0"
+                    console.log("target:" + target)
+                    console.log("credits: " + model[index.name])
+                    get(child(dbRef,target)).then((snapshot) =>
+                    {
+                      if (snapshot.exists()){ 
+                        console.log(snapshot.val())
+                        set(
+                          ref(
+                            db,
+                            target
+                          ),
+                          {credits: (Number(snapshot.val().credits)*snapshot.val().count + Number(model[index.name]))/(snapshot.val().count +1), count: snapshot.val().count + 1}
+                        );
+                          }
+                          else{
+                            //write fresh
+                            set(
+                              ref(
+                                db,
+                                target
+                              ),
+                              {credits: Number(model[index.name]), count:1} )
+                          }
+                    })
+                  }
+                  return(<></>);
+                }
+                )
+                console.log(index)
+               }
               
+              //console.log(index.name,index.credit)
+               if(userids[element].toString() === [index.name].toString()){
+                 console.log("match")
+                 
+               }
+               return(<></>);
+             })
+              }
             }
-            
-          })
+              
+        
          })
 
        
@@ -117,6 +182,7 @@ const ReadDB = ({ params }) => {
                     
                 }*/
       } else {
+        console.log("nodata")
       }
     });
   };
@@ -185,10 +251,10 @@ const ReadDB = ({ params }) => {
                   classid
               ),
               [
-                { credits: "0" },
-                { name: "Uxer Ham", credit: "0" },
-                { name: "Yeon Su Park", credit: "0" },
-                { name: "조성혜", credit: "0" },
+                { credits: 0, count:0 },
+                { name: "Uxer Ham", credit: "0", id:"bPNyFc0pLFaNa2EB3NaIMK0CVZC2" },
+                { name: "Yeon Su Park", credit: "0", id:"SbkyhYXe0iMEwKFMEQEQOW6dw273" },
+                { name: "Juan Mail", credit: "0", id:"Cjf0eQkTCOPYRs1Hud5P62HSWq53" },
               ]
             );
           }
@@ -234,26 +300,13 @@ const ReadDB = ({ params }) => {
   }, [pastteams]);
 
   const onSubmit = (model) => {
-    //alert(JSON.stringify(model[.pastteams[0][1].name])); // displays points allocated for 1st person
-
-    //debugging stuff
-    /*this.setState({
-            data:[model, ....data]
-        })
-        this.setState({
-            output:[model]
-        })
-       
-        alert(JSON.stringify(.output[0]));
-        console.log(.pastteams[0][3].credit)
-        */
-    //redirect
-    window.location.assign("./mypage");
+    //
+    onPush(model)
 
     //write to db updated values
     //1.build items to be written in DB
 
-    update[0] = { credits: 0 };
+    update[0] = { credits: 0, count: 0};
 
     for (const i in pastteams[0]) {
       
@@ -261,6 +314,7 @@ const ReadDB = ({ params }) => {
         update[i] = {
           name: pastteams[0][i].name,
           credit: model[pastteams[0][i].name],
+          id:pastteams[0][i].id
         };
       }
     }
@@ -278,6 +332,7 @@ const ReadDB = ({ params }) => {
       ),
       update
     );
+   
 
     //update past average
 
@@ -300,6 +355,8 @@ const ReadDB = ({ params }) => {
     );
 
     //redirect to another page
+    //window.location.assign("./mypage");
+    history.push("/mypage")
   };
 
   useEffect(() => {
@@ -334,8 +391,6 @@ const ReadDB = ({ params }) => {
           }}
         />
        
-
-        <button onClick={onPush}>Push </button>
       </div>
   
     </>

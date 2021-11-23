@@ -50,7 +50,7 @@ function handleCourseClick(course){
   }
     
 export default function Join(props) {
-    const [classList, setClassList] = useState(classes);
+    const classList = classes
     const [joinedClass, setJoinedClass] = useState([]);
     const [uid, setUid] = useState('');
     const [username, setUserName] = useState('');

@@ -27,10 +27,10 @@ componentDidMount() {
 
 user_credit() {
   const dbRef = ref(getDatabase());
-  // set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 300);
+  //set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 300);
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/')).then((snapshot) => {
       if (snapshot.exists()) {
-        this.setState({ credit: Object.values(snapshot.val()) });
+        this.setState({credit: Object.values(snapshot.val())});
         if (this.state.credit < 100) {
           this.setState({picture: PROFILE1});
           this.setState({level: 1});
@@ -55,6 +55,7 @@ user_credit() {
       else {
         this.setState({picture: PROFILE1});
         this.setState({level: 1});
+        this.setState({credit: 0});
       }
   }) ;
 }
@@ -67,6 +68,7 @@ user_credit() {
         const user_name = this.state.currentUser.displayName;
         const user_email = this.state.currentUser.email;
         this.user_credit();
+        console.log(this.state.credit)
         return (
           <div>
             {this.user_credit()}

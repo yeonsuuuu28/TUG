@@ -16,6 +16,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Zoom from '@mui/material/Zoom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
+import Modal from "./modal1.jsx"
 
 const theme = createTheme({
     palette: {
@@ -130,7 +131,7 @@ function dbAdd(e) {
         get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/')).then((snapshot) => {
             if (snapshot.exists()) {
                 if (!(Object.values(snapshot.val()).includes(e))) {
-                    alert("Successfully joined");
+                    // alert("Successfully joined");
                     push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + e), "no profile");
                     set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/email/'), auth.currentUser.email);
                   }
@@ -168,6 +169,7 @@ export default function Join(props) {
     const [input, setInput] = useState("");
     const [classList, setClassList] = useState(classes);
     const [table2, setTable2] = useState([])
+    const [table3, setTable3] = useState([])
 
     useEffect (() => {
       setTimeout (() => {
@@ -177,7 +179,12 @@ export default function Join(props) {
               if (snapshot.exists()) {
                 setTable2(Object.keys(snapshot.val()));
               }
-          })
+            })
+            get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/')).then((snapshot) => {
+              if (snapshot.exists()) {
+                setTable3(Object.keys(snapshot.val()));
+              }
+            })
         }
       }, 1000)
     }, [])
@@ -218,7 +225,7 @@ export default function Join(props) {
                 </tr>
               )
             }
-            else {
+            else if (table3.includes(j)) {
               table.push(
                 <tr className="test10" key={i}>
                     <td className="table_class" key={i+1}>
@@ -227,7 +234,22 @@ export default function Join(props) {
                         <div className="table_class_subtitle2">Team of {classList[i].team} | {classList[i].open} for Team-Building </div>
                     </td>
                     <td className="table_join_button" key={i+2}>
-                        <div className="join_button" onClick = {()=>classes_join(j)} key={i+3}>JOIN</div>
+                      <div className="start_button2" key={i+3}>JOINED</div>
+                    </td>
+                </tr>
+              )
+            }
+            else {
+              table.push(
+                <tr className="test10" key={i}>
+                    <td className="table_class" key={i+1}>
+                        <div className="table_class_title">{classList[i].name}</div>
+                        <div className="table_class_subtitle">{classList[i].professor} </div> 
+                        <div className="table_class_subtitle2">Team of {classList[i].team} | {classList[i].open} for Team-Building </div>
+                    </td>
+                    <td className="table_join_button" key={i+2} onClick = {()=>classes_join(j)}>
+                        <Modal/>
+                        {/* <div className="join_button" onClick = {()=>classes_join(j)} key={i+3}>JOIN</div> */}
                     </td>
                 </tr>
               )

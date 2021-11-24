@@ -1,0 +1,30 @@
+.modalmodal {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border: 0px;
+    height: 50px;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+
+.modal_button1 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    width: 120px;
+    height: 40px;
+    background: #939393;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 0 auto;
+}

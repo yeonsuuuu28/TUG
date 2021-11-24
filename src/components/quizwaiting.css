@@ -83,7 +83,15 @@
       margin-lefT: 10%; 
       height: 15px;
   }
-
+  .buttonTable{
+    border: 0px;
+    width: 80%;
+    margin-left: 10%; 
+    height: 15px;
+  }
+  .buttonTd{
+    width: 33%;
+  }
   .radioform{
     font-size: 40pt;
   }
@@ -100,29 +108,45 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    margin: auto;
     color: white;
     font-size: 14pt;
     white-space: nowrap;
     text-align: center;
     font-family: "Lato", sans-serif;
     height: 50px;
-    margin-left: 43%;
-    margin-right: 43%;
-    margin-top: 50px;
-    margin-bottom: 70px;
-    width: 200px;
+    max-width: 200px;
+    width: 60%;
     background: #1b1e2e;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .button100Unselect {
+    /* position: absolute; */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: auto;
+    color: white;
+    font-size: 14pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    height: 50px;
+    max-width: 200px;
+    width: 60%;
+    background: #999;
     color: white;
     border-radius: 10px;
     cursor: pointer;
   }
 
   .button101 {
-      padding-left: 40px;
-      text-align: center;
-    display: grid;
-    grid-template-columns: 0.3fr 0.3fr 0.3fr;
-    grid-gap: 0px;
+    text-align: center;
+    width: 100%;
+    margin: auto;
   }
 
   .profileprofile_title {

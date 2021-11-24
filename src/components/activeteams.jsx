@@ -5,6 +5,7 @@ import "./activeteams.css"
 import ERROR from "../images/error.png"
 
 function handleclick(course) {
+  console.log(course)
   window.location.href = "/credit/" + course
 }
 
@@ -19,14 +20,14 @@ function ActiveTeamInfo({course, name}){
       console.log(s.val());
       setInfo(s.val().map((i)=>{
         return(
-          <div>
-          <table>
+          <>
+         
           <tr key={i.name + i.email}>
             <td>{i.name}</td>
             <td>{i.email}</td>
           </tr>
-          </table>
-          </div>
+    
+          </>
         );
       }));
     }
@@ -43,17 +44,13 @@ function ActiveTeamInfo({course, name}){
         <button onClick={() => setOnClick(true)}>back</button>
         <div>{course}:{name}</div>
         <table>
-          <thead>
             <tr>
               <th key='member'>MEMBER</th>
               <th key='CONTACT'>CONTACT</th>
             </tr>
-          </thead>
-          <tbody>
             {info}
-          </tbody>
         </table>
-        <button onClick={(course) => handleclick(course)}>DONE</button>
+        <button onClick={() => handleclick(course)}>DONE</button>
       </div>
     )
   }
@@ -66,6 +63,7 @@ function ActiveTeams() {
   const initial = ['Loading...', <div className="error4"><img src = {ERROR} className = "error3" alt=""/><br/>You have no Active Team yet :(</div> ];
   const [courseComponent, setCourseComponent] = useState(initial[0]);
   const [onClick, setOnClick] = useState([false, '', '']);
+  
 
   if (auth.currentUser === null) {
     return (

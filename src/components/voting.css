@@ -1,7 +1,6 @@
-.button30 {
+.button301 {
     position: absolute;
     top: 380px;
-
     text-align: center;
     display: flex;
     justify-content: center;
@@ -18,9 +17,10 @@
     border-radius: 10px;
     cursor: pointer;
     left: 780px;
+    cursor: pointer;
   }
 
-.button31 {
+.button311 {
     position: absolute;
     top: 380px;
     right: 150px;

@@ -151,6 +151,7 @@ export default function Join(props) {
   const [uid, setUid] = useState("");
   const [username, setUserName] = useState("");
   const [table2, setTable2] = useState([]);
+  const [table3, setTable3] = useState([]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -174,6 +175,20 @@ export default function Join(props) {
             setTable2(Object.keys(snapshot.val()));
           }
         });
+        get(
+            child(
+              dbRef,
+              "users/" +
+                auth.currentUser.uid +
+                "/" +
+                auth.currentUser.displayName +
+                "/pastteams/"
+            )
+          ).then((snapshot) => {
+            if (snapshot.exists()) {
+              setTable3(Object.keys(snapshot.val()));
+            }
+          });
       }
     });
   }, [uid, username]);
@@ -198,6 +213,9 @@ export default function Join(props) {
         if (joinedClass[i] === classList[j].code) {
           let k = classList[j].code;
           if (table2.includes(k)) {
+            continue;
+          }
+          if (table3.includes(k)) {
             continue;
           }
           if (classList[j].open === "Opened") {

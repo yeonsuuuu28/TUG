@@ -77,7 +77,6 @@ const ReadDB = (params) => {
     }
   });
       
-
   const buildAveCredit = () => {
     return new Promise((resolve,reject) =>{
       setTimeout(()=>{

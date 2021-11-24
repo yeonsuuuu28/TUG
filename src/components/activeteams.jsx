@@ -21,12 +21,10 @@ function ActiveTeamInfo({course, name}){
       setInfo(s.val().map((i)=>{
         return(
           <>
-         
           <tr key={i.name + i.email}>
             <td>{i.name}</td>
             <td>{i.email}</td>
           </tr>
-    
           </>
         );
       }));
@@ -90,7 +88,7 @@ function ActiveTeams() {
             const name = s.child('/'+c+'/name/').val();
             const prof =  s.child('/'+c+'/professor/').val();
             return(
-            <table className="hahahatest">
+            <table key = {name+prof} className="hahahatest">
               <tbody>
                 <tr>
                   <td className ="collapse">

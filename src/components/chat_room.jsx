@@ -207,9 +207,9 @@ const ProfileTags = ({skills, hobbies}) => {
     if (skills.length * hobbies.length > 0) {
         return (
             <div>
-                {<h3>Skill-Sets</h3>}
+                {<h2>Skill-Sets</h2>}
                 {skills.map(tag => `#${tag}\t`)}
-                {<h3>Interesting Facts</h3>}
+                {<h2>Interesting Facts</h2>}
                 {hobbies.map(tag => `#${tag}\t`)}
             </div>
         )
@@ -436,63 +436,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 }
             });
             
-            // this creates dummy data
-            /*const classList = ["CS101", "CS204", "CS220", "CS230", "CS330"]
-            const meanCredits = [32.5, 28.3, 20.4, 36.3, 24.6]
-            const myCredits = [43.2, 41.3, 38.0, 23.1, 40.7]
-            
-            for (let i=0; i<5; i++) {
-                outData.push({
-                    'class': classList[i],
-                    'received': meanCredits[i],
-                    'given': myCredits[i],
-                })
-            }
-            console.log(`plot data of ${plotUserId} is`, outData)
-            setPlotData(outData);*/
-
-            /*// this is the original code but disable to render report images
-            // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수
-            // users/id/name/pastteams/CS101/??/credits:"3" <- 얘가 모든 클래스 평균
-            get(ref(db, `users/${plotUserId}`)).then((snapshot) => {
-                if (snapshot.exists()) {
-
-                    // iterate once sice each id has one name
-                    snapshot.forEach((snapshotChild) => {
-                        
-                        // iterate for each class
-                        snapshotChild.child("pastteams").forEach((snapshotClass) => {
-                            const res = Object.values(snapshotClass.val());
-                            
-                            let meanCredit = -1;
-                            let creditSum = 0;
-                            let peers = 0;
-                            
-                            for (const r of res) {
-                                console.log('credit r', r)
-                                if (Object.keys(r).includes('credits')) {
-                                    meanCredit = parseInt(r['credits'])
-                                }
-                                else {
-                                    creditSum += parseInt(r['credit'])
-                                    peers += 1;
-                                }
-                            }
-                            
-                            const myCredit = Math.round(100 * creditSum / peers) / 100;
-                            
-                            outData.push({
-                                'class': snapshotClass.key,
-                                'received': meanCredit,
-                                'peers': myCredit,
-                            })
-                        })
-                    })
-
-                    console.log(`plot data of ${plotUserId} is`, outData)
-                    setPlotData(outData);
-                }
-            });//*/
         }
     }, [plotUserId])
 
@@ -540,7 +483,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     
     useEffect( () => {
         if (secLeft.current < 0){
-            console.log("타임 아웃");
+            console.log("CHAT SESSION FINISHED!");
             set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
             clearInterval(timerId.current);
         }
@@ -562,19 +505,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     const newCheckReminderFrom = useRef(-1);
 
     useEffect( () => {
-        /*get(ref(db, `rooms/${classId}/${roomId}/messages`)).then((snapshot) => {
-            snapshot.forEach((s) => {
-                const sender = s.val()['sender'];
-                const mid = parseInt(s.val()['id']);
-                if (sender === remoteId && idsToRemind.includes(mid)) {
-                    remindStep += 1;
-                }
-                setSkills(s.child(`class/${classId}/profile1`).val())
-                setHobbies(s.child(`class/${classId}/profile2`).val())
-                console.log(`skills of ${plotUserId} are`, skills)
-                console.log(`hobbies of ${plotUserId} are`,hobbies)
-            })
-        })*/
         if (roomInitTime.current && roomInitTime.current > 0) {
             let breakLoop = false;
             newCheckReminderFrom.current = -1;
@@ -592,7 +522,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 }
                 else {
                     get(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`)).then((snapshot) => {
-                        // TODO: others could write message with same mid
                         if (!snapshot.exists()) {
                             set(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`), {
                                 id: `${mid}`,
@@ -615,6 +544,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
     // eslint-disable-next-line
     }, [timerSec]);
+
+    
     
     
     return (
@@ -675,7 +606,11 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 }
                 {(timerSec>0 || timerMin>0) && 
                     (plotUserId.length>0 && plotUserId !== remoteId) && 
-                    (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <h2>No Credit History Found</h2>))
+                    (<h2>Credit History</h2>)
+                }
+                {(timerSec>0 || timerMin>0) && 
+                    (plotUserId.length>0 && plotUserId !== remoteId) && 
+                    (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <p>no credit history found.<br/>please welcome the newcomer!</p>))
                 }
             </div>
         </div>

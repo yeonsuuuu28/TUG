@@ -31,19 +31,19 @@ function handleAnswerClick(course, qnum, score, fun){
 };
 
 //* handleImportanceClick: event handler when the importance-check button is clicked
-function handleImportanceClick(course, qnum){
-  const dbRef = ref(getDatabase());
-  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-  get(child(dbRef, route)).then((snapshot) => {
-    if(snapshot.exists()) {
-        alert("Success!!!!");
-        set(ref(db, route + 'essen_questions/' + qnum + '/importance/'), "yes");
-    }
-    else{
-      alert("something is wrong"); // TODO go out to the main page
-    }
-  });
-};
+// function handleImportanceClick(course, qnum){
+//   const dbRef = ref(getDatabase());
+//   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
+//   get(child(dbRef, route)).then((snapshot) => {
+//     if(snapshot.exists()) {
+//         alert("Success!!!!");
+//         set(ref(db, route + 'essen_questions/' + qnum + '/importance/'), "yes");
+//     }
+//     else{
+//       alert("something is wrong"); // TODO go out to the main page
+//     }
+//   });
+// };
 
 //* GetAnswers
 /// input: id - index of fun question in funQcandidates array
@@ -502,46 +502,45 @@ function GetEssentialQuestions({course, randArr}){
 //* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
 /// input: course - course id, round, funNumber - number of fun questions at each round
 /// if done: goto quizwaiting page
-function handleDoneClick(course, round, funNumber){
-  const dbRef = ref(getDatabase());
-  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-  console.log(course, round, route); 
+// function handleDoneClick(course, round, funNumber){
+//   const dbRef = ref(getDatabase());
+//   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
+//   console.log(course, round, route); 
 
-  /// essential questions
-  get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
-    set(ref(db, route + 'essen_questions/done/'), "no");
-    const answeredquestions = Object.keys(snapshot.val());
-    if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
-      set(ref(db, route + 'essen_questions/done/'), "yes");
-      console.log(course, round, route, round===1); 
-      if(round === '1') { /// done
-        window.location.href = "/quizwaiting/" + course + "/" + round;
-      }
-    }
-    else{
-      if(round === '1') alert("not done"); //TODO
-    }
-  });
+//   /// essential questions
+//   get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
+//     set(ref(db, route + 'essen_questions/done/'), "no");
+//     const answeredquestions = Object.keys(snapshot.val());
+//     if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
+//       set(ref(db, route + 'essen_questions/done/'), "yes");
+//       console.log(course, round, route, round===1); 
+//       if(round === '1') { /// done
+//         window.location.href = "/quizwaiting/" + course + "/" + round;
+//       }
+//     }
+//     else{
+//       if(round === '1') alert("not done"); //TODO
+//     }
+//   });
+//   if(round > 1){ /// fun questions
+//     get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
+//       set(ref(db, route + 'fun_questions/done/'), "no");
+//       const answeredquestions = Object.keys(snapshot.val());
+//       if(snapshot.exists() && answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length)) {
+//         set(ref(db, route + 'fun_questions/done/'), "yes");
+//         // console.log("What: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
 
-  if(round > 1){ /// fun questions
-    get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
-      set(ref(db, route + 'fun_questions/done/'), "no");
-      const answeredquestions = Object.keys(snapshot.val());
-      if(snapshot.exists() && answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length)) {
-        set(ref(db, route + 'fun_questions/done/'), "yes");
-        // console.log("What: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
+//         /// done
+//         window.location.href = "/quizwaiting/" + course + "/" + round;
+//       }
+//       else{
+//         // console.log("Whatf: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
 
-        /// done
-        window.location.href = "/quizwaiting/" + course + "/" + round;
-      }
-      else{
-        // console.log("Whatf: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
-
-        alert("not done"); //TODO
-      }
-    });
-  }
-};
+//         alert("not done"); //TODO
+//       }
+//     });
+//   }
+// };
 
 
 

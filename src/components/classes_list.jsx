@@ -45,7 +45,7 @@
             "name" : "System Programming",
             "professor" : "Jaehyuk Huh",
             "code" : "CS230",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 2
         }, 
         {

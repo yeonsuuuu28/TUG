@@ -13,7 +13,7 @@ function QuizWaiting(props) {
   let rooms = 1;
   const [leftStudents, setLeftStudents] = useState('loading...');
 
-  setTimeout(setInterval(getLeftStudents(), 10000), 5000);
+  setInterval(getLeftStudents, 1000);
   
   if(leftStudents[0] === '0'){
     const totalStudents = leftStudents.split(' / ')[1];
@@ -29,23 +29,25 @@ function QuizWaiting(props) {
   /// output: leftStudents - number of left students that did not finished the quiz
   /// set number of rooms to divide students
   function getLeftStudents() {
+    var totalStudents = 0;
+    console.log("startleft, ", leftStudents);
     get(child(dbRef, route)).then((s) => {
-      const totalStudents = Object.keys(s.val()).length;
-      let leftStudents = totalStudents;
+      totalStudents = Object.keys(s.val()).length;
+      let ls = totalStudents;
       s.forEach((user) => {
         if(user.child('/essen_questions/done/').val() === 'yes') { // essential questions
           if( round > 1 ? true : false ){
             if(user.child('/fun_questions/done/').val() === 'yes'){ // fun questions 
               console.log("userchild fun: ", user.key, user.child('/fun_questions/done/').val());
-              leftStudents = leftStudents - 1;
+              ls = ls - 1;
             }
             else console.log(user);
           }
-          else leftStudents = leftStudents - 1;
-          console.log("left: ", leftStudents);
+          else ls = ls - 1;
         }
       });
-      setLeftStudents(leftStudents + ' / ' + totalStudents); // set left students
+      console.log("left: ", ls);
+      setLeftStudents(ls + ' / ' + totalStudents); // set left students
     });
   }
 
@@ -58,7 +60,7 @@ function QuizWaiting(props) {
       <div className="waiting_description_align">
       <div className="waiting_description">
         Please wait for your peers to finish the quiz!<br/>
-        Round {round} will start soon. Who will be your first team?<br/>
+        Chat Round {round} will start soon. Who will be your first team?<br/>
         We hope you could find your suitable teammates!<br/>
       </div>
       <div className="waiting_number">

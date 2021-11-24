@@ -99,6 +99,7 @@ function handleVoting(vote, course, round){
             console.log("dkdk",curracceptance.length/total);
             return voteResult(false, course, round);//TODO
           }
+          return(<></>)
         }
         else{
           console.log("not in this room: ", room.users, auth.currentUser.uid);

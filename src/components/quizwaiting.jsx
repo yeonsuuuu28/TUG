@@ -1,9 +1,7 @@
-// import { Titlebar } from "./random_quiz.jsx";
 import Navbar from "./navbar_quiz.jsx";
 import React, { useState } from 'react'
 import { getDatabase, ref, get, child } from "firebase/database";
 import team_building_algorithm from './team_building_algorithm';
-// import Voting from "./voting.jsx";
 import "./quizwaiting.css";
 
 //* QuizWaiting - '/quizwaiting/:course/:round' page
@@ -23,8 +21,6 @@ function QuizWaiting(props) {
     else if(totalStudents >= 6) rooms = Math.round(totalStudents/3); // ~3: 1 room, 4~7: 2 rooms, 8~10: 3 rooms
     else if(totalStudents >= 4) rooms = Math.round(totalStudents/2);  
     
-    // console.log("leftStudents", leftStudents.split(' / ')[1]);
-    // console.log("rooms: ", round, rooms);
     team_building_algorithm(course, round, rooms); // TODO: should define n (the number of teams)
     setTimeout(() => window.location.href = "/chat/" + course + "/" + round, 1000);  /// goto chat page
   }

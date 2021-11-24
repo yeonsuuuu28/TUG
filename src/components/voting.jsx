@@ -1,8 +1,5 @@
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
-// import { useState } from "react";
-// import { AppPlatform } from "firebase-admin/lib/project-management/app-metadata";
-
 
 //* storeTeamInDB
 function storeTeamInDB(course, userarr){
@@ -14,8 +11,6 @@ function storeTeamInDB(course, userarr){
       const emails = userarr.map((user, index) => snapshot.child('/'+user+'/'+username[index] + '/email/').val());
       // console.log("emails: ", username, userarr, emails);
       userarr.forEach((user,index) => {
-        // const username = Object.keys(snapshot.child('/'+user+'/').val())[0];
-        // console.log("lastpang: ", Object.keys(snapshot.child('/'+user+'/').val()));
         /// relocate user at the first element
         const userarr2 = userarr.slice();
         userarr2.splice(index - userarr.length, 1);
@@ -32,11 +27,12 @@ function storeTeamInDB(course, userarr){
             name: username2[i],
             id: user,
             email: emails2[i],
-            credit:0
+            credit:0,
+            count:0
           })
         })
         console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/", data2);
-        set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"),{credit:0, count:0}, data2); /// store current team in DB
+        set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"), data2); /// store current team in DB
         set(ref(db, 'classes/' + course + '/user/' + user + "/finished/"), 'yes');
         set(ref(db, "users/" + user + '/' + username[index] + "/teambuilding/"), null);
       });
@@ -62,7 +58,6 @@ function voteResult(formed, course, round){
 /// input: vote - true if the user clicks 'Yes', false if the user clicks 'Try Again'
 function handleVoting(vote, course, round){
   const dbRef = ref(getDatabase());
-  // const route = 'rooms/' + course + "/"; //TODO
   const route = 'classes/' + course + '/rooms/';
 
   get(child(dbRef, route)).then((snapshot) => {
@@ -70,6 +65,7 @@ function handleVoting(vote, course, round){
       snapshot.val().map((room, index)=>{
         if(room.users.includes(auth.currentUser.uid)){
           set(ref(db, route + index + '/vote/voted/' + auth.currentUser.uid + '/'), 'yes');
+          
           let curracceptance = room.vote.accept;
           if(curracceptance === undefined) curracceptance = [];
           else curracceptance = Object.keys(curracceptance);
@@ -79,30 +75,29 @@ function handleVoting(vote, course, round){
           if(voted === undefined) voted = [];
           else voted = Object.keys(voted);
 
-          // console.log("curr: ", curracceptance/total);
-          console.log(voted, curracceptance, total);
+          // console.log("curr: ", curracceptance/total, vote);
+          // console.log(voted, curracceptance.length, total);
           if((curracceptance.length/total) >= 2/3) { /// if 2/3 of team members agree, finalize the team with this members!
             storeTeamInDB(course, room.users);
-            return voteResult(true, course, round);
+            return voteResult(true, course, round);//TODO
           }
-          else if((voted.length/total) < 2/3){
-            return setTimeout(handleVoting(vote, course, round), 1000);
-          }
-          else if((curracceptance.length/total) < 2/3 && !vote){
-            console.log("dkdk",curracceptance/total);
-            return voteResult(false, course, round);
-          }
-          else if(vote){ /// +1 to room.vote.accept if user voted as 'true'
+          
+          if(vote){ /// +1 to room.vote.accept if user voted as 'true'
             set(ref(db, route + index + '/vote/accept/' + auth.currentUser.uid + '/'), 'yes');
             if((curracceptance.length+1)/total >= 2/3) { /// if 2/3 of team members agree, finalize the team with this members!
               storeTeamInDB(course, room.users);
-              // console.log("aft: ", (curracceptance + 1)/total);
-              return voteResult(true, course, round);
+              // console.log("aft: ", (curracceptance.length + 1)/total);
+              return voteResult(true, course, round);//TODO
             }
-            else{
-              console.log("d2222kdk",curracceptance/total);
-              return voteResult(false, course, round);
-            }
+          }
+          
+          if((voted.length/total) < 2/3){ /// if 2/3 of students haven't vote yet, recall this function
+            // console.log('again~~');
+            return setTimeout(handleVoting(vote, course, round), 1000);
+          }
+          else if((curracceptance.length/total) < 2/3){ /// if 2/3 of students voted and 2/3 of students did not agree to this team, call voteResult with parameter 'false'
+            console.log("dkdk",curracceptance.length/total);
+            return voteResult(false, course, round);//TODO
           }
         }
         else{

@@ -170,6 +170,7 @@ export default function Join(props) {
     const [classList, setClassList] = useState(classes);
     const [table2, setTable2] = useState([])
     const [table3, setTable3] = useState([])
+    const [table4, setTable4] = useState([])
 
     useEffect (() => {
       setTimeout (() => {
@@ -183,6 +184,11 @@ export default function Join(props) {
             get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/')).then((snapshot) => {
               if (snapshot.exists()) {
                 setTable3(Object.keys(snapshot.val()));
+              }
+            })
+            get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/pastteams/')).then((snapshot) => {
+              if (snapshot.exists()) {
+                setTable4(Object.keys(snapshot.val()));
               }
             })
         }
@@ -212,6 +218,20 @@ export default function Join(props) {
             let j = classList[i].code;
             console.log(j, table2)
             if (table2.includes(j)) {
+              table.push(
+                <tr className="test10" key={i}>
+                    <td className="table_class" key={i+1}>
+                        <div className="table_class_title">{classList[i].name}</div>
+                        <div className="table_class_subtitle">{classList[i].professor} </div> 
+                        <div className="table_class_subtitle2">Team of {classList[i].team} | {classList[i].open} for Team-Building </div>
+                    </td>
+                    <td className="table_join_button" key={i+2}>
+                      <div className="start_button2" key={i+3}>COMPLETED</div>
+                    </td>
+                </tr>
+              )
+            }
+            else if (table4.includes(j)) {
               table.push(
                 <tr className="test10" key={i}>
                     <td className="table_class" key={i+1}>

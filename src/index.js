@@ -22,7 +22,7 @@ const App = () => (
       <Route path="/quiz/:course/:round" component = {Quiz} />
       <Route path="/chat/:course/:round" component = {GroupChatInterface} />
       <Route path="/mypage" component = {mypage} />
-      <Route path="/credit" component = {credit} />
+      <Route path="/credit/:course" component = {credit} />
       <Route path="/startquiz" component = {startquiz} />
       <Route path="/profile" component = {profile} />
       <Route path="/quizinfo/:course/:round" component = {QuizInformation} />

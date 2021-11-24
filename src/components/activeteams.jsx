@@ -4,6 +4,11 @@ import { useState } from "react";
 import "./activeteams.css"
 import ERROR from "../images/error.png"
 
+function handleclick(course) {
+  // window.location.href = "/credit/" + course
+  console.log(course)
+}
+
 //* ActiveTeamInfo - subpage to show team information of each course
 function ActiveTeamInfo({course, name}){
   const dbRef = ref(getDatabase());
@@ -15,12 +20,15 @@ function ActiveTeamInfo({course, name}){
       console.log(s.val());
       setInfo(s.val().map((i)=>{
         return(
+          <div>
           <table>
           <tr key={i.name + i.email}>
             <td>{i.name}</td>
             <td>{i.email}</td>
           </tr>
           </table>
+          {/* <button onClick={(course) => handleclick(course)}>DONE</button> */}
+          </div>
         );
       }));
     }

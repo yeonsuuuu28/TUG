@@ -194,7 +194,8 @@ export default function Join(props) {
                 <tr className="test10" key={i}>
                     <td className="table_class" key={i+1}>
                         <div className="table_class_title">{classList[i].name}</div>
-                        <div className="table_class_subtitle">{classList[i].professor}</div>
+                        <div className="table_class_subtitle">{classList[i].professor} </div> 
+                        <div className="table_class_subtitle2">Team of {classList[i].team} | {classList[i].open} for Team-Building </div>
                     </td>
                     <td className="table_join_button" key={i+2}>
                         <div className="join_button" onClick = {()=>classes_join(j)} key={i+3}>JOIN</div>

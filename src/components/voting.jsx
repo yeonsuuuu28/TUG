@@ -59,6 +59,7 @@ function voteResult(formed, course, round){
 //* handleVoting
 /// input: vote - true if the user clicks 'Yes', false if the user clicks 'Try Again'
 function handleVoting(vote, course, round){
+  alert("please wait until other teammates vote!");
   const dbRef = ref(getDatabase());
   const route = 'classes/' + course + '/rooms/';
 

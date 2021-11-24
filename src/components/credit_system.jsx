@@ -553,7 +553,7 @@ const ReadDB = (params) => {
     writeUpdate2()
 
     alert(
-      "Thank you for submitting an honest review! Credits are now updated Successfully"
+      "Thank you for submitting an honest review! As a bonus you get 10 points for evaluating your teammates. Check your profile to see your total credits!"
     );
 
     //redirect to another page

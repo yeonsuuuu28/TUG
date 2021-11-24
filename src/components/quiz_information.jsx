@@ -3,12 +3,12 @@ import { getDatabase, ref, get, child } from "firebase/database";
 import Navbar from "./navbar_quiz.jsx";
 import "./quiz_information.css";
 import React, { useState } from 'react'
+import classes from "./classes_list.jsx";
 
 
 function handleGetStarted(course, round){
   window.location.href = "/quiz/" + course + '/' + round;
 }
-
 
 
 //* QuizInformation
@@ -34,16 +34,15 @@ function QuizInformation(props){
   getStudentsMinMax();
 
   //* getStudentsMinMax
-  /// 11~: [totalStudents/4] rooms
-  /// ~3: 1 room, 4~7: 2 rooms, 8~10: 3 rooms
   function getStudentsMinMax() {
     get(child(dbRef, route)).then((s) => {
       const totalStudents = Object.keys(s.val()).length;
       const divide = () => {
-        if(totalStudents <= 3) return 1;
-        else if(totalStudents <= 7) return 2;
-        else if(totalStudents <= 10) return 3;
-        else return 4;
+        for(var i =0; i<classes.length; i++){
+          if(classes[i].code === course) {
+            return classes[i].team;
+          }
+        }
       }
       const divided = totalStudents/divide();
 
@@ -53,31 +52,6 @@ function QuizInformation(props){
       else{
         setStdMinMax(parseInt(divided));
       }
-
-      // if(totalStudents <= 3){
-      //   setStdMinMax(totalStudents);
-      // }
-      // else if(totalStudents <= 7){
-      //   if(totalStudents === 4 || totalStudents === 6){
-      //     setStdMinMax(parseInt(totalStudents/2));
-      //   }
-      //   else{
-      //     setStdMinMax(Math.floor(totalStudents/2)+' ~ '+Math.ceil(totalStudents/2));
-      //   }
-      // }
-      // else if(totalStudents <= 10){
-      //   if(totalStudents === 9){
-      //     setStdMinMax(parseInt(totalStudents/3));
-      //   }
-      //   else{
-      //     setStdMinMax(Math.floor(totalStudents/3)+' ~ '+Math.ceil(totalStudents/3));
-      //   }
-      // }
-      // else{
-      //   if(((totalStudents / 4) - Math.floor(totalStudents / 4)) > 0){
-      //     setStdMinMax(Math.floor(totalStudents/4) + ' ~ ' + Math.ceil(totalStudents/4));
-      //   }
-      // }
     });
   }
 

@@ -26,7 +26,7 @@ const App = () => (
       <Route path="/quizinfo/:course/:round" component = {QuizInformation} />
       <Route path="/activeteams" component = {ActiveTeams} />
       <Route path="/quizwaiting/:course/:round" component = {QuizWaiting} />
-      <Route path="/waitingjoin/:course" component = {WaitingJoin} />
+      <Route path="/waitingjoin/:course/:round" component = {WaitingJoin} />
     </Switch>
   </BrowserRouter>
 );

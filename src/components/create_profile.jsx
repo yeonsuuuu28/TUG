@@ -27,7 +27,7 @@ function profileAdd(x, y) {
             set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID + "/profile2/"), y)
             alert("Successfully saved");
             // window.location.href = "/quizinfo/" + classID + '/1'
-            window.location.href = "/waitingjoin/"+classID; 
+            window.location.href = "/waitingjoin/"+classID + '/1'; 
             }
           else {
             alert("Please add 3 tags for each!")

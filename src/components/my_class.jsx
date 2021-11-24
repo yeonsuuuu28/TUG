@@ -17,7 +17,7 @@ function handleCourseClick(course){
                 alert("You are already building a team for " + course + "."
                 + "\nRedirecting to " + course + " quiz page...")
                 // window.location.href = "/quizinfo/"+course+'/1'; //TODO delete later
-                window.location.href = "/waitingjoin/"+course;
+                window.location.href = "/waitingjoin/"+course+'/1';
               }
               else {
                 alert("You have not finished creating your profile for " + course + "."
@@ -33,7 +33,7 @@ function handleCourseClick(course){
                               alert("You are already building a team for " + Object.values(snapshot.val())[0] + "."
                               + "\nRedirecting to " + Object.values(snapshot.val())[0] + " quiz page...")
                               // window.location.href = "/quizinfo/"+ Object.values(snapshot.val())[0] +'/1';  //TODO delete later
-                              window.location.href = "/waitingjoin/"+Object.values(snapshot.val())[0];  
+                              window.location.href = "/waitingjoin/"+Object.values(snapshot.val())[0]+'/1';  
                             }
                             else if (Object.values(snapshot2.val())[0] === "no profile") {
                               alert("You have not finished creating your profile for " + Object.values(snapshot.val())[0] + "."

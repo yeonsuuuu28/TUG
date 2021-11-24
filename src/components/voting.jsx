@@ -48,8 +48,9 @@ function voteResult(formed, course, round){
   }
   else if(formed === false){ /// store the current team in the DB goto quizinfo page of next round
     if(alert("Less than 2/3 of your teammates agreed to be in this team :(\n Let's go to the next round! :)"));
-    const nextRound = parseInt(round) + 1;
-    window.location.href = "/quizinfo/" + course + "/" + nextRound;
+    const nextRound = parseInt(round) + 1;    
+    // window.location.href = "/quizinfo/" + course + "/" + nextRound;
+    window.location.href = "/waitingjoin/" + course + "/" + nextRound;
   }
 }
 

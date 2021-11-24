@@ -403,39 +403,39 @@ const ReadDB = (params) => {
             //  console.log(.pastteams[0][3].credit)
           } else {
             //add in data
-            alert("no data, pushing dummy data ");
-            set(
-              ref(
-                db,
-                "users/" +
-                  uid +
-                  "/" +
-                  auth.currentUser.displayName +
-                  "/current_teams/" +
-                  classid
-              ),
-              [
-                { credits: 0, count: 0 },
-                {
-                  name: "Uxer Ham",
-                  credit: "0",
-                  id: "bPNyFc0pLFaNa2EB3NaIMK0CVZC2",
-                  email: "uxerham@gmail.com",
-                },
-                {
-                  name: "Yeon Su Park",
-                  credit: "0",
-                  id: "SbkyhYXe0iMEwKFMEQEQOW6dw273",
-                  email: "yeonsuuuu28@gmail.com",
-                },
-                {
-                  name: "Juan Mail",
-                  credit: "0",
-                  id: "Cjf0eQkTCOPYRs1Hud5P62HSWq53",
-                  email: "mailjuan2021@gmail.com",
-                },
-              ]
-            );
+            alert("no data");
+            // set(
+            //   ref(
+            //     db,
+            //     "users/" +
+            //       uid +
+            //       "/" +
+            //       auth.currentUser.displayName +
+            //       "/current_teams/" +
+            //       classid
+            //   ),
+            //   [
+            //     { credits: 0, count: 0 },
+            //     {
+            //       name: "Uxer Ham",
+            //       credit: "0",
+            //       id: "bPNyFc0pLFaNa2EB3NaIMK0CVZC2",
+            //       email: "uxerham@gmail.com",
+            //     },
+            //     {
+            //       name: "Yeon Su Park",
+            //       credit: "0",
+            //       id: "SbkyhYXe0iMEwKFMEQEQOW6dw273",
+            //       email: "yeonsuuuu28@gmail.com",
+            //     },
+            //     {
+            //       name: "Juan Mail",
+            //       credit: "0",
+            //       id: "Cjf0eQkTCOPYRs1Hud5P62HSWq53",
+            //       email: "mailjuan2021@gmail.com",
+            //     },
+            //   ]
+            // );
           }
         });
         //get all user id

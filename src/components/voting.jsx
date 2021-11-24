@@ -28,8 +28,7 @@ function storeTeamInDB(course, userarr){
             name: username2[i],
             id: user,
             email: emails2[i],
-            credits:0,
-            count:0
+            credit:0,
           })
         }));
         console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/", data2);

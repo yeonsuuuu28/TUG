@@ -138,11 +138,54 @@ function Voting(props) {
       <div style={{textAlign: "center", fontFamily: "Lato", fontSize: "12pt"}}>
         Do you want to make team with current members?
       </div>
-      <div>
-        <span className="button30" onClick={() => handleVoting(true, course, round)}>Yes</span>
-        <span className="button31" onClick={() => handleVoting(false, course, round)}>Try Again ({leftchances}/{totalrounds})</span>
+      <div style={{textAlign:"center"}}>
+      <table style={{textAlign:"center", width: "50%", marginLeft: "25%", marginRight: "25%", height: "150px", border: "0"}}>
+        <tbody>
+          <tr>
+            <td style={{textAlign:"center", width: "100px"}}>
+        <div style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              color: "white",
+              fontSize: "12pt",
+              whiteSpace: "nowrap",
+              textAlign: "center",
+              fontFamily: "Lato, sans-serif",
+              height: "40px",
+              width: "80%",
+              marginLeft: "10%",
+              marginRight: "10%",
+              background: "#1b1e2e",
+              borderRadius: "10px",
+              cursor: "pointer",
+          }} 
+          onClick={() => handleVoting(true, course, round)}>Yes</div>
+          </td>
+          <td style={{textAlign:"center", width: "100px"}}>
+        <div style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              color: "white",
+              fontSize: "12pt",
+              whiteSpace: "nowrap",
+              textAlign: "center",
+              fontFamily: "Lato, sans-serif",
+              height: "40px",
+              width: "80%",
+              marginLeft: "10%",
+              marginRight: "10%",
+              background: "#1b1e2e",
+              borderRadius: "10px",
+              cursor: "pointer",
+          }} onClick={() => handleVoting(false, course, round)}>Try Again ({leftchances}/{totalrounds})</div>
+          </td>
+          </tr>
+          </tbody>
+          </table>
       </div>
-    </div>
+      </div>
   )
 }
 

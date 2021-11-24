@@ -112,43 +112,115 @@ function GetAnswers({course, id, fun}){
 function GetRandomFunQuestions({course, round, number}){ 
   const dbRef = ref(getDatabase());
   const route = '/classes/' + course + '/fun_order/';
-  const N = funQcandidates.length;
-  const [questions, setQuestions] = useState([]);
+  var result = []
+  var checkbox = []
+  var buttonClicked = []
+  var startIndex, endIndex;
+  if (round === "2"){
+    startIndex = 0;
+    endIndex = Math.floor(funQcandidates.length/2) - 1;
+  }
+  else{
+    startIndex = Math.floor(funQcandidates.length/2);
+    endIndex = funQcandidates.length - 1;
+  }
 
-  get(child(dbRef, route)).then((snapshot) => {
-    if(snapshot.exists()) {
-      const history = Object.values(snapshot.val());
-      if(questions.length === 0){
-        setQuestions(history.slice(Math.min((round-2) * number, N), Math.min((round-1) * number, N)));
+  function handleChange(e){
+    if(checkbox.includes(e)){
+      var index = checkbox.indexOf(e);
+      if (index !== -1) {
+        checkbox.splice(index, 1);
       }
     }
     else{
-      var randArr = [];
-      for(var i =0; i<N; i++) {
-        randArr.push([Math.random(), i]);
-      }
-      randArr.sort();
-      const history = randArr.map(x => x[1]);
-      set(ref(db, route), history);
-      if(questions.length === 0){
-        setQuestions(history.slice(Math.min((round-2) * number, N), Math.min((round-1) * number, N)));
-      }
+      checkbox.push(e)
     }
-  });
+  }
 
-  console.log(questions)
-  const QAobjects = questions.map(x => // list of the html object of each question and answer set
-    <li className = "question" key = {x}>
-      {funQcandidates[x].question}
-      <GetAnswers course = {course} id = {x} fun={true}/>
-    </li>
-  );
+  for (var j = startIndex; j <= endIndex; j++){
+    buttonClicked.push({0: false, 1: false, 2: false})
+  }
+  const [buttons, setButtons] = useState(buttonClicked);
 
-  return (
-    <ul id="quiz-content">
-      {QAobjects}
-    </ul>
-  )
+  function handleButtonClick (index, qNo){
+    const tempLst = [...buttons]
+    if (tempLst[index][qNo]){
+      tempLst[index][qNo] = false;
+    }
+    else{
+      tempLst[index][0] = false
+      tempLst[index][1] = false
+      tempLst[index][2] = false
+      tempLst[index][qNo] = true
+    }
+    setButtons(tempLst)
+  }
+
+  function renderButton(index, qNo, temp){
+    console.log(buttons[index][qNo])
+    if(buttons[index][qNo]){
+      return(
+        <div className = "button100" onClick = {() => handleButtonClick(index, qNo)}>{funAcandidates[temp].answers[qNo].answer}</div>
+      )
+    }
+    else{
+      return(
+        <div className = "button100Unselect" onClick = {() => handleButtonClick(index, qNo)}>{funAcandidates[temp].answers[qNo].answer}</div>
+      )
+    }
+  }
+  
+  for (var i = startIndex; i <= endIndex; i++){
+    const temp = i;
+    result.push(
+      <>
+        <table className = "quizTable">
+          <tbody>
+              <tr>
+                  <td className = "nopadding">
+
+                  </td>
+                  <td className = "mini_explanation">
+                      Check if this question<br/> is important to you!
+                  </td>
+              </tr>
+              <tr>
+                  <td className = "question_title12">
+                      <b>Q{i - startIndex + 1}</b>. {funQcandidates[temp].question}
+                  </td>
+                  <td className = "checkboxQuiz">
+                    <Checkbox
+                      onChange={() => handleChange(temp + 1)}
+                      inputProps={{ 'aria-label': 'controlled' }}
+                      sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                    /> 
+                  </td>
+              </tr>
+          </tbody>
+        </table>
+        <br/>
+        <br/>
+        <table className = "buttonTable">
+          <tbody>
+            <tr>
+              <td className = "buttonTd">
+                {renderButton(temp-startIndex, 0, temp)}
+              </td>
+              <td className = "buttonTd">
+                {renderButton(temp-startIndex, 1, temp)}
+              </td>
+              <td className = "buttonTd">
+                {renderButton(temp-startIndex, 2, temp)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br/>
+        <br/>
+      </>
+    )
+  }
+  return result;
 };
 
 
@@ -220,6 +292,11 @@ function GetEssentialQuestions({course, randArr}){
       }
       temp["done"] = "yes"
       set(ref(db, route + 'essen_questions/'), temp)
+      for (var j = 1; j < 14; j++){
+        if(dict["checked" + j]){
+          set(ref(db, route + 'essen_questions/'+ randArr[j-1][1] + '/importance/'), 'yes')
+        }
+      }
       window.location.href = "/quizwaiting/" + course + "/1";
     }
     else{
@@ -396,12 +473,12 @@ function GetEssentialQuestions({course, randArr}){
                 <b>Q{j+1}</b>. {essenQcandidates[randArr[j][1]].question}
             </td>
             <td className = "checkboxQuiz">
-                <Checkbox
-                    checked={dict["checked"+ qNo]}
-                    onChange={() => handleChange(qNo)}
-                    inputProps={{ 'aria-label': 'controlled' }}
-                      sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                /> 
+              <Checkbox
+                checked={dict["checked"+ qNo]}
+                onChange={() => handleChange(qNo)}
+                inputProps={{ 'aria-label': 'controlled' }}
+                sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+              /> 
             </td>
         </tr>
         </tbody>

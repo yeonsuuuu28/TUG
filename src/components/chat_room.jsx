@@ -12,7 +12,7 @@ import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useList } from 'react-firebase-hooks/database';
 
-import Navbar from './navbar.jsx'
+import Navbar from './navbar_chat.jsx'
 import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
@@ -207,10 +207,53 @@ const ProfileTags = ({skills, hobbies}) => {
     if (skills.length * hobbies.length > 0) {
         return (
             <div>
-                {<h2>Skill-Sets</h2>}
-                {skills.map(tag => `#${tag}\t`)}
-                {<h2>Interesting Facts</h2>}
-                {hobbies.map(tag => `#${tag}\t`)}
+                {<div style={{
+                    fontFamily: "Lato, sans-serif",
+                    fontSize: "15pt",
+                    fontWeight: "bold",
+                    paddingLeft: "20px",
+                    paddingTop: "10px"
+                }}>
+                    Skill-Sets
+                </div>}
+                <div style={{
+                    fontFamily: "Lato, sans-serif",
+                    paddingTop: "20px",
+                    paddingBottom: "20px",
+                }}>{skills.map(tag => <span style={{
+                    marginLeft: "20px",
+                    backgroundColor: "#c6e3fa",
+                    paddingLeft: "15px",
+                    paddingRight: "15px",
+                    paddingBottom: "7px",
+                    paddingTop: "7px",
+                    borderRadius: "15px",
+                    color: "#333333"
+                }}># {tag}</span>)}
+                </div>
+                {<div style={{
+                    fontFamily: "Lato, sans-serif",
+                    fontSize: "15pt",
+                    fontWeight: "bold",
+                    paddingLeft: "20px",
+                    paddingTop: "15px"
+                }}>Interesting Facts</div>}
+                                <div style={{
+                    fontFamily: "Lato, sans-serif",
+                    paddingTop: "20px",
+                    paddingBottom: "20px",
+                }}>
+                {hobbies.map(tag => <span style={{
+                    marginLeft: "20px",
+                    backgroundColor: "#c6e3fa",
+                    paddingLeft: "15px",
+                    paddingRight: "15px",
+                    paddingBottom: "7px",
+                    paddingTop: "7px",
+                    borderRadius: "15px",
+                    color: "#333333"
+                }}># {tag}</span>)}
+                </div>
             </div>
         )
     }
@@ -617,18 +660,41 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 }
                 {(timerSec>0 || timerMin>0) && 
                     ((plotUserId.length<=0 || plotUserId === remoteId) && 
-                        <h1>Click one of chat bubbles to see profile.</h1>)
+                        <div style={{
+                            textAlign: "center", 
+                            paddingTop: "40px",
+                            fontFamily: "Lato, sans-serif", 
+                            fontSize: "20pt",
+                            fontWeight: "bold",
+                            }}>
+                            Click chat bubbles to see others' profiles.
+                        </div>)
                 }
                 {(timerSec>0 || timerMin>0) && 
                     (plotUserId.length>0 && plotUserId !== remoteId) && 
                     <div>
-                        <h1>{namePairs[plotUserId]}</h1> 
+                    <div style={{
+                        textAlign: "center", 
+                        paddingTop: "40px",
+                        fontFamily: "Lato, sans-serif", 
+                        fontSize: "20pt",
+                        fontWeight: "bold",
+                        }}>{namePairs[plotUserId]}
+                    </div>
                         <ProfileTags skills={skills} hobbies={hobbies} />
                     </div>
                 }
                 {(timerSec>0 || timerMin>0) && 
                     (plotUserId.length>0 && plotUserId !== remoteId) && 
-                    (<h2>Credit History</h2>)
+                    (<div style={{
+                        fontFamily: "Lato, sans-serif",
+                        fontSize: "15pt",
+                        fontWeight: "bold",
+                        paddingLeft: "20px",
+                        paddingTop: "30px",
+                        marginBottom: "0px",
+                        paddingBottom: "0px"
+                    }}>Credit History</div>)
                 }
                 {(timerSec>0 || timerMin>0) && 
                     (plotUserId.length>0 && plotUserId !== remoteId) && 

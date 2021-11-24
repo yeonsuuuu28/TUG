@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import MyClass from "./my_class.jsx";
 import ActiveTeams from './activeteams.jsx';
 import Profile from "./profile.jsx";
+import PastTeams from './pastteams.jsx';
 
 const StyledTabs = styled(Tabs)({
     '& 	.MuiTabs-indicator': {
@@ -103,7 +104,7 @@ export default function VerticalTabs() {
         <ActiveTeams />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Past Teams
+       <PastTeams />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <Profile />

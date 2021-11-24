@@ -7,8 +7,6 @@ import ERROR from "../images/error.png";
 
 
 
-
-
 function PastTeamInfo({ course, name }) {
   const dbRef = ref(getDatabase());
   const route =

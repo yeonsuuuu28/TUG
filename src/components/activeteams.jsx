@@ -5,6 +5,7 @@ import "./activeteams.css"
 import ERROR from "../images/error.png"
 
 function handleclick(course) {
+  console.log(course)
   window.location.href = "/credit/" + course
 }
 
@@ -49,7 +50,7 @@ function ActiveTeamInfo({course, name}){
             </tr>
             {info}
         </table>
-        <button onClick={(course) => handleclick(course)}>DONE</button>
+        <button onClick={() => handleclick(course)}>DONE</button>
       </div>
     )
   }
@@ -62,6 +63,7 @@ function ActiveTeams() {
   const initial = ['Loading...', <div className="error4"><img src = {ERROR} className = "error3" alt=""/><br/>You have no Active Team yet :(</div> ];
   const [courseComponent, setCourseComponent] = useState(initial[0]);
   const [onClick, setOnClick] = useState([false, '', '']);
+  
 
   if (auth.currentUser === null) {
     return (

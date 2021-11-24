@@ -92,7 +92,7 @@ if (auth.currentUser === null) {
     <div className="error4">
       <img src={ERROR} className="error3" alt="" />
       <br />
-      Please sign-in to see your active teams.
+      Please sign-in to see your past teams.
     </div>
   );
 } else {

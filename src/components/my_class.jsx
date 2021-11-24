@@ -30,7 +30,7 @@ function handleCourseClick(course){
                     if (Object.keys(snapshot3.val()).includes(Object.values(snapshot.val())[0])) {
                         get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + Object.values(snapshot.val())[0])).then((snapshot2) => {
                             if (Object.keys(snapshot2.val())[0] === "profile1") {
-                              alert("You are already building a team for " + snapshot.val() + "."
+                              alert("You are already building a team for " + Object.values(snapshot.val())[0] + "."
                               + "\nRedirecting to " + Object.values(snapshot.val())[0] + " quiz page...")
                               // window.location.href = "/quizinfo/"+ Object.values(snapshot.val())[0] +'/1';  //TODO delete later
                               window.location.href = "/waitingjoin/"+Object.values(snapshot.val())[0];  
@@ -58,6 +58,7 @@ export default function Join(props) {
     const [joinedClass, setJoinedClass] = useState([]);
     const [uid, setUid] = useState('');
     const [username, setUserName] = useState('');
+    const [table2, setTable2] = useState([]);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -65,8 +66,19 @@ export default function Join(props) {
                 setUid(user.uid);
                 setUserName(user.displayName);
             }
+            if (auth.currentUser !== null) {
+                const dbRef = ref(getDatabase());
+                  get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/current_teams/')).then((snapshot) => {
+                    if (snapshot.exists()) {
+                      setTable2(Object.keys(snapshot.val()));
+                    }
+                })
+              }
+      
         });
     }, [uid, username])
+
+    
 
     const getJoinedClass = () => {
         const dbRef = ref(getDatabase());
@@ -86,18 +98,37 @@ export default function Join(props) {
             for (var i = 0; i < joinedClass.length; i++) {
                 if (joinedClass[i] === classList[j].code) {
                     let k = classList[j].code
-                    classtable.push(
-                        <tr key={i}>
-                            <td className="table_class" key={i+1}>
-                                <div className="table_class_title">{classList[j].name}</div>
-                                <div className="table_class_subtitle">{classList[j].professor}</div>
-                            </td>
-                            <td className="table_join_button" key={i+2}>
-                                <div className="start_button" onClick = {()=>handleCourseClick(k)} key={i+3}>MAKE TEAM</div>
-                            </td>
-                        </tr>
-                    )
-
+                    if (table2.includes(k)) {
+                        continue;
+                    }
+                    if (classList[j].open === "Opened") {
+                        classtable.push(
+                            <tr key={i}>
+                                <td className="table_class" key={i+1}>
+                                    <div className="table_class_title">{classList[j].name}</div>
+                                    <div className="table_class_subtitle">{classList[j].professor} </div> 
+                                    <div className="table_class_subtitle2">Team of {classList[j].team} | {classList[j].open} for Team-Building </div>
+                                </td>
+                                <td className="table_join_button" key={i+2}>
+                                    <div className="start_button" onClick = {()=>handleCourseClick(k)} key={i+3}>MAKE TEAM</div>
+                                </td>
+                            </tr>
+                        )
+                    }
+                    else {
+                        classtable.push(
+                            <tr key={i}>
+                                <td className="table_class" key={i+1}>
+                                    <div className="table_class_title">{classList[j].name}</div>
+                                    <div className="table_class_subtitle">{classList[j].professor} </div> 
+                                    <div className="table_class_subtitle2">Team of {classList[j].team} | {classList[j].open} for Team-Building </div>
+                                </td>
+                                <td className="table_join_button" key={i+2}>
+                                    <div className="start_button2" key={i+3}>NOT OPENED</div>
+                                </td>
+                            </tr>
+                        )
+                    }
                 }
             }
         }

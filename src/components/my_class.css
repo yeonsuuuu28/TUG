@@ -1,7 +1,7 @@
 .table_setting2 {
     width: 150%;
     border: 0px;
-    margin-left: 25%;
+    margin-left: 20%;
     margin-right: 25%;
     border-spacing: 0px 25px;
 }
@@ -24,6 +24,24 @@
     margin: 0 auto;
 }
 
+.start_button2 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    width: 135px;
+    height: 40px;
+    background: rgb(170, 170, 170);
+    color: white;
+    border-radius: 15px;
+    cursor: default;
+    margin: 0 auto;
+}
+
 .error {
     width: 300px;
     padding-bottom: 10px;
@@ -36,3 +54,48 @@
     font-family: "Lato", sans-serif;
     font-size: 14pt;
 }
+
+ul#course-list {
+    box-sizing: border-box;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    list-style-type: none;
+    padding: 0 var(--padding-large) 0 var(--padding-large);
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    font-family: var(--font-second);
+  }
+  
+  li.course {
+    box-sizing: border-box;
+    background-color: white;
+    align-items: center;
+    float: none;
+    margin: var(--margin);
+    border: var(--border-width);
+    border-style: solid;
+    padding: 30px var(--padding-medium);
+    height: 100px;
+    font-size: var(--font-medium);
+  }
+  
+  li.coursedescription {
+    float: left;
+  }
+  
+  div.courseprof {
+    font-size: var(--font-small);
+  }
+  
+  button.join_quiz {
+    background-color: white;
+    float: right;
+    border-width: var(--border-width);
+    border-radius: var(--border-radius);
+    border-color: var(--color-black);
+    padding: var(--padding-small) var(--padding-medium) var(--padding-small)
+      var(--padding-medium);
+    font-size: var(--font-micro);
+  }
+  

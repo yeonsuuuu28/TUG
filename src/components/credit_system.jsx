@@ -250,7 +250,7 @@ const ReadDB = ({ params }) => {
               uid +
               "/" +
               auth.currentUser.displayName +
-              "/currentteams/" +
+              "/current_teams/" +
               classid
           )
         ).then((snapshot) => {
@@ -272,7 +272,7 @@ const ReadDB = ({ params }) => {
                   uid +
                   "/" +
                   auth.currentUser.displayName +
-                  "/currentteams/" +
+                  "/current_teams/" +
                   classid
               ),
               [
@@ -402,7 +402,7 @@ const ReadDB = ({ params }) => {
           auth.currentUser.uid +
           "/" +
           auth.currentUser.displayName +
-          "/currentteams/" +
+          "/current_teams/" +
           classid
       ),
       null

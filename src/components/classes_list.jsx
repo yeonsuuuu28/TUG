@@ -4,14 +4,14 @@
             "professor" : "Juho Kim",
             "code" : "CS473",
             "open" : "Opened",
-            "team" : 4
+            "team" : 2
         }, 
         {
             "name" : "Introduction to Software Engineering",
             "professor" : "Doo-Hwan Bae",
             "code" : "CS350",
             "open" : "Opened",
-            "team" : 4
+            "team" : 2
         },
         {
             "name" : "Introduction to Programming",
@@ -24,35 +24,35 @@
             "name" : "Discrete Mathematics",
             "professor" : "Sungwon Kang",
             "code" : "CS204",
-            "open" : "Not Opened",
+            "open" : "Opened",
             "team" : 2
         }, 
         {
             "name" : "Data Structure",
             "professor" : "Eun Young Moon",
             "code" : "CS206",
-            "open" : "Not Opened",
+            "open" : "Opened",
             "team" : 2
         }, 
         {
             "name" : "Programming Principles",
             "professor" : "Jeehoon Kang",
             "code" : "CS220",
-            "open" : "Not Opened",
+            "open" : "Opened",
             "team" : 2
         }, 
         {
             "name" : "System Programming",
             "professor" : "Jaehyuk Huh",
             "code" : "CS230",
-            "open" : "Not Opened",
+            "open" : "Opened",
             "team" : 2
         }, 
         {
             "name" : "Introduction to Algorithms",
             "professor" : "Martin ZIEGLER",
             "code" : "CS300",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 3
         }, 
         {
@@ -66,15 +66,15 @@
             "name" : "Programming Language",
             "professor" : "Sukyoung Ryu",
             "code" : "CS320",
-            "open" : "Opened",
-            "team" : 3
+            "open" : "Not Opened",
+            "team" : 4
         }, 
         {
             "name" : "Operating Systems and Lab",
             "professor" : "Insik Shin",
             "code" : "CS330",
-            "open" : "Opened",
-            "team" : 2
+            "open" : "Not Opened",
+            "team" : 4
         }
     ]
 

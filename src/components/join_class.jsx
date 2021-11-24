@@ -136,11 +136,11 @@ function dbAdd(e) {
                     set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/email/'), auth.currentUser.email);
                   }
                 else {
-                    alert("Already joined")
+                    // alert("Already joined")
                 }
             }
             else {
-                alert("Successfully joined");
+                // alert("Successfully joined");
                 push(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + e), "no profile")
                 set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/email/'), auth.currentUser.email);
               }});

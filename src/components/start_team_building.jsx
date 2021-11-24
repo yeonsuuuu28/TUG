@@ -3,7 +3,6 @@ import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import './start_team_building.css';
-// import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 
 //* handleCourseClick - go to quiz session when the course 'open' button is clicked.
 function handleCourseClick(course){
@@ -15,7 +14,8 @@ function handleCourseClick(course){
             if (Object.keys(snapshot.val())[0] === "profile1") {
               alert("You are already building a team for " + course + "."
               + "\nRedirecting to " + course + " quiz page...")
-              window.location.href = "/quizinfo/"+course+'/1';
+              // window.location.href = "/quizinfo/"+course+'/1'; //TODO delete later
+              window.location.href = "/waitingjoin/"+course;
               }
             else {
               alert("You have not finished creating your profile for " + course + "."
@@ -28,7 +28,8 @@ function handleCourseClick(course){
               if (Object.keys(snapshot.val())[0] === "profile1") {
                 alert("You are already building a team for " + course + "."
                 + "\nRedirecting to " + course + " quiz page...")
-                window.location.href = "/quizinfo/"+ Object.keys(snapshot.val())[0] +'/1';
+                window.location.href = "/waitingjoin/"+Object.keys(snapshot.val())[0];
+                // window.location.href = "/quizinfo/"+ Object.keys(snapshot.val())[0] +'/1'; //TODO delete later
                 }
               else {
                 alert("You have not finished creating your profile for " + course + "."
@@ -79,21 +80,49 @@ function GetCourseList({ uid, username }){
         const courseid = Object.keys(snapshot.val());
         get(child(dbRef, '/classes/')).then((s)=> {
           if(s.exists()){
-            setCourseName(courseid.map(id => s.child(id + '/name/').val()));
-            setCourseProf(courseid.map(id => s.child(id + '/professor/').val()));  
-            setCourseObjects((courseid).map((id, index) => 
-              <li className = "course" key = {id}>
-                <ul>
-                  <li className='coursedescription'>
-                    <div className = "coursename">{id}: {courseName[index]}</div>
-                    <div className='courseprof'>{courseProf[index]}</div>
+            setCourseName(courseid.map(id => {
+              if(s.child(id + '/quizstarted/').val() != 'yes'){
+                return (s.child(id + '/name/').val());
+              }
+              else return ('blabla');
+            }));
+            setCourseProf(courseid.map(id => {
+              if(s.child(id + '/quizstarted/').val() != 'yes'){
+                return (s.child(id + '/professor/').val());
+              }
+              else return ('blabla');
+            }));
+            // setCourseProf(courseid.map(id => s.child(id + '/professor/').val()));  
+            setCourseObjects(courseid.map((id, index) => {
+              if(s.child(id + '/quizstarted/').val() != 'yes'){
+                return (
+                  <li className = "course" key = {id}>
+                    <ul>
+                      <li className='coursedescription'>
+                        <div className = "coursename">{id}: {courseName[index]}</div>
+                        <div className='courseprof'>{courseProf[index]}</div>
+                      </li>
+                      <li>
+                        <button onClick={() => handleCourseClick(id)} className='join_quiz'>Start</button> {/*//TODO Start only when it's ready to start quiz */}
+                      </li>
+                    </ul>
                   </li>
-                  <li>
-                    <button onClick={() => handleCourseClick(id)} className='join_quiz'>Start</button> {/*//TODO Start only when it's ready to start quiz */}
-                  </li>
-                </ul>
-              </li>
-            ));
+                );
+              }
+            }));
+            // setCourseObjects((courseid).map((id, index) => 
+            //   <li className = "course" key = {id}>
+            //     <ul>
+            //       <li className='coursedescription'>
+            //         <div className = "coursename">{id}: {courseName[index]}</div>
+            //         <div className='courseprof'>{courseProf[index]}</div>
+            //       </li>
+            //       <li>
+            //         <button onClick={() => handleCourseClick(id)} className='join_quiz'>Start</button> {/*//TODO Start only when it's ready to start quiz */}
+            //       </li>
+            //     </ul>
+            //   </li>
+            // ));
           }
           else{
             alert("no class"); //TODO

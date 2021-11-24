@@ -12,6 +12,7 @@ import profile from "./components/create_profile";
 import QuizInformation from "./components/quiz_information";
 import ActiveTeams from "./components/activeteams";
 import QuizWaiting from "./components/quizwaiting";
+import WaitingJoin from "./components/waitingjoin";
 
 const App = () => (
   <BrowserRouter>
@@ -27,6 +28,7 @@ const App = () => (
       <Route path="/quizinfo/:course/:round" component = {QuizInformation} />
       <Route path="/activeteams" component = {ActiveTeams} />
       <Route path="/quizwaiting/:course/:round" component = {QuizWaiting} />
+      <Route path="/waitingjoin/:course" component = {WaitingJoin} />
     </Switch>
   </BrowserRouter>
 );

@@ -8,24 +8,134 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 
 const update = [{}];
-const classid = "CS101";
+//const classid = "CS101";
 // const tnames = [];
 
-const ReadDB = ({ params }) => {
-  // const course = params.course
+const ReadDB = (params) => {
+  const classid = params.match.params.course;
   // const [data, setData] = useState([
   //   { name: "Uxer Ham", point: 0 },
   //   { name: "Yeon Su Park", point: 0 },
   //   { name: "조성혜", point: 0 },
   // ]);
+  console.log(params.match.params.course);
   const [pastteams, setPastTeams] = useState([]);
   //const [userids, setUserIds] = useState([]);
   // const [localCredit, setLocalCredit] = useState();
   // const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
   const [tnames, setTnames] = useState([]);
+  const [update3, setUpdate3] = useState([]);
   // const [invert,setInvert] = useState([])
   const history = useHistory();
+
+  const writeUpdate2 = async () => {
+    const auth = getAuth();
+    //const dbRef = ref(getDatabase());
+    const update2 = await buildAveCredit();
+    setUpdate3(update2);
+    //current user
+    set(
+      ref(
+        db,
+        "users/" +
+          auth.currentUser.uid +
+          "/" +
+          auth.currentUser.displayName +
+          "/vis/" +
+          classid
+      ),
+      update3
+    );
+
+    //other teamates
+    console.log(pastteams[0]);
+    for (const index in pastteams[0]) {
+      if (pastteams[0][index].name) {
+        set(
+          ref(
+            db,
+            "users/" +
+              pastteams[0][index].id +
+              "/" +
+              pastteams[0][index].name +
+              "/vis/" +
+              classid
+          ),
+          update3
+        );
+        console.log(
+          "users/" +
+            pastteams[0][index].id +
+            "/" +
+            pastteams[0][index].name +
+            "/vis/" +
+            classid
+        );
+      }
+    }
+  };
+      
+
+  const buildAveCredit = () => {
+    return new Promise((resolve,reject) =>{
+      setTimeout(()=>{
+    const auth = getAuth();
+    const dbRef = ref(getDatabase());
+
+    const loc =
+      "/users/" +
+      auth.currentUser.uid +
+      "/" +
+      auth.currentUser.displayName +
+      "/pastteams/" +
+      classid;
+    const update2 = [{}];
+    get(child(dbRef, loc)).then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+        //object of past teams
+
+        //update current user 
+        //get average of all users
+        //0 own average
+        update2[0] = {
+          name: auth.currentUser.displayName,
+          ave_credit: String(snapshot.val()[0].credits),
+        };
+        //1 onwards, get users average
+        for (const i in snapshot.val()) {
+          if (snapshot.val()[Number(i) + 1]) {
+            const uname = snapshot.val()[Number(i) + 1].name;
+            const usid = snapshot.val()[Number(i) + 1].id;
+            get(
+              child(
+                dbRef,
+                "/users/" + usid + "/" + uname + "/pastteams/" + classid + "/0"
+              )
+            ).then((snapshot) => {
+              if (snapshot.exists()) {
+                update2[Number(i) + 1] = {
+                  name: uname,
+                  ave_credit: String(snapshot.val().credits),
+                };
+              }
+            });
+          } 
+        }
+
+        
+      
+      } else {
+        console.log("nodata");
+      }
+    });
+      
+      resolve(update2)},5000)
+      
+    })
+   
+  };
 
   const onPush = async (model) => {
     const auth = getAuth();
@@ -118,25 +228,53 @@ const ReadDB = ({ params }) => {
                       });
                       //update total credit
                       const totalCreditAddr =
+                        "users/" + index.id + "/" + index.name + "/totalcredit";
+                      get(child(dbRef, totalCreditAddr)).then((snapshot) => {
+                        if (snapshot.exists()) {
+                          console.log(snapshot.val());
+                          set(ref(db, totalCreditAddr), {
+                            credit:
+                              Number(snapshot.val().credit) +
+                              Number(model[index.name]),
+                          });
+                        } else {
+                          //write fresh
+                          set(ref(db, totalCreditAddr), {
+                            credit: Number(model[index.name]),
+                          });
+                        }
+                      });
+                      //build vis credit
+                      /*
+                      const vis_credit =
                         "users/" +
                         index.id +
                         "/" +
                         index.name +
-                        "/totalcredit";
-                      get(child(dbRef,totalCreditAddr)).then((snapshot)=>{
-                        if(snapshot.exists()){
+                        "/vis_credit/" +
+                        classid;
+                      const ave_credit =
+                        "users/" +
+                        index.id +
+                        "/" +
+                        index.name +
+                        "/pastcredit/" +
+                        classid+ "/0";
+                      get(child(dbRef, ave_credit)).then((snapshot) => {
+                        if (snapshot.exists()) {
                           console.log(snapshot.val());
-                          set(ref(db,totalCreditAddr),{
-                            credit: Number(snapshot.val().credit) + Number(model[index.name])
+                          set(ref(db, vis_credit), {
+                            credit:
+                              Number(snapshot.val().credit) +
+                              Number(model[index.name]),
                           });
-                        } else{
+                        } else {
                           //write fresh
-                          set(ref(db,totalCreditAddr),{
-                            credit: Number(model[index.name])
-                          })
+                          set(ref(db, totalCreditAddr), {
+                            credit: Number(model[index.name]),
+                          });
                         }
-
-                      });
+                      });*/
                     }
                     return <></>;
                   });
@@ -356,7 +494,7 @@ const ReadDB = ({ params }) => {
         };
       }
     }
-    //console.log(update)
+    console.log(update)
     //2.write to db
     set(
       ref(
@@ -370,7 +508,7 @@ const ReadDB = ({ params }) => {
       ),
       update
     );
-    //add 10 points 
+    //add 10 points
     const ownTotalCreditAddr =
       "users/" +
       auth.currentUser.uid +
@@ -382,8 +520,8 @@ const ReadDB = ({ params }) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
         set(ref(db, ownTotalCreditAddr), {
-          credit: Number(snapshot.val().credit) + 10
-        })
+          credit: Number(snapshot.val().credit) + 10,
+        });
       } else {
         //write fresh
         set(ref(db, ownTotalCreditAddr), {
@@ -408,12 +546,14 @@ const ReadDB = ({ params }) => {
       null
     );
 
+    //build ave credit
+    writeUpdate2(); 
+
     alert(
       "Thank you for submitting an honest review! Credits are now updated Successfully"
     );
 
     //redirect to another page
-    //window.location.assign("./mypage");
     history.push("/mypage");
   };
 
@@ -426,6 +566,8 @@ const ReadDB = ({ params }) => {
       fillModel();
     }
   }, [pastteams, fillModel]);
+
+  
 
   return (
     <>

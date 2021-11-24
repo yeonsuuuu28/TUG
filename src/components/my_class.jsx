@@ -7,143 +7,138 @@ import classes from "./classes_list.jsx";
 import ERROR from "../images/error.png";
 
 function handleCourseClick(course) {
-  console.log(course);
-  const dbRef = ref(getDatabase());
-  get(
-    child(
-      dbRef,
-      "users/" +
-        auth.currentUser.uid +
-        "/" +
-        auth.currentUser.displayName +
-        "/teambuilding/"
-    )
-  ).then((snapshot) => {
-    if (snapshot.exists()) {
-      if (Object.values(snapshot.val()) === course) {
-        get(
-          child(
-            dbRef,
-            "users/" +
-              auth.currentUser.uid +
-              "/" +
-              auth.currentUser.displayName +
-              "/class/" +
-              course
-          )
-        ).then((snapshot) => {
-          if (Object.keys(snapshot.val())[0] === "profile1") {
-            alert(
-              "You are already building a team for " +
-                course +
-                "." +
-                "\nRedirecting to " +
-                course +
-                " quiz page..."
-            );
-            // window.location.href = "/quizinfo/"+course+'/1'; //TODO delete later
-            window.location.href = "/waitingjoin/" + course+'/1';
-          } else {
-            alert(
-              "You have not finished creating your profile for " +
-                course +
-                "." +
-                "\nRedirecting to " +
-                course +
-                " profile page..."
-            );
-            window.location.href = "/profile";
-          }
-        });
-      } else {
-        get(
-          child(
-            dbRef,
-            "users/" +
-              auth.currentUser.uid +
-              "/" +
-              auth.currentUser.displayName +
-              "/class/"
-          )
-        ).then((snapshot3) => {
-          if (
-            Object.keys(snapshot3.val()).includes(
-              Object.values(snapshot.val())[0]
-            )
-          ) {
-            get(
-              child(
-                dbRef,
-                "users/" +
-                  auth.currentUser.uid +
-                  "/" +
-                  auth.currentUser.displayName +
-                  "/class/" +
-                  Object.values(snapshot.val())[0]
-              )
-            ).then((snapshot2) => {
-              if (Object.keys(snapshot2.val())[0] === "profile1") {
-                alert(
-                  "You are already building a team for " +
-                    Object.values(snapshot.val())[0] +
-                    "." +
-                    "\nRedirecting to " +
-                    Object.values(snapshot.val())[0] +
-                    " quiz page..."
-                );
-                // window.location.href = "/quizinfo/"+ Object.values(snapshot.val())[0] +'/1';  //TODO delete later
-                window.location.href =
-                  "/waitingjoin/" + Object.values(snapshot.val())[0] + '/1';
-              } else if (Object.values(snapshot2.val())[0] === "no profile") {
-                alert(
-                  "You have not finished creating your profile for " +
-                    Object.values(snapshot.val())[0] +
-                    "." +
-                    "\nRedirecting to " +
-                    Object.values(snapshot.val())[0] +
-                    " profile page..."
-                );
-                window.location.href = "/profile";
-              }
-            });
-          } else {
-            set(
-              ref(
-                db,
-                "users/" +
-                  auth.currentUser.uid +
-                  "/" +
-                  auth.currentUser.displayName +
-                  "/teambuilding/"
-              ),
-              null
-            );
-            alert(
-              "You are no longer in " +
-                Object.values(snapshot.val())[0] +
-                " class." +
-                "\nRedirection to my page..."
-            );
-            window.location.href = "/mypage";
-          }
-        });
-      }
-    } else {
-      push(
-        ref(
-          db,
-          "users/" +
-            auth.currentUser.uid +
-            "/" +
-            auth.currentUser.displayName +
-            "/teambuilding/"
-        ),
-        course
-      );
+  push(ref(db,"users/" + auth.currentUser.uid + "/" + auth.currentUser.displayName + "/teambuilding/"), course);
       window.location.href = "/profile";
-    }
-  });
 }
+
+
+  // console.log(course);
+  
+  // ).then((snapshot) => {
+  //   if (snapshot.exists()) {
+  //     if (Object.values(snapshot.val()) === course) {
+  //       get(
+  //         child(
+  //           dbRef,
+  //           "users/" +
+  //             auth.currentUser.uid +
+  //             "/" +
+  //             auth.currentUser.displayName +
+  //             "/class/" +
+  //             course
+  //         )
+  //       ).then((snapshot) => {
+  //         if (Object.keys(snapshot.val())[0] === "profile1") {
+  //           alert(
+  //             "You are already building a team for " +
+  //               course +
+  //               "." +
+  //               "\nRedirecting to " +
+  //               course +
+  //               " quiz page..."
+  //           );
+  //           // window.location.href = "/quizinfo/"+course+'/1'; //TODO delete later
+  //           window.location.href = "/waitingjoin/" + course+'/1';
+  //         } else {
+  //           alert(
+  //             "You have not finished creating your profile for " +
+  //               course +
+  //               "." +
+  //               "\nRedirecting to " +
+  //               course +
+  //               " profile page..."
+  //           );
+  //           window.location.href = "/profile";
+  //         }
+  //       });
+  //     } else {
+  //       get(
+  //         child(
+  //           dbRef,
+  //           "users/" +
+  //             auth.currentUser.uid +
+  //             "/" +
+  //             auth.currentUser.displayName +
+  //             "/class/"
+  //         )
+  //       ).then((snapshot3) => {
+  //         if (
+  //           Object.keys(snapshot3.val()).includes(
+  //             Object.values(snapshot.val())[0]
+  //           )
+  //         ) {
+  //           get(
+  //             child(
+  //               dbRef,
+  //               "users/" +
+  //                 auth.currentUser.uid +
+  //                 "/" +
+  //                 auth.currentUser.displayName +
+  //                 "/class/" +
+  //                 Object.values(snapshot.val())[0]
+  //             )
+  //           ).then((snapshot2) => {
+  //             if (Object.keys(snapshot2.val())[0] === "profile1") {
+  //               alert(
+  //                 "You are already building a team for " +
+  //                   Object.values(snapshot.val())[0] +
+  //                   "." +
+  //                   "\nRedirecting to " +
+  //                   Object.values(snapshot.val())[0] +
+  //                   " quiz page..."
+  //               );
+  //               // window.location.href = "/quizinfo/"+ Object.values(snapshot.val())[0] +'/1';  //TODO delete later
+  //               window.location.href =
+  //                 "/waitingjoin/" + Object.values(snapshot.val())[0] + '/1';
+  //             } else if (Object.values(snapshot2.val())[0] === "no profile") {
+  //               alert(
+  //                 "You have not finished creating your profile for " +
+  //                   Object.values(snapshot.val())[0] +
+  //                   "." +
+  //                   "\nRedirecting to " +
+  //                   Object.values(snapshot.val())[0] +
+  //                   " profile page..."
+  //               );
+  //               window.location.href = "/profile";
+  //             }
+  //           });
+  //         } else {
+  //           set(
+  //             ref(
+  //               db,
+  //               "users/" +
+  //                 auth.currentUser.uid +
+  //                 "/" +
+  //                 auth.currentUser.displayName +
+  //                 "/teambuilding/"
+  //             ),
+  //             null
+  //           );
+  //           alert(
+  //             "You are no longer in " +
+  //               Object.values(snapshot.val())[0] +
+  //               " class." +
+  //               "\nRedirection to my page..."
+  //           );
+  //           window.location.href = "/mypage";
+  //         }
+  //       });
+  //     }
+  //   } else {
+  //     push(
+  //       ref(
+  //         db,
+  //         "users/" +
+  //           auth.currentUser.uid +
+  //           "/" +
+  //           auth.currentUser.displayName +
+  //           "/teambuilding/"
+  //       ),
+  //       course
+  //     );
+  //     window.location.href = "/profile";
+  //   }
+  // });
 
 export default function Join(props) {
   const classList = classes;
@@ -189,6 +184,20 @@ export default function Join(props) {
               setTable3(Object.keys(snapshot.val()));
             }
           });
+          get(
+            child(
+              dbRef,
+              "users/" +
+                auth.currentUser.uid +
+                "/" +
+                auth.currentUser.displayName +
+                "/teambuilding/"
+            )
+          ).then((snapshot) => {
+            if (snapshot.exists()) {
+              set(ref(db,"users/" + auth.currentUser.uid + "/" + auth.currentUser.displayName + "/teambuilding/"), null);
+            }
+          });
       }
     });
   }, [uid, username]);
@@ -220,29 +229,30 @@ export default function Join(props) {
           }
           if (classList[j].open === "Opened") {
             classtable.push(
-              <tr key={i}>
-                <td className="table_class" key={i + 1}>
-                  <div className="table_class_title">{classList[j].name}</div>
-                  <div className="table_class_subtitle">
-                    {classList[j].professor}{" "}
-                  </div>
-                  <div className="table_class_subtitle2">
-                    Team of {classList[j].team} | {classList[j].open} for
-                    Team-Building{" "}
-                  </div>
-                </td>
-                <td className="table_join_button" key={i + 2}>
-                  <div
-                    className="start_button"
-                    onClick={() => handleCourseClick(k)}
-                    key={i + 3}
-                  >
-                    MAKE TEAM
-                  </div>
-                </td>
-              </tr>
-            );
-          } else {
+                <tr key={i}>
+                  <td className="table_class" key={i + 1}>
+                    <div className="table_class_title">{classList[j].name}</div>
+                    <div className="table_class_subtitle">
+                      {classList[j].professor}{" "}
+                    </div>
+                    <div className="table_class_subtitle2">
+                      Team of {classList[j].team} | {classList[j].open} for
+                      Team-Building{" "}
+                    </div>
+                  </td>
+                  <td className="table_join_button" key={i + 2}>
+                    <div
+                      className="start_button"
+                      onClick={() => handleCourseClick(k)}
+                      key={i + 3}
+                    >
+                      MAKE TEAM
+                    </div>
+                  </td>
+                </tr>
+              );
+          } 
+          else {
             classtable.push(
               <tr key={i}>
                 <td className="table_class" key={i + 1}>

@@ -55,26 +55,28 @@ export default class DynamicForm extends React.Component {
             let props = m.props || {};
             
             return(
-                <div key={key} className="form-group">
-                        <label className="form-label"
-                            key={"l" + m.key}
-                            htmlFor={m.key}>
-                            {m.label}
-                        </label>
-                       
-                        
-                            <input {...props}
-                                //reference all input element this.name, bla blla
-                                ref={(key) => { this[m.key] = key; } }
-                                className="form-input"
-                                type={type}
-                                key={"i" + m.key}
-                                onChange={(e) => { this.onChange(e, key,m); } } />
-                    
-                    </div>
-
-                    
-                    
+                <table className = "creditTable">
+                    <tbody>
+                        <tr>
+                            <td className = "creditLabel">
+                                <label className="form-label"
+                                    key={"l" + m.key}
+                                    htmlFor={m.key}>
+                                    {m.label}
+                                </label>
+                            </td>
+                            <td className = "creditInput">
+                                <input {...props}
+                                    //reference all input element this.name, bla blla
+                                    ref={(key) => { this[m.key] = key; } }
+                                    className="form-input"
+                                    type={type}
+                                    key={"i" + m.key}
+                                    onChange={(e) => { this.onChange(e, key,m); } } />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                                );
         } ); 
         return formUI
@@ -84,16 +86,16 @@ export default class DynamicForm extends React.Component {
         let title = this.props.title || "Dynamic Form";
         return(
             <div className = {this.props.className}>
-                <div className = "proftitle" >{title}</div>
-                <div className = "profile_description">Submitting honest reviews will help you and other classmates in selecting a team mate with a good fit.</div>
-                <div className = "profile_description">Professors and TAs can see your credit distribution. 
+                <div className = "proftitle1" >{title}</div>
+                <div className = "profile_description1">Honest reviews will help you and classmates in selecting a team mate with a good fit.</div>
+                <div className = "profile_description1">Professors and TAs can see your credit distribution.<br/>
                 By submitting this form, you acknowledge that everything written below is true.</div>
-                <h3> Remaining points to distribute: {this.state.count} </h3>
-                
+                <hr style={{marginTop: "20px"}}/>
+                <div className="creditcreditcredit">Remaining points to distribute: {this.state.count} </div>
                 <form className = "dynamic-form" onSubmit ={(e)=>{this.onSubmit(e)}}>
                     {this.renderForm()}
                     <div className = "form-group">
-                        <button type = "submit">submit</button>
+                        <div className= "submitsubmit_button" onClick ={(e)=>{this.onSubmit(e)}}>Submit</div>
                     </div>
                 </form>
             </div>

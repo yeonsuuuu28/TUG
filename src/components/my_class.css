@@ -1,8 +1,9 @@
 .table_setting2 {
-    width: 150%;
+    width: 900px;
     border: 0px;
-    margin-left: 15%;
-    margin-right: 25%;
+    margin-left: 60px;
+    /* margin-left: 15%;
+    margin-right: 25%; */
     border-spacing: 0px 25px;
 }
 

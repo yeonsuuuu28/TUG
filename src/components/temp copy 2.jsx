@@ -81,7 +81,7 @@ export default function Quiz(){
             <div className="button101"><span className="button100">Never</span><span className="button100">Maybe</span><span className="button100">Absolutely</span></div>
             <div className = "centerAlign">
             
-                                        </div>
+            </div>
         </div>
     )
 }

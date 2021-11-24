@@ -1,13 +1,64 @@
 .hahahatest {
     border: 0;
-    width: 175px;
+    width: 600px;
     margin-top: 20px;
     margin-left: 20px;
     height: 140px;
-    width: 200px;
+    /* width: 200px; */
     border-collapse: collapse;
 }
+.contactTable{
+    border: 0px;
+    width: 60vw;
+    margin-left: 15vw; 
+    height: 15px;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+.headerMember{
+    background-color: #c6e3fa;
+    height: 70px;
+    font-style: "Lato", sans-serif;
+    font-weight: bold;
+    font-size: 18pt;
+    border: 1px solid black;
+}
+.contactTitle{
+    font-family: "Lato", sans-serif;
+    font-weight: 1000;
+    font-size: 25pt;
+    color: black;
+    text-align: center;
+    padding-left: 175px;
+    margin-top: 20px;
+    padding-bottom: 30px;   
+}
 
+.contactEmail {
+    font-family: "Lato", sans-serif;
+    /* padding-top: 10px; */
+    /* padding-bottom: 10px; */
+    padding: 20px;
+    /* padding-top: 30px; */
+    border-left: 1px solid black;
+    /* border-bottom: 1px solid black; */
+}
+.headerContact{
+    background-color: #c6e3fa;
+    height: 70px;
+    font-style: "Lato", sans-serif;
+    font-weight: bold;
+    font-size: 18pt;
+    border: 1px solid black;
+    /* border-bottom: 1px solid black; */
+}
+.contactName{
+    width: 20vw;
+    border-right: 1px solid black;
+}
+.hundred{
+    width:100%;
+}
 .hahatest {
     border: 0;
     height: 10px;
@@ -30,4 +81,67 @@
     vertical-align: top;
     font-family: "Lato", sans-serif;
     font-size: 14pt;
+}
+
+.done_button {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    width: 26%;
+    height: 40px;
+    background: #1b1e2e;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    /* margin: 0 auto; */
+    margin-top: 50px;
+    margin-right: 30%;
+    margin-left: 44%;
+}
+
+.back_button {
+    cursor: pointer;
+    font-size: 30pt;
+    color: grey;
+}
+
+.view_button {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-size: 12pt;
+    white-space: nowrap;
+    text-align: center;
+    font-family: "Lato", sans-serif;
+    width: 230px;
+    height: 45px;
+    background: #1b1e2e;
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.table_setting3 {
+    width: 900px;
+    border: 0px;
+    /* margin-left: 15%;
+    margin-right: 25%; */
+    border-spacing: 0px 25px;
+    margin-left: 60px;
+    margin-top: 20px;
+}
+
+.notification {
+    text-align: center;
+    padding-left: 175px;
+    padding-top: 50px;
+    font-family: "Lato", sans-serif;
+    font-size: 13pt;
 }

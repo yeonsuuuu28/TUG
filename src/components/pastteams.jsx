@@ -27,14 +27,15 @@ function PastTeamInfo({ course, name }) {
 
       setInfo(
         s.val().map((i) => {
+          if (i.name !== undefined){
           return (
-            <>
                 <tr key={i.name + i.email}>
-                  <td>{i.name}</td>
-                  <td>{i.credit}</td>
+                  <td className = "contactName">{i.name}</td>
+                  <td className = "contactEmail">{i.credit}</td>
                 </tr>
-            </>
           );
+          }
+          return (<></>)
         })
       );
     }
@@ -48,28 +49,26 @@ function PastTeamInfo({ course, name }) {
     console.log(info)
     //const aveCredit = teamMates[0].credits
     /// when the user did not click 'back' button
-    let aveCredit = 0
-    if(teamMates){
-       aveCredit = teamMates[0].credits;
-    }
+    // let aveCredit = 0
+    // if(teamMates){
+    //    aveCredit = teamMates[0].credits;
+    // }
     return (
       <div>
-        <button onClick={() => setOnClick(true)}>back</button>
-        <div>
-          {course}:{name}
-        </div>
-        <div>Your Average Credits: {aveCredit}</div>
-        <table>
-          <thead>
+        <i className="fas fa-arrow-alt-circle-left back_button" onClick={() => setOnClick(true)}></i>
+        {/* <button onClick={() => setOnClick(true)}>back</button> */}
+        <div className = "contactTitle">{name}</div>
+        {/* <div>Your Average Credits: {aveCredit}</div> */}
+        <table className = "contactTable">
+          <tbody>
             <tr>
-              <th key="member">MEMBER</th>
-              <th key="grade">CREDIT</th>
+              <td key="member" className = "headerMember">MEMBER</td>
+              <td key="grade" className = "headerContact">CREDIT</td>
             </tr>
-            </thead>
-            <tbody>
-              {info}
+            {info}
             </tbody>
         </table>
+        <div className="notification">Please visit <b>profile tab</b> to view your total credit!</div>
       </div>
     );
   }
@@ -85,7 +84,7 @@ const initial = [
   <div className="error4">
     <img src={ERROR} className="error3" alt="" />
     <br />
-    You have no Active Team yet :(
+    You have no past teams yet :(
   </div>,
 ];
 const [courseComponent, setCourseComponent] = useState(initial[0]);
@@ -122,18 +121,15 @@ if (auth.currentUser === null) {
             const prof = s.child("/" + c + "/professor/").val();
             console.log(name,prof)
             return (
-              <table key = {name+prof} className="hahahatest">
+              <table key = {name+prof} className="table_setting3">
                 <tbody>
                   <tr key = {name}>
-                    <td className="collapse">{name}</td>
-                  </tr>
-                  <tr key = {prof}>
-                    <td className="hahatest">
-                      {prof}&nbsp;&nbsp;&nbsp;
-                      <i className="fas fa-arrow-alt-circle-right"></i>
-                      <button onClick={() => setOnClick([true, c, name])}>
-                        go
-                      </button>
+                    <td className="table_class">
+                    <div className="table_class_title">{name}</div>
+                    <div className="table_class_subtitle">{prof}{" "}</div>
+                    </td>
+                    <td className="table_join_button" key={2}>
+                    <div className="view_button" onClick={() => setOnClick([true, c, name])}>VIEW CREDIT HISTORY</div>
                     </td>
                   </tr>
                 </tbody>

@@ -30,3 +30,9 @@ h1 {
 h3 {
     font-family: "Lato", sans-serif;
 }
+
+.newcomer {
+    font-family: "Lato", sans-serif;
+    padding-top: 15px;
+    padding-left: 20px;
+}

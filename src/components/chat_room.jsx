@@ -662,9 +662,10 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     ((plotUserId.length<=0 || plotUserId === remoteId) && 
                         <div style={{
                             textAlign: "center", 
-                            paddingTop: "40px",
+                            paddingTop: "30px",
                             fontFamily: "Lato, sans-serif", 
                             fontSize: "20pt",
+                            paddingBottom: "10px",
                             fontWeight: "bold",
                             }}>
                             Click chat bubbles to see others' profiles.
@@ -698,7 +699,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 }
                 {(timerSec>0 || timerMin>0) && 
                     (plotUserId.length>0 && plotUserId !== remoteId) && 
-                    (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <p>no credit history found.<br/>please welcome the newcomer!</p>))
+                    (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <div className="newcomer">No credit history found.<br/>Please welcome the newcomer!</div>))
                 }
             </div>
         </div>

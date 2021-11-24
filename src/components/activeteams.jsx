@@ -5,7 +5,7 @@ import "./activeteams.css"
 import ERROR from "../images/error.png"
 
 function handleclick(course) {
-  console.log(course)
+  // console.log(course)
   window.location.href = "/credit/" + course
 }
 
@@ -17,16 +17,17 @@ function ActiveTeamInfo({course, name}){
   const [onClick, setOnClick] = useState(false);
   get(child(dbRef, route)).then((s)=> {
     if (s.exists() && info === 'Loading...') {
-      console.log(s.val());
+      // console.log(s.val());
       setInfo(s.val().map((i)=>{
-        return(
-          <>
-          <tr key={i.name + i.email}>
-            <td>{i.name}</td>
-            <td>{i.email}</td>
-          </tr>
-          </>
-        );
+        if (i.name !== undefined){
+          return(
+            <tr>
+              <td className = "contactName">{i.name}</td>
+              <td className = "contactEmail">{i.email}</td>
+            </tr>
+          );
+        }
+        return (<></>)
       }));
     }
   });
@@ -39,20 +40,18 @@ function ActiveTeamInfo({course, name}){
   else{ /// when the user did not click 'back' button
     return(
       <div>
-        <button onClick={() => setOnClick(true)}>back</button>
-        <div>{course}:{name}</div>
-        <table>
-          <thead> 
+        <i className="fas fa-arrow-alt-circle-left back_button" onClick={() => setOnClick(true)}></i>
+        <div className = "contactTitle">{name}</div>
+        <table className = "contactTable">
+          <tbody> 
             <tr>
-              <th key='member'>MEMBER</th>
-              <th key='CONTACT'>CONTACT</th>
+              <td key='member' className = "headerMember">MEMBER</td>
+              <td key='CONTACT'className = "headerContact">CONTACT</td>
             </tr>
-            </thead>
-            <tbody>
             {info}
-            </tbody>
+          </tbody>
         </table>
-        <button onClick={() => handleclick(course)}>DONE</button>
+        <div className="done_button" onClick={() => handleclick(course)}>TEAMWORK FINISHED</div>
       </div>
     )
   }
@@ -62,7 +61,7 @@ function ActiveTeamInfo({course, name}){
 
 //* ActiveTeams - page '/activeteams',, component 'ActiveTeams' in mypage
 function ActiveTeams() {
-  const initial = ['Loading...', <div className="error4"><img src = {ERROR} className = "error3" alt=""/><br/>You have no Active Team yet :(</div> ];
+  const initial = ['Loading...', <div className="error4"><img src = {ERROR} className = "error3" alt=""/><br/>You have no active teams yet :(</div> ];
   const [courseComponent, setCourseComponent] = useState(initial[0]);
   const [onClick, setOnClick] = useState([false, '', '']);
   
@@ -82,15 +81,26 @@ function ActiveTeams() {
     get(child(dbRef, route)).then((s)=> {
       if (s.exists() && (courseComponent === initial[0] || courseComponent === initial[1])) {
         const courses = Object.keys(s.val());
-        console.log('courses:', courses);
+        // console.log('courses:', courses);
         get(child(dbRef, '/classes/')).then((s)=>{
           setCourseComponent(courses.map((c) => {
             const name = s.child('/'+c+'/name/').val();
             const prof =  s.child('/'+c+'/professor/').val();
             return(
-            <table key = {name+prof} className="hahahatest">
+            <table key = {name+prof} className="table_setting3">
               <tbody>
-                <tr>
+                <tr key={3}>
+                  <td className="table_class" key={1}>
+                    <div className="table_class_title">{name}</div>
+                    <div className="table_class_subtitle">
+                      {prof}{" "}
+                    </div>
+                  </td>
+                  <td className="table_join_button" key={2}>
+                    <div className="view_button" onClick={() => setOnClick([true, c, name])}>VIEW YOUR TEAMMATES</div>
+                  </td>
+                </tr>
+                {/* <tr>
                   <td className ="collapse">
                     {name}
                   </td>
@@ -100,7 +110,7 @@ function ActiveTeams() {
                     {prof}&nbsp;&nbsp;&nbsp;<i className="fas fa-arrow-alt-circle-right"></i>
                     <button onClick={() => setOnClick([true, c, name])}>go</button>
                   </td>
-                </tr>
+                </tr> */}
               </tbody>
             </table>
             );
@@ -114,11 +124,11 @@ function ActiveTeams() {
     });
 
     if(onClick[0]){ /// when the user clicked 'go' button
-      console.log("onClick: ", onClick);
+      // console.log("onClick: ", onClick);
       // setOnClick([false, '', '']);
       return(
         <div>
-          <ActiveTeamInfo course={onClick[1]} name={onClick[2]} /> 
+          <ActiveTeamInfo course={onClick[1]} name={onClick[2]} />    
         </div>
       )
     }

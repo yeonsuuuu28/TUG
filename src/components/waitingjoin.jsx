@@ -38,7 +38,6 @@ function WaitingJoin(props) {
     return;
   }
 
-
   //* setTimeState
   /// set the state 'timeLeft'
   function setTimeState() {

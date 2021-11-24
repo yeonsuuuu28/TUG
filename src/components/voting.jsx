@@ -22,16 +22,18 @@ function storeTeamInDB(course, userarr){
         emails2.splice(index - emails.length, 1);
         emails2.splice(0,0,emails[index]);
                 // console.log("data: ", userarr2, userarr2, username, username2);
-        const data2 = userarr2.map((user, i) => {
+        let data2 = [{credits:0, count:0}];
+        data2 = data2.concat(userarr2.map((user, i) => {
           return({
             name: username2[i],
             id: user,
             email: emails2[i],
-            credit:0
+            credits:0,
+            count:0
           })
-        })
+        }));
         console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/", data2);
-        set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"),{credits:0, count:0}, data2); /// store current team in DB
+        set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"), data2); /// store current team in DB
         set(ref(db, 'classes/' + course + '/user/' + user + "/finished/"), 'yes');
         set(ref(db, "users/" + user + '/' + username[index] + "/teambuilding/"), null);
       });

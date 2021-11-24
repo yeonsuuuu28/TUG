@@ -24,7 +24,7 @@ function WaitingJoin(props) {
   }
   const dbRef = ref(getDatabase());
   const [joinedStudents, setJoinedStudents] = useState(0);
-  const [sentence, setSentence] = useState(round === 1 ? "If " + studlimit + " students join, the quiz will start." : "");
+  const [sentence, setSentence] = useState(round === 1 ? "Let's wait for 3 minutes." : "");
   const [timeLeft, setTimeLeft] = useState('');
   const [userarr, setUserArr] = useState([]); // for round >= 2: set the left user list
   setTimeout(setTimeState, 1000);
@@ -52,7 +52,7 @@ function WaitingJoin(props) {
   /// go to quizinfo page if 4 or more students joined in the class
   function timeOut() {
     if(round === 1 && joinedStudents < studlimit) {
-      setSentence("3 minutes over. But we need " + studlimit + " students to start the quiz.");
+      setSentence("3 minutes over. But we need at least " + studlimit + " students to start the quiz.");
     }
     else if(round >= 2 && joinedStudents < studlimit){
       setSentence("Times Over! There is only one team left. Wish you have a nice teamwork!")

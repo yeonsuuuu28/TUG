@@ -19,14 +19,14 @@ function ActiveTeamInfo({course, name}){
       console.log(s.val());
       setInfo(s.val().map((i)=>{
         return(
-          <div>
-          <table>
+          <>
+         
           <tr key={i.name + i.email}>
             <td>{i.name}</td>
             <td>{i.email}</td>
           </tr>
-          </table>
-          </div>
+    
+          </>
         );
       }));
     }
@@ -43,15 +43,11 @@ function ActiveTeamInfo({course, name}){
         <button onClick={() => setOnClick(true)}>back</button>
         <div>{course}:{name}</div>
         <table>
-          <thead>
             <tr>
               <th key='member'>MEMBER</th>
               <th key='CONTACT'>CONTACT</th>
             </tr>
-          </thead>
-          <tbody>
             {info}
-          </tbody>
         </table>
         <button onClick={(course) => handleclick(course)}>DONE</button>
       </div>

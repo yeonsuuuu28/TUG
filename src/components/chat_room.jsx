@@ -5,7 +5,8 @@ import {
     useEffect
 } from 'react';
 
-import { db } from "./firebase.jsx";
+// eslint-disable-next-line
+import { auth, db } from "./firebase.jsx";
 
 import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -15,8 +16,6 @@ import Navbar from './navbar.jsx'
 import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
-
-//import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import './chat_room.css'
 
 
@@ -24,7 +23,8 @@ import './chat_room.css'
 // https://chatscope.io/storybook/react/?path=/story/components-chatcontainer--live-controlled-example-with-grouped-messages
 // might use this one too https://github.com/chatscope/use-chat, https://github.com/chatscope/use-chat-example
 
-
+// eslint-disable-next-line
+import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import {
   MainContainer,
   ChatContainer,
@@ -99,24 +99,6 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
 
     
     // reset finished chat room to prevent reusing it
-    // const resetRoomIfDone = (roomId) => {
-    //     get(ref(db, `rooms/${classId}/${roomId}`)).then((snapshot) => {
-    //         if (snapshot.exists()) {
-    //             const finished = snapshot.child('info/chatFinished').val();
-    //             if (finished) {
-    //                 set(ref(db, `rooms/${classId}/${roomId}`), null);
-    //             }
-    //         }
-    //     })
-    // }
-
-
-
-    console.log(`finding room for sender=${senderId} in ${classId}`)
-
-    // run this once when creating the room
-    useEffect(() => {
-            // reset finished chat room to prevent reusing it
     const resetRoomIfDone = (roomId) => {
         get(ref(db, `rooms/${classId}/${roomId}`)).then((snapshot) => {
             if (snapshot.exists()) {
@@ -127,19 +109,26 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
             }
         })
     }
-        // read global {uid: anonName} dictionary of this room, create one if not found
-        const updateAnonsIfNone = (roomId, userList) => {
-            get(ref(db, `rooms/${classId}/${roomId}/anons`)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    setAnonNames(snapshot.val());
-                }
-                else {
-                    const pairs = namePairs(userList);
-                    set(ref(db, `rooms/${classId}/${roomId}/anons`), pairs);
-                    setAnonNames(pairs);
-                }
-            })
-        }
+
+    // read global {uid: anonName} dictionary of this room, create one if not found
+    const updateAnonsIfNone = (roomId, userList) => {
+        get(ref(db, `rooms/${classId}/${roomId}/anons`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                setAnonNames(snapshot.val());
+            }
+            else {
+                const pairs = namePairs(userList);
+                set(ref(db, `rooms/${classId}/${roomId}/anons`), pairs);
+                setAnonNames(pairs);
+            }
+        })
+    }
+
+    console.log(`finding room for sender=${senderId} in ${classId}`)
+
+    // run this once when creating the room
+    useEffect(() => {
+
         // read room info for sender: classes/CS473/rooms/0/users/{idx:userId}
         get(ref(db, `classes/${classId}/rooms`)).then((snapshotRoom) => {
             if (snapshotRoom.exists()) {
@@ -163,8 +152,8 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
                 setErrorCode(2);
             }
         });
-        
-    }, [classId, senderId])
+    // eslint-disable-next-line
+    }, [])
     
     if (roomId > -1) {
         return (
@@ -197,30 +186,30 @@ function RoomForSender({classId, senderId, senderName, chatRound}){
 }
 
 // return list of (str) userId for roomId
-// function getUserIdsInRoom(classId, roomId) {
+/*function getUserIdsInRoom(classId, roomId) {
     
-//     // classes/CS473/rooms/0/users/{idx:userId}
-//     get(ref(db, `classes/${classId}/rooms/${roomId}/users`)).then((snapshot) => {
-//         if (snapshot.exists()) {
-//             const userIds = snapshot.val();
-//             console.log(userIds)
-//             return userIds // 이거 왜 undefined?
-//         }
-//         else {
-//             // no room info found
-//             alert(`No Room ${roomId} in ${classId}`);
-//             return []
-//         }
-//     });
-// }
+    // classes/CS473/rooms/0/users/{idx:userId}
+    get(ref(db, `classes/${classId}/rooms/${roomId}/users`)).then((snapshot) => {
+        if (snapshot.exists()) {
+            const userIds = snapshot.val();
+            console.log(userIds)
+            return userIds // 이거 왜 undefined?
+        }
+        else {
+            // no room info found
+            alert(`No Room ${roomId} in ${classId}`);
+            return []
+        }
+    });
+}*/
 
 const ProfileTags = ({skills, hobbies}) => {
     if (skills.length * hobbies.length > 0) {
         return (
             <div>
-                {<h3>Skills</h3>}
+                {<h3>Skill-Sets</h3>}
                 {skills.map(tag => `#${tag}\t`)}
-                {<h3>Hobbies</h3>}
+                {<h3>Interesting Facts</h3>}
                 {hobbies.map(tag => `#${tag}\t`)}
             </div>
         )
@@ -238,7 +227,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     ///// chat interface /////
 
     const remoteId = 'Moderator';
-    // const remoteMsgCnt = useRef(0);
+    //const remoteMsgCnt = useRef(0);
     
     const inputRef = useRef();
     const [msgInputValue, setMsgInputValue] = useState("");
@@ -330,16 +319,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     // time when room first got created (unit:ms)
     const roomInitTime = useRef(0);
 
-
-
-    ///// real-time chat update /////
-    
-    const route = `rooms/${classId}/${roomId}/messages/`
-    const [snapshots, loading, error] = useList(ref(db, route));
-    console.log(loading, error)
-    const messages = snapshots.map(doc => doc.val())
-    useEffect( () => {
-            // write room info with no messages when initialized 
+    // write room info with no messages when initialized 
     function updateRoomInfo(roomId) {
         get(ref(db, `rooms/${classId}/${roomId}/info`)).then((snapshot) => {
 
@@ -380,59 +360,13 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         });
     }
 
-        // read append one chat message message and return new groups[] 
-        const updatedGroups = (prevGroups, messageId, message, sender, notCancel) => {
-            if (prevGroups.length > 0) {
-                const lastGroup = prevGroups[prevGroups.length - 1];
+    ///// real-time chat update /////
     
-                if (lastGroup.sender === sender) {
-                    // Add to group
-                    const newMessages = [...lastGroup.messages].concat({
-                        _id: `${messageId}`,
-                        message,
-                        sender: sender
-                    });
-                    const newGroup = { ...lastGroup,
-                        messages: newMessages
-                    };
-                    const newGroups = prevGroups.slice(0, -1).concat(newGroup);
-                    
-                    return newGroups;
-                }
-                
-                else {
-                    // Sender different than last sender - create new group 
-                    const newGroup = {
-                        _id: `${messageId}`,
-                        direction: sender === senderId ? "outgoing" : "incoming",
-                        messages: [{
-                            _id: `${messageId}`,
-                            message,
-                            sender: sender
-                        }],
-                        sender: sender
-                    };
-                    
-                    return prevGroups.concat(newGroup);
-                }
-            }
-            
-            else {
-                const newGroup = {
-                    _id: `${messageId}`,
-                    direction: sender === senderId ? "outgoing" : "incoming",
-                    messages: [{
-                        _id: `${messageId}`,
-                        message,
-                        sender: sender
-                    }],
-                    sender: sender
-                };
-                
-                return [newGroup];
-            }
-        }
-    
+    const route = `rooms/${classId}/${roomId}/messages/`
+    // eslint-disable-next-line
+    const [snapshots, loading, error] = useList(ref(db, route));
+    const messages = snapshots.map(doc => doc.val())
+    useEffect( () => {
         if (messages.length === 0) {
             // timer starts for this group
             updateRoomInfo(roomId);
@@ -442,7 +376,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             emptyGroup = updatedGroups(emptyGroup, messages[i]['id'], messages[i]['message'], messages[i]['sender']);
         }
         setGroups(emptyGroup);
-        }, [snapshots, messages, roomId, classId, senderId]
+        // eslint-disable-next-line
+        }, [snapshots]
     )
 
     //// real-time plot update /////
@@ -455,6 +390,22 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
             let outData = [];
             
+            // this creates dummy data
+            const classList = ["CS101", "CS204", "CS220", "CS230", "CS330"]
+            const meanCredits = [32.5, 28.3, 20.4, 36.3, 24.6]
+            const myCredits = [43.2, 41.3, 38.0, 23.1, 40.7]
+            
+            for (let i=0; i<5; i++) {
+                outData.push({
+                    'class': classList[i],
+                    'received': meanCredits[i],
+                    'given': myCredits[i],
+                })
+            }
+            console.log(`plot data of ${plotUserId} is`, outData)
+            setPlotData(outData);
+
+            /*// this is the original code but disable to render report images
             // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수
             // users/id/name/pastteams/CS101/??/credits:"3" <- 얘가 모든 클래스 평균
             get(ref(db, `users/${plotUserId}`)).then((snapshot) => {
@@ -486,7 +437,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                             
                             outData.push({
                                 'class': snapshotClass.key,
-                                'class average': meanCredit,
+                                'received': meanCredit,
                                 'peers': myCredit,
                             })
                         })
@@ -495,7 +446,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     console.log(`plot data of ${plotUserId} is`, outData)
                     setPlotData(outData);
                 }
-            });
+            });//*/
         }
     }, [plotUserId])
 
@@ -519,12 +470,13 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 })
             })
         }
-    }, [plotUserId, classId, roomId, hobbies, skills])
+    // eslint-disable-next-line
+    }, [plotUserId])
 
 
     ///// chat timer /////    
     
-    const maxChatSec = 100; // time to chat for each group (unit:s)
+    const maxChatSec = 300; // time to chat for each group (unit:s)
     const secLeft = useRef(0); // time left to chat with group members (unit:s)
     const timerId = useRef(null);
     const [timerSec, setTimerSec] = useState(parseInt(maxChatSec / 60));
@@ -546,24 +498,24 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
             clearInterval(timerId.current);
         }
-    }, [timerSec, classId, roomId]);
+    // eslint-disable-next-line
+    }, [timerSec]);
 
 
     ///// global chat moderator /////
 
     // sec left to send messages to all room members (ascending order)
-    const whenToRemind = [80, 70, 60, 10].sort((a,b) => b-a);
-
+    const whenToRemind = [299, 180, 60, 10].sort((a,b) => b-a);
+    const reminders = [
+        "Chat with your potential group members. Click each chat bubble to see profiles of its author.",
+        "You have three minutes before voting!",
+        "One minute left! Share your last comments to people.",
+        "Ten seconds left! Get ready to vote!",
+    ]
     const checkReminderFrom = useRef(0);
     const newCheckReminderFrom = useRef(-1);
 
     useEffect( () => {
-            const reminders = [
-        "Chat with your potential group members. Click each chat bubble to see profiles of its author.",
-        "You have two minutes before voting!",
-        "One minute left! Share your last comments to people.",
-        "Ten seconds left! Get ready to vote!",
-    ]
         /*get(ref(db, `rooms/${classId}/${roomId}/messages`)).then((snapshot) => {
             snapshot.forEach((s) => {
                 const sender = s.val()['sender'];
@@ -573,7 +525,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 }
                 setSkills(s.child(`class/${classId}/profile1`).val())
                 setHobbies(s.child(`class/${classId}/profile2`).val())
-
                 console.log(`skills of ${plotUserId} are`, skills)
                 console.log(`hobbies of ${plotUserId} are`,hobbies)
             })
@@ -616,8 +567,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             
         }
 
-        
-    }, [timerSec, classId, roomId, whenToRemind]);
+    // eslint-disable-next-line
+    }, [timerSec]);
     
     
     return (
@@ -674,9 +625,11 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     <div>
                         <h1>{namePairs[plotUserId]}</h1> 
                         <ProfileTags skills={skills} hobbies={hobbies} />
-                        {(plotData.length > 0 && <CreditPlot data={plotData}/>) ||
-                        (plotData.length <= 0 && <h2>no history found</h2>)}
                     </div>
+                }
+                {(timerSec>0 || timerMin>0) && 
+                    (plotUserId.length>0 && plotUserId !== remoteId) && 
+                    (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <h2>No Credit History Found</h2>))
                 }
             </div>
         </div>

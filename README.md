@@ -1,70 +1,53 @@
-# Getting Started with Create React App
+# TUG
+#### Team TUG (Auejin Ham, Yeon Su Park, Cheryl Siy, Seonghye Cho)
+Many KAIST students are having difficulties finding credible and suitable team members for group projects since the remote environment under pandemic does not give students communal places to get to know each other. 
+To solve this problem, our team created a real-time web platform that creates a virtual space where students can discover new people, interact through an anonymized chat system and form the best possible team without feeling any social pressure. 
+Our system is unique in the sense that it 
+1) deploys a fun quiz session to discover the most suitable teammates through a premade algorithm, 
+2) provides a chatting session where people can interact freely with the help of a moderator chatbot, 
+3) promotes each users to make their choices where they accept the current team or take another chance,
+4) provides information of each candidates through our distinctive credit system that is used to acknowledge their overall participation on group projects.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Quick Start
+- git clone this repository
+- npm install
+- npm start
 
-## Available Scripts
 
-In the project directory, you can run:
+## Main page & Navigation bar
+- **main_page.jsx & main.css:** main page
+- **navbar.jsx & navbar.css & navbar_copy.jsx:** navigation bar for the main page
+- **navbar_quiz.jsx:** navigation bar for the quiz time
 
-### `npm start`
+## Join Class
+- **join_class.jsx & join_class.css:** component to join the class
+- **classes_list.jsx:** dataset of classes
+- **start_team_building.jsx & start_team_building.css:** component to start the quiz session
+- **create_profile.jsx & create_profile.css:** component to create profile for each class
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Task 1: Quiz session
+- **quiz_information.jsx & quiz_information.css:** information page before each round of quiz starts
+- **random_quiz.jsx & random_quiz.css:** main part of quiz session
+- **question_candidates.jsx:** dataset of questions
+- **kmeans.jsx:** K-means algorithm which is copied from https://medium.com/geekculture/implementing-k-means-clustering-from-scratch-in-javascript-13d71fbcb31e
+- **team_building_algorithm.jsx:** algorithm part to divide students into several teams
+- **quiz_waiting.jsx & quiz_waiting.css:** waiting page after quiz
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Task 2: Chat session
+- **random_names.jsx:** dataset of random animal names
+- **chat_room.jsx & chat_room.css:** main part of chat session
+- **chat_user_info_vis.jsx:** credit plot at the right side of chat session
+- **voting.jsx:** voting component after chat session
 
-### `npm test`
+## Task 3: Credit distribution session
+- **credit_system.jsx & credit.css:** main part of credit system
+- **Dynamic Form/index.js & form.css :** Dynamic Form component used in credit system
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## My Page
+- **my_page.jsx:** my page tabs at the left side
+- **activeteams.jsx:** ACTIVE TEAM tab
+- **profile.jsx & profile.css:** PROFILE tab
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Others
+- **firebase.jsx:** configuration and initialization of firebase
+- **index.js:** App component with page routes

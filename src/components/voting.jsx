@@ -1,7 +1,7 @@
 import { auth, db } from "./firebase.jsx";
-import { getDatabase, ref, get, child, set, push } from "firebase/database";
-import { useState } from "react";
-import { AppPlatform } from "firebase-admin/lib/project-management/app-metadata";
+import { getDatabase, ref, get, child, set } from "firebase/database";
+// import { useState } from "react";
+// import { AppPlatform } from "firebase-admin/lib/project-management/app-metadata";
 
 
 //* storeTeamInDB
@@ -48,12 +48,12 @@ function storeTeamInDB(course, userarr){
 function voteResult(formed, course, round){
   if(formed === true) { /// goto Active Team page
     alert("Your team is formed! ^V^\nmore than 2/3 of your teammates agreed to be in this team! :)");
-    // window.location.href = "/mypage";
+    window.location.href = "/mypage";
   }
   else if(formed === false){ /// store the current team in the DB goto quizinfo page of next round
     if(alert("Less than 2/3 of your teammates agreed to be in this team :(\n Let's go to the next round! :)"));
     const nextRound = parseInt(round) + 1;
-    // window.location.href = "/quizinfo/" + course + "/" + nextRound;
+    window.location.href = "/quizinfo/" + course + "/" + nextRound;
   }
 }
 
@@ -136,14 +136,16 @@ function Voting(props) {
 
   return(
     <div className="popup">
-      <div>
+      <div style={{textAlign: "center", fontFamily: "Lato", fontSize: "17pt", paddingTop: "190px", fontWeight: "bold", paddingBottom: "20px"}}>
         Discussion Time has Passed!
       </div>
-      <div>
+      <div style={{textAlign: "center", fontFamily: "Lato", fontSize: "12pt"}}>
         Do you want to make team with current members?
       </div>
-      <button onClick={() => handleVoting(true, course, round)}>Yes</button>
-      <button onClick={() => handleVoting(false, course, round)}>Try Again ({leftchances}/{totalrounds})</button>
+      <div>
+        <span className="button30" onClick={() => handleVoting(true, course, round)}>Yes</span>
+        <span className="button31" onClick={() => handleVoting(false, course, round)}>Try Again ({leftchances}/{totalrounds})</span>
+      </div>
     </div>
   )
 }

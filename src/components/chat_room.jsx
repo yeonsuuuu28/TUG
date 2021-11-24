@@ -337,7 +337,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 secLeft.current = timeLeft;
                 setTimerMin(parseInt(secLeft.current / 60));
                 setTimerSec(parseInt(secLeft.current % 60));
-                
+
                 // must check again even if not finished on the server
                 if (roomInfo['chatFinished'] === false && timeLeft < 0) {
                     set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
@@ -359,6 +359,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     initTime: nowTime,
                     chatFinished: false,
                 });
+
+                set(ref(db, `rooms/${classId}/${roomId}/messages/`), 0 );
             }
         });
     }
@@ -522,13 +524,12 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     // not ready to send message
                     breakLoop = true;
                 }
-                else {
-                    
+                else {                    
 
                     get(ref(db, `rooms/${classId}/${roomId}/messages`)).then((snapshot) => {
                         if (snapshot.exists()) {                            
                             const msgs = Object.values(snapshot.val());
-                            const res = msgs.filter((x) => x.message === reminders[i])
+                            const res = msgs.filter((x) => (x.sender === remoteId) && (x.message === reminders[i]))
                             if (res.length === 0) {
                                 get(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`)).then((snapshot) => {
                                     if (!snapshot.exists()) {
@@ -545,13 +546,13 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                             }
                         }
                         else {
-                            set(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`), {
+                            /*set(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`), {
                                 id: `${mid}`,
                                 message: msg,
                                 sender : remoteId
                             });
                             
-                            newCheckReminderFrom.current = i;
+                            newCheckReminderFrom.current = i;*/
                         }
                     })
                 }

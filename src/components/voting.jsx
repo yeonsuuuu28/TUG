@@ -4,6 +4,7 @@ import { getDatabase, ref, get, child, set } from "firebase/database";
 //* storeTeamInDB
 function storeTeamInDB(course, userarr){
   const dbRef = ref(getDatabase());
+  console.log("welcome to storeTeamInDB");
 
   get(child(dbRef, 'users/')).then((snapshot) => {
     if(snapshot.exists()) {
@@ -21,7 +22,7 @@ function storeTeamInDB(course, userarr){
         const emails2 = emails.slice();
         emails2.splice(index - emails.length, 1);
         emails2.splice(0,0,emails[index]);
-                // console.log("data: ", userarr2, userarr2, username, username2);
+                console.log("data: ", userarr2, userarr2, username, username2);
         let data2 = [{credits:0, count:0}];
         data2 = data2.concat(userarr2.map((user, i) => {
           return({
@@ -193,3 +194,4 @@ function Voting(props) {
 }
 
 export default Voting;
+export {storeTeamInDB};

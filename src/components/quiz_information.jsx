@@ -40,17 +40,18 @@ function QuizInformation(props){
       const divide = () => {
         for(var i =0; i<classes.length; i++){
           if(classes[i].code === course) {
+            console.log("sdlksdf", classes[i].team);
             return classes[i].team;
           }
         }
       }
       const divided = totalStudents/divide();
 
-      if((divided - Math.floor(divided)) > 0){
-        setStdMinMax(Math.floor(divided) + ' ~ ' + Math.ceil(divided));
+      if((divided - Math.floor(divided)) > 0){ // totalStudents is multiple of divide()
+        setStdMinMax(Math.floor(divide()-0.5) + ' ~ ' + Math.ceil(divide()-0.5));
       }
       else{
-        setStdMinMax(parseInt(divided));
+        setStdMinMax(parseInt(divide()));
       }
     });
   }

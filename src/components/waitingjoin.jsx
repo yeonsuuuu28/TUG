@@ -4,7 +4,7 @@ import { db} from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import "./quizwaiting.css";
 import classes from "./classes_list.jsx";
-import storeTeamInDB from "./voting.jsx";
+import {storeTeamInDB} from "./voting.jsx";
 
 const timeInit = Date.now();
 
@@ -14,7 +14,7 @@ const timeInit = Date.now();
 function WaitingJoin(props) {
   const course = props.match.params.course;
   const round = parseInt(props.match.params.round);
-  const timelimit = round === 1 ? 3 * 60 * 1000 : 1 * 60 * 1000; // 3 minutes 
+  const timelimit = round === 1 ? 3 * 60 * 1000 : 0.2 * 60 * 1000; // 3 minutes //TODODODODODDODODODO
   let studlimit = 8;
   for(var i =0; i<classes.length; i++){ // set studlimit
     if(classes[i].code === course) {
@@ -30,6 +30,15 @@ function WaitingJoin(props) {
   setTimeout(setTimeState, 1000);
   setTimeout(getJoinedStudents, 5000);
 
+  /// return statement
+  if(sentence === "Times Over! There is only one team left. Wish you have a nice teamwork!"){
+    console.log("userarr: ", course, userarr);
+    storeTeamInDB(course, userarr);
+    setTimeout(window.location.href = "/mypage", 3000);
+    return;
+  }
+
+
   //* setTimeState
   /// set the state 'timeLeft'
   function setTimeState() {
@@ -40,7 +49,7 @@ function WaitingJoin(props) {
     // console.log(timeInit, timeNow, mins, seconds);
     if(mins < 0) { // time is over
       timeOut(); /// call timeOut function after 3 minutes
-      setInterval(getJoinedStudents, 5000);
+      if(round === 1) setInterval(getJoinedStudents, 5000);
     }
     else {
       if(seconds < 10) seconds = '0'+seconds;
@@ -55,10 +64,9 @@ function WaitingJoin(props) {
       setSentence("3 minutes over. But we need at least " + studlimit + " students to start the quiz.");
     }
     else if(round >= 2 && joinedStudents < studlimit){
-      setSentence("Times Over! There is only one team left. Wish you have a nice teamwork!")
-      storeTeamInDB(course, userarr);
-      setTimeout(()=>{window.location.href = "/mypage"}, 3000);
-      console.log(course, userarr);
+      // setTimeout(window.location.href = "/mypage", 3000);
+      
+      setSentence("Times Over! There is only one team left. Wish you have a nice teamwork!");
     }
     else{ /// go to next page
       const route = 'classes/' + course + '/quizstarted/'; // if 'quizstarted' == 'yes': cannot join the class. quiz is started with currently joined students
@@ -80,7 +88,7 @@ function WaitingJoin(props) {
         else if(round >= 2){ /// round >= 2: set userarr and joinedStudents
           let joined = 0;
           let userarr2 = [];
-          console.log(s.child('/user/').val());
+          // console.log(s.child('/user/').val());
           Object.values(s.child('/user/').val()).map((obj, index) => {
             if(obj['finished'] === 'yes') {}
             else {
@@ -88,9 +96,12 @@ function WaitingJoin(props) {
               joined = joined + 1;
             }
           });
-          setUserArr(userarr2);
-          setJoinedStudents(joined);
-          console.log("round ",round, " joined students: ", joinedStudents, userarr2);
+          if(timeLeft != '0:00'){
+            setUserArr(userarr2);
+            setJoinedStudents(joined);
+          }
+          
+          // console.log("round ",round, " joined students: ", joinedStudents, userarr2);
         }
         else{ /// first start at round 1
           setJoinedStudents(Object.keys(s.child('/user/').val()).length);

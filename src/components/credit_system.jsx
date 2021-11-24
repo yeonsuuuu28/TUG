@@ -29,7 +29,8 @@ const ReadDB = (params) => {
   // const [invert,setInvert] = useState([])
   const history = useHistory();
 
-  const writeUpdate2 = async () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const writeUpdate2 = useCallback(async () => {
     const auth = getAuth();
     //const dbRef = ref(getDatabase());
     const update2 = await buildAveCredit();
@@ -74,66 +75,66 @@ const ReadDB = (params) => {
         );
       }
     }
-  };
+  });
       
 
   const buildAveCredit = () => {
     return new Promise((resolve,reject) =>{
       setTimeout(()=>{
-    const auth = getAuth();
-    const dbRef = ref(getDatabase());
+            const auth = getAuth();
+            const dbRef = ref(getDatabase());
 
-    const loc =
-      "/users/" +
-      auth.currentUser.uid +
-      "/" +
-      auth.currentUser.displayName +
-      "/pastteams/" +
-      classid;
-    const update2 = [{}];
-    get(child(dbRef, loc)).then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-        //object of past teams
-
-        //update current user 
-        //get average of all users
-        //0 own average
-        update2[0] = {
-          name: auth.currentUser.displayName,
-          ave_credit: String(snapshot.val()[0].credits),
-        };
-        //1 onwards, get users average
-        for (const i in snapshot.val()) {
-          if (snapshot.val()[Number(i) + 1]) {
-            const uname = snapshot.val()[Number(i) + 1].name;
-            const usid = snapshot.val()[Number(i) + 1].id;
-            get(
-              child(
-                dbRef,
-                "/users/" + usid + "/" + uname + "/pastteams/" + classid + "/0"
-              )
-            ).then((snapshot) => {
+            const loc =
+              "/users/" +
+              auth.currentUser.uid +
+              "/" +
+              auth.currentUser.displayName +
+              "/pastteams/" +
+              classid;
+            const update2 = [{}];
+            get(child(dbRef, loc)).then((snapshot) => {
               if (snapshot.exists()) {
-                update2[Number(i) + 1] = {
-                  name: uname,
-                  ave_credit: String(snapshot.val().credits),
+                console.log(snapshot.val());
+                //object of past teams
+
+                //update current user 
+                //get average of all users
+                //0 own average
+                update2[0] = {
+                  name: auth.currentUser.displayName,
+                  ave_credit: String(snapshot.val()[0].credits),
                 };
+                //1 onwards, get users average
+                for (const i in snapshot.val()) {
+                  if (snapshot.val()[Number(i) + 1]) {
+                    const uname = snapshot.val()[Number(i) + 1].name;
+                    const usid = snapshot.val()[Number(i) + 1].id;
+                    get(
+                      child(
+                        dbRef,
+                        "/users/" + usid + "/" + uname + "/pastteams/" + classid + "/0"
+                      )
+                    ).then((snapshot) => {
+                      if (snapshot.exists()) {
+                        update2[Number(i) + 1] = {
+                          name: uname,
+                          ave_credit: String(snapshot.val().credits),
+                        };
+                      }
+                    });
+                  } 
+                }
+
+                
+              
+              } else {
+                console.log("nodata");
               }
             });
-          } 
-        }
-
-        
-      
-      } else {
-        console.log("nodata");
-      }
-    });
-      
-      resolve(update2)},5000)
-      
-    })
+              
+              resolve(update2)},3000)
+              
+            })
    
   };
 
@@ -550,7 +551,7 @@ const ReadDB = (params) => {
     );
 
     //build ave credit
-    writeUpdate2(); 
+    writeUpdate2()
 
     alert(
       "Thank you for submitting an honest review! Credits are now updated Successfully"
@@ -570,6 +571,9 @@ const ReadDB = (params) => {
       fillModel();
     }
   }, [pastteams, fillModel]);
+  useEffect(() => {
+    writeUpdate2();
+  }, [update3,writeUpdate2])
 
   
 

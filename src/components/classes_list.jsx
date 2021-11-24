@@ -1,69 +1,80 @@
     const classes = [
         {
-            "name" : "Introduction to Programming",
-            "professor" : "Jongmoon Baik",
-            "code" : "CS101",
-            "open" : "no"
-        }, 
-        {
-            "name" : "Discrete Mathematics",
-            "professor" : "Sungwon Kang",
-            "code" : "CS204",
-            "open" : "no"
-        }, 
-        {
-            "name" : "Data Structure",
-            "professor" : "Eun Young Moon",
-            "code" : "CS206",
-            "open" : "no"
-        }, 
-        {
-            "name" : "Programming Principles",
-            "professor" : "Jeehoon Kang",
-            "code" : "CS220",
-            "open" : "no"
-        }, 
-        {
-            "name" : "System Programming",
-            "professor" : "Jaehyuk Huh",
-            "code" : "CS230",
-            "open" : "no"
-        }, 
-        {
-            "name" : "Introduction to Algorithms",
-            "professor" : "Martin ZIEGLER",
-            "code" : "CS300",
-            "open" : "no"
-        }, 
-        {
-            "name" : "Computer Organization",
-            "professor" : "Soontae Kim",
-            "code" : "CS311",
-            "open" : "no"
-        }, 
-        {
-            "name" : "Programming Language",
-            "professor" : "Sukyoung Ryu",
-            "code" : "CS320",
-            "open" : "no"
-        }, 
-        {
-            "name" : "Operating Systems and Lab",
-            "professor" : "Insik Shin",
-            "code" : "CS330",
-            "open" : "yes"
-        }, 
-        {
             "name" : "Introduction to Social Computing",
             "professor" : "Juho Kim",
             "code" : "CS473",
-            "open" : "yes"
+            "open" : "Opened",
+            "team" : 4
         }, 
         {
             "name" : "Introduction to Software Engineering",
             "professor" : "Doo-Hwan Bae",
             "code" : "CS350",
-            "open" : "yes"
+            "open" : "Opened",
+            "team" : 4
+        },
+        {
+            "name" : "Introduction to Programming",
+            "professor" : "Jongmoon Baik",
+            "code" : "CS101",
+            "open" : "Opened",
+            "team" : 2
+        }, 
+        {
+            "name" : "Discrete Mathematics",
+            "professor" : "Sungwon Kang",
+            "code" : "CS204",
+            "open" : "Not Opened",
+            "team" : 2
+        }, 
+        {
+            "name" : "Data Structure",
+            "professor" : "Eun Young Moon",
+            "code" : "CS206",
+            "open" : "Not Opened",
+            "team" : 2
+        }, 
+        {
+            "name" : "Programming Principles",
+            "professor" : "Jeehoon Kang",
+            "code" : "CS220",
+            "open" : "Not Opened",
+            "team" : 2
+        }, 
+        {
+            "name" : "System Programming",
+            "professor" : "Jaehyuk Huh",
+            "code" : "CS230",
+            "open" : "Not Opened",
+            "team" : 2
+        }, 
+        {
+            "name" : "Introduction to Algorithms",
+            "professor" : "Martin ZIEGLER",
+            "code" : "CS300",
+            "open" : "Opened",
+            "team" : 3
+        }, 
+        {
+            "name" : "Computer Organization",
+            "professor" : "Soontae Kim",
+            "code" : "CS311",
+            "open" : "Not Opened",
+            "team" : 3
+        }, 
+        {
+            "name" : "Programming Language",
+            "professor" : "Sukyoung Ryu",
+            "code" : "CS320",
+            "open" : "Opened",
+            "team" : 3
+        }, 
+        {
+            "name" : "Operating Systems and Lab",
+            "professor" : "Insik Shin",
+            "code" : "CS330",
+            "open" : "Opened",
+            "team" : 2
         }
     ]
 

@@ -32,11 +32,12 @@ function storeTeamInDB(course, userarr){
           return({
             name: username2[i],
             id: user,
-            email: emails2[i]
+            email: emails2[i],
+            credit:0
           })
         })
         console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/", data2);
-        set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"), data2); /// store current team in DB
+        set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"),{credit:0, count:0}, data2); /// store current team in DB
         set(ref(db, 'classes/' + course + '/user/' + user + "/finished/"), 'yes');
         set(ref(db, "users/" + user + '/' + username[index] + "/teambuilding/"), null);
       });

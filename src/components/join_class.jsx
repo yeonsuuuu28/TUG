@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Navbar from './navbar.jsx'
 import {auth, db} from "./firebase.jsx";
 import { getDatabase, ref, push, get, child, set } from "firebase/database";
@@ -24,7 +24,6 @@ const theme = createTheme({
       },
     },
   });
-
 
 function ScrollTop(props) {
     const { children, window } = props;
@@ -168,6 +167,20 @@ function dbAdd(e) {
 export default function Join(props) {
     const [input, setInput] = useState("");
     const [classList, setClassList] = useState(classes);
+    const [table2, setTable2] = useState([])
+
+    useEffect (() => {
+      setTimeout (() => {
+        if (auth.currentUser !== null) {
+          const dbRef = ref(getDatabase());
+            get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/current_teams/')).then((snapshot) => {
+              if (snapshot.exists()) {
+                setTable2(Object.keys(snapshot.val()));
+              }
+          })
+        }
+      }, 1000)
+    }, [])
 
     const take_input = () => {
         let new_input = input.toLowerCase();
@@ -190,7 +203,23 @@ export default function Join(props) {
         let table = [];
         for (var i = 0; i < classList.length; i++) {
             let j = classList[i].code;
-            table.push(
+            console.log(j, table2)
+            if (table2.includes(j)) {
+              table.push(
+                <tr className="test10" key={i}>
+                    <td className="table_class" key={i+1}>
+                        <div className="table_class_title">{classList[i].name}</div>
+                        <div className="table_class_subtitle">{classList[i].professor} </div> 
+                        <div className="table_class_subtitle2">Team of {classList[i].team} | {classList[i].open} for Team-Building </div>
+                    </td>
+                    <td className="table_join_button" key={i+2}>
+                      <div className="start_button2" key={i+3}>COMPLETED</div>
+                    </td>
+                </tr>
+              )
+            }
+            else {
+              table.push(
                 <tr className="test10" key={i}>
                     <td className="table_class" key={i+1}>
                         <div className="table_class_title">{classList[i].name}</div>
@@ -201,7 +230,8 @@ export default function Join(props) {
                         <div className="join_button" onClick = {()=>classes_join(j)} key={i+3}>JOIN</div>
                     </td>
                 </tr>
-            )
+              )
+            }
         }
         return table;
     }
@@ -236,6 +266,7 @@ export default function Join(props) {
             />
             </Box></div>
             {getclasses()}
+            {/* {getCurrentTeam()} */}
             <table className = "table_setting"><tbody>{display()}</tbody></table>
             <ThemeProvider theme={theme}>
             <ScrollTop {...props}>

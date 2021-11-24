@@ -339,7 +339,6 @@ const ReadDB = ({ params }) => {
   const onSubmit = (model) => {
     //
     onPush(model);
-    const auth = getAuth();
     const dbRef = ref(getDatabase());
 
     //write to db updated values

@@ -5,8 +5,7 @@ import "./activeteams.css"
 import ERROR from "../images/error.png"
 
 function handleclick(course) {
-  // window.location.href = "/credit/" + course
-  console.log(course)
+  window.location.href = "/credit/" + course
 }
 
 //* ActiveTeamInfo - subpage to show team information of each course
@@ -27,7 +26,6 @@ function ActiveTeamInfo({course, name}){
             <td>{i.email}</td>
           </tr>
           </table>
-          {/* <button onClick={(course) => handleclick(course)}>DONE</button> */}
           </div>
         );
       }));
@@ -55,6 +53,7 @@ function ActiveTeamInfo({course, name}){
             {info}
           </tbody>
         </table>
+        <button onClick={(course) => handleclick(course)}>DONE</button>
       </div>
     )
   }

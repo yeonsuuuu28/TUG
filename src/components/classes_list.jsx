@@ -1,38 +1,38 @@
     const classes = [
         {
+            "name" : "Data Structure",
+            "professor" : "Eun Young Moon",
+            "code" : "CS206",
+            "open" : "Opened",
+            "team" : 2
+        }, 
+        {
+            "name" : "Introduction to Programming",
+            "professor" : "Jongmoon Baik",
+            "code" : "CS101",
+            "open" : "Opened",
+            "team" : 3
+        }, 
+        {
             "name" : "Introduction to Social Computing",
             "professor" : "Juho Kim",
             "code" : "CS473",
             "open" : "Opened",
-            "team" : 2
+            "team" : 4
         }, 
         {
             "name" : "Introduction to Software Engineering",
             "professor" : "Doo-Hwan Bae",
             "code" : "CS350",
             "open" : "Opened",
-            "team" : 2
+            "team" : 4
         },
-        {
-            "name" : "Introduction to Programming",
-            "professor" : "Jongmoon Baik",
-            "code" : "CS101",
-            "open" : "Opened",
-            "team" : 2
-        }, 
         {
             "name" : "Discrete Mathematics",
             "professor" : "Sungwon Kang",
             "code" : "CS204",
             "open" : "Opened",
-            "team" : 2
-        }, 
-        {
-            "name" : "Data Structure",
-            "professor" : "Eun Young Moon",
-            "code" : "CS206",
-            "open" : "Opened",
-            "team" : 2
+            "team" : 3
         }, 
         {
             "name" : "Programming Principles",
@@ -45,14 +45,14 @@
             "name" : "System Programming",
             "professor" : "Jaehyuk Huh",
             "code" : "CS230",
-            "open" : "Not Opened",
+            "open" : "Opened",
             "team" : 2
         }, 
         {
             "name" : "Introduction to Algorithms",
             "professor" : "Martin ZIEGLER",
             "code" : "CS300",
-            "open" : "Not Opened",
+            "open" : "Opened",
             "team" : 3
         }, 
         {

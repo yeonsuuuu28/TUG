@@ -7,6 +7,7 @@ import PROFILE3 from "../images/Level3.png"
 import PROFILE4 from "../images/Level4.png"
 import PROFILE5 from "../images/Level5.png"
 import "./profile.css"
+import ERROR from "../images/error.png"
 
 export class profile extends Component {
   constructor(props) {
@@ -27,10 +28,10 @@ componentDidMount() {
 
 user_credit() {
   const dbRef = ref(getDatabase());
-  // set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 300);
+  //set(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/' + 'credit'), 300);
   get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/totalcredit/')).then((snapshot) => {
       if (snapshot.exists()) {
-        this.setState({ credit: Object.values(snapshot.val()) });
+        this.setState({credit: Object.values(snapshot.val())});
         if (this.state.credit < 100) {
           this.setState({picture: PROFILE1});
           this.setState({level: 1});
@@ -55,18 +56,25 @@ user_credit() {
       else {
         this.setState({picture: PROFILE1});
         this.setState({level: 1});
+        this.setState({credit: 0});
       }
   }) ;
 }
 
     render() {
       if (this.state.currentUser === null) {
-        return (<div>Please sign-in to see your profile</div>)
+        return (
+          <div className="error4">
+          <img src = {ERROR} className = "error3" alt=""/><br/>
+          Please sign-in to see your profile.
+          </div>
+        )
       }
       else {
         const user_name = this.state.currentUser.displayName;
         const user_email = this.state.currentUser.email;
         this.user_credit();
+        console.log(this.state.credit)
         return (
           <div>
             {this.user_credit()}

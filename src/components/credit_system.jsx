@@ -5,7 +5,7 @@ import DynamicForm from "./DynamicForm";
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
 const update = [{}];
 const classid = "CS101";
@@ -23,111 +23,136 @@ const ReadDB = ({ params }) => {
   // const [localCredit, setLocalCredit] = useState();
   // const [localCount, setLocalCount] = useState(0);
   const [members, setMembers] = useState([]);
-  const [tnames,setTnames] = useState([]);
+  const [tnames, setTnames] = useState([]);
   // const [invert,setInvert] = useState([])
-  const history = useHistory()
+  const history = useHistory();
 
-
-
-  const onPush = async(model) => {
+  const onPush = async (model) => {
     const auth = getAuth();
     const dbRef = ref(getDatabase());
 
     get(child(dbRef, "/users")).then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val())
-        const userids = snapshot.val()
+        console.log(snapshot.val());
+        const userids = snapshot.val();
         //setUserIds(snapshot.val());
-        console.log(userids)
+        console.log(userids);
         //onsole.log(userdd)
-       
+
         //const tempName =  userids.map((x) => userids[x])
         //console.log(tempName)
         // var j = 0;
         console.log("current username: " + auth.currentUser.displayName);
         // const currentUser = "Yeonsu";
-        console.log(userids)
-        const tempName = Object.keys(userids) //all user ids in the system 
+        console.log(userids);
+        const tempName = Object.keys(userids); //all user ids in the system
         //console.log(Object.values(userids))
         // eslint-disable-next-line array-callback-return
         tempName.map((element) => {
           //userids[element] //displayname
           //element  //hashname
 
-        //---------looks for the updated user in the db----------//
+          //---------looks for the updated user in the db----------//
           //checks if there is a pastteams under user
-          console.log(userids[element][Object.keys(userids[element])]) //print all users 
+          console.log(userids[element][Object.keys(userids[element])]); //print all users
 
-          if("pastteams" in userids[element][Object.keys(userids[element])]){ //pastteams
+          if ("pastteams" in userids[element][Object.keys(userids[element])]) {
+            //pastteams
             //checks if there is a class id in user
             //console.log(userids[element][Object.keys(userids[element])].pastteams)
-            if(classid in userids[element][Object.keys(userids[element])].pastteams ){ //class id CS 101
-              console.log(userids[element][Object.keys(userids[element])].pastteams[classid]) //array of all CS 101
+            if (
+              classid in
+              userids[element][Object.keys(userids[element])].pastteams
+            ) {
+              //class id CS 101
+              console.log(
+                userids[element][Object.keys(userids[element])].pastteams[
+                  classid
+                ]
+              ); //array of all CS 101
 
-               userids[element][Object.keys(userids[element])].pastteams[classid].map((index)=>{
-                console.log(index)
-                
-               //names in pastteams that have data
-               if(Object.keys(index).includes("name")){
-                tnames.map((team) => {
-                  console.log(team)
-                  console.log(index.name)
-                  console.log(index.id)
-                  //if name of user is inside the class id, update the original user
-                  if (index.name === team){
-                    console.log("Yes")
-                    //get current value
-                    const target = "users/" +
-                    index.id +
-                    "/" +
-                    index.name +
-                    "/pastteams/" +
-                    classid +"/0"
-                    console.log("target:" + target)
-                    console.log("credits: " + model[index.name])
-                    get(child(dbRef,target)).then((snapshot) =>
-                    {
-                      if (snapshot.exists()){ 
-                        console.log(snapshot.val())
-                        set(
-                          ref(
-                            db,
-                            target
-                          ),
-                          {credits: (Number(snapshot.val().credits)*snapshot.val().count + Number(model[index.name]))/(snapshot.val().count +1), count: snapshot.val().count + 1}
-                        );
-                          }
-                          else{
-                            //write fresh
-                            set(
-                              ref(
-                                db,
-                                target
-                              ),
-                              {credits: Number(model[index.name]), count:1} )
-                          }
-                    })
-                  }
-                  return(<></>);
+              userids[element][Object.keys(userids[element])].pastteams[
+                classid
+              ].map((index) => {
+                console.log(index);
+
+                //names in pastteams that have data
+                if (Object.keys(index).includes("name")) {
+                  tnames.map((team) => {
+                    console.log(team);
+                    console.log(index.name);
+                    console.log(index.id);
+                    //if name of user is inside the class id, update the original user
+                    if (index.name === team) {
+                      console.log("Yes");
+                      //get current value
+                      const target =
+                        "users/" +
+                        index.id +
+                        "/" +
+                        index.name +
+                        "/pastteams/" +
+                        classid +
+                        "/0";
+                      console.log("target:" + target);
+                      console.log("credits: " + model[index.name]);
+                      //update average credit
+                      get(child(dbRef, target)).then((snapshot) => {
+                        if (snapshot.exists()) {
+                          console.log(snapshot.val());
+                          set(ref(db, target), {
+                            credits:
+                              (Number(snapshot.val().credits) *
+                                snapshot.val().count +
+                                Number(model[index.name])) /
+                              (snapshot.val().count + 1),
+                            count: snapshot.val().count + 1,
+                          });
+                        } else {
+                          //write fresh
+                          set(ref(db, target), {
+                            credits: Number(model[index.name]),
+                            count: 1,
+                          });
+                        }
+                      });
+                      //update total credit
+                      const totalCreditAddr =
+                        "users/" +
+                        index.id +
+                        "/" +
+                        index.name +
+                        "/totalcredit";
+                      get(child(dbRef,totalCreditAddr)).then((snapshot)=>{
+                        if(snapshot.exists()){
+                          console.log(snapshot.val());
+                          set(ref(db,totalCreditAddr),{
+                            credit: Number(snapshot.val().credit) + Number(model[index.name])
+                          });
+                        } else{
+                          //write fresh
+                          set(ref(db,totalCreditAddr),{
+                            credit: Number(model[index.name])
+                          })
+                        }
+
+                      });
+                    }
+                    return <></>;
+                  });
+                  console.log(index);
                 }
-                )
-                console.log(index)
-               }
-              
-              //console.log(index.name,index.credit)
-               if(userids[element].toString() === [index.name].toString()){
-                 console.log("match")
-                 
-               }
-               return(<></>);
-             })
-              }
-            }
-              
-        
-         })
 
-       
+                //console.log(index.name,index.credit)
+                if (userids[element].toString() === [index.name].toString()) {
+                  console.log("match");
+                }
+                return <></>;
+              });
+            }
+          }
+        });
+
         // for (const i in tempName) {
         //   console.log(i)
         //   for (const j in tnames){
@@ -182,7 +207,7 @@ const ReadDB = ({ params }) => {
                     
                 }*/
       } else {
-        console.log("nodata")
+        console.log("nodata");
       }
     });
   };
@@ -225,7 +250,7 @@ const ReadDB = ({ params }) => {
               uid +
               "/" +
               auth.currentUser.displayName +
-              "/currentteams/" +
+              "/current_teams/" +
               classid
           )
         ).then((snapshot) => {
@@ -247,14 +272,26 @@ const ReadDB = ({ params }) => {
                   uid +
                   "/" +
                   auth.currentUser.displayName +
-                  "/currentteams/" +
+                  "/current_teams/" +
                   classid
               ),
               [
-                { credits: 0, count:0 },
-                { name: "Uxer Ham", credit: "0", id:"bPNyFc0pLFaNa2EB3NaIMK0CVZC2" },
-                { name: "Yeon Su Park", credit: "0", id:"SbkyhYXe0iMEwKFMEQEQOW6dw273" },
-                { name: "Juan Mail", credit: "0", id:"Cjf0eQkTCOPYRs1Hud5P62HSWq53" },
+                { credits: 0, count: 0 },
+                {
+                  name: "Uxer Ham",
+                  credit: "0",
+                  id: "bPNyFc0pLFaNa2EB3NaIMK0CVZC2",
+                },
+                {
+                  name: "Yeon Su Park",
+                  credit: "0",
+                  id: "SbkyhYXe0iMEwKFMEQEQOW6dw273",
+                },
+                {
+                  name: "Juan Mail",
+                  credit: "0",
+                  id: "Cjf0eQkTCOPYRs1Hud5P62HSWq53",
+                },
               ]
             );
           }
@@ -301,22 +338,21 @@ const ReadDB = ({ params }) => {
 
   const onSubmit = (model) => {
     //
-    onPush(model)
+    onPush(model);
+    const dbRef = ref(getDatabase());
 
     //write to db updated values
     //1.build items to be written in DB
-     //add 10 to total credit
+    //add 10 to total credit
 
-
-    update[0] = { credits: 0, count: 0};
+    update[0] = { credits: 0, count: 0 };
 
     for (const i in pastteams[0]) {
-      
       if (Object.keys(pastteams[0][i]).includes("name")) {
         update[i] = {
           name: pastteams[0][i].name,
           credit: model[pastteams[0][i].name],
-          id:pastteams[0][i].id
+          id: pastteams[0][i].id,
         };
       }
     }
@@ -334,7 +370,27 @@ const ReadDB = ({ params }) => {
       ),
       update
     );
-   
+    //add 10 points 
+    const ownTotalCreditAddr =
+      "users/" +
+      auth.currentUser.uid +
+      "/" +
+      auth.currentUser.displayName +
+      "/totalcredit";
+    //if exist, add value, if not, create fresh
+    get(child(dbRef, ownTotalCreditAddr)).then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+        set(ref(db, ownTotalCreditAddr), {
+          credit: Number(snapshot.val().credit) + 10
+        })
+      } else {
+        //write fresh
+        set(ref(db, ownTotalCreditAddr), {
+          credit: 10,
+        });
+      }
+    });
 
     //update past average
 
@@ -346,7 +402,7 @@ const ReadDB = ({ params }) => {
           auth.currentUser.uid +
           "/" +
           auth.currentUser.displayName +
-          "/currentteams/" +
+          "/current_teams/" +
           classid
       ),
       null
@@ -358,7 +414,7 @@ const ReadDB = ({ params }) => {
 
     //redirect to another page
     //window.location.assign("./mypage");
-    history.push("/mypage")
+    history.push("/mypage");
   };
 
   useEffect(() => {
@@ -392,9 +448,7 @@ const ReadDB = ({ params }) => {
             onSubmit(model);
           }}
         />
-       
       </div>
-  
     </>
   );
 };

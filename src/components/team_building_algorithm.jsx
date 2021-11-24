@@ -120,9 +120,7 @@ function team_building_algorithm(c, round, n) {
         });
       }
     });
-  });
-
-  
+  }); 
 }
 
 export default team_building_algorithm;

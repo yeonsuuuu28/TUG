@@ -99,7 +99,7 @@ function WaitingJoin(props) {
               return(<></>)
             }
           });
-          if(timeLeft != '0:00'){
+          if(timeLeft !== '0:00'){
             setUserArr(userarr2);
             setJoinedStudents(joined);
           }

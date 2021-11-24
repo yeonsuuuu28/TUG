@@ -12,7 +12,7 @@ import { getDatabase, ref, set, get } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useList } from 'react-firebase-hooks/database';
 
-import Navbar from './navbar.jsx'
+import Navbar from './navbar_chat.jsx'
 import CreditPlot from './chat_user_info_vis.jsx'
 import Voting from './voting.jsx'
 import RandomNames from './random_names.jsx'
@@ -222,7 +222,7 @@ const ProfileTags = ({skills, hobbies}) => {
                     paddingBottom: "20px",
                 }}>{skills.map(tag => <span style={{
                     marginLeft: "20px",
-                    backgroundColor: "#b3cbef",
+                    backgroundColor: "#c6e3fa",
                     paddingLeft: "15px",
                     paddingRight: "15px",
                     paddingBottom: "7px",
@@ -245,7 +245,7 @@ const ProfileTags = ({skills, hobbies}) => {
                 }}>
                 {hobbies.map(tag => <span style={{
                     marginLeft: "20px",
-                    backgroundColor: "#b3cbef",
+                    backgroundColor: "#c6e3fa",
                     paddingLeft: "15px",
                     paddingRight: "15px",
                     paddingBottom: "7px",
@@ -692,6 +692,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                         fontWeight: "bold",
                         paddingLeft: "20px",
                         paddingTop: "30px",
+                        marginBottom: "0px",
+                        paddingBottom: "0px"
                     }}>Credit History</div>)
                 }
                 {(timerSec>0 || timerMin>0) && 

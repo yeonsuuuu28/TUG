@@ -82,10 +82,13 @@ function WaitingJoin(props) {
           let userarr2 = [];
           console.log(s.child('/user/').val());
           Object.values(s.child('/user/').val()).map((obj, index) => {
-            if(obj['finished'] === 'yes') {}
+            if(obj['finished'] === 'yes') {
+              return(<></>)
+            }
             else {
               userarr2.push(Object.keys(s.child('/user/').val())[index]);
               joined = joined + 1;
+              return(<></>)
             }
           });
           setUserArr(userarr2);
@@ -95,6 +98,7 @@ function WaitingJoin(props) {
         else{ /// first start at round 1
           setJoinedStudents(Object.keys(s.child('/user/').val()).length);
           console.log("currently joined students: ", joinedStudents);
+          return(<></>)
         }
       }
       else{

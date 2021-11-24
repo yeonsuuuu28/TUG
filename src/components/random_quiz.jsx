@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
@@ -8,7 +8,6 @@ import { FormControl } from "@mui/material";
 import { RadioGroup, Radio } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
 import Navbar from "./navbar_quiz.jsx";
-import { onAuthStateChanged } from "firebase/auth";
 
 
 //* GetRandomFunQuestions
@@ -142,6 +141,7 @@ function GetRandomFunQuestions({course, round}){
                     </td>
                     <td className = "checkboxQuiz">
                       <Checkbox
+                        // eslint-disable-next-line
                         onChange={() => handleChange(questionLst[temp])}
                         inputProps={{ 'aria-label': 'controlled' }}
                         sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}

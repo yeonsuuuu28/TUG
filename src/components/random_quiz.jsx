@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './random_quiz.css'
 import { essenQcandidates, essenAcandidates, funQcandidates, funAcandidates } from './question_candidates'
 import { auth, db } from "./firebase.jsx";
@@ -8,219 +8,186 @@ import { FormControl } from "@mui/material";
 import { RadioGroup, Radio } from "@mui/material";
 import { FormControlLabel } from "@mui/material";
 import Navbar from "./navbar_quiz.jsx";
-
-//* handleAnswerClick: event handler when the answer button is clicked
-/// input: qnum - question id, score - score of the clicked answer, answer - answer string of the clicked button, fun - true if the round>=2
-/// stores the clicked answer data into DB
-function handleAnswerClick(course, qnum, score, fun){
-  const dbRef = ref(getDatabase());
-  const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-  get(child(dbRef, route)).then((snapshot) => {
-    if(snapshot.exists()) {
-      if(fun){
-        set(ref(db, route + 'fun_questions/' + qnum + '/score/'), score);
-      }
-      else{
-        set(ref(db, route + 'essen_questions/' + qnum + '/score/'), score);
-      }
-    }
-    else{
-      alert("something is wrong"); // TODO go out to the main page
-    }
-  });
-};
-
-//* handleImportanceClick: event handler when the importance-check button is clicked
-// function handleImportanceClick(course, qnum){
-//   const dbRef = ref(getDatabase());
-//   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-//   get(child(dbRef, route)).then((snapshot) => {
-//     if(snapshot.exists()) {
-//         alert("Success!!!!");
-//         set(ref(db, route + 'essen_questions/' + qnum + '/importance/'), "yes");
-//     }
-//     else{
-//       alert("something is wrong"); // TODO go out to the main page
-//     }
-//   });
-// };
-
-//* GetAnswers
-/// input: id - index of fun question in funQcandidates array
-/// output: <html> - button list of each corresponding answer
-function GetAnswers({course, id, fun}){
-  const shuffle = (arr) => {
-    return arr.slice().sort(() => Math.random() - 0.5);
-  }
-
-  const [selectedValue, setSelectedValue] = React.useState();
-  const handleChange = (event, course, id, score ,fun) => {
-    setSelectedValue(event.target.value);
-    handleAnswerClick(course, id, score, fun)
-  };
-
-
-  if(fun){
-    const answerButtons = shuffle(funAcandidates[id].answers).map(x => // shuffle: randomize the order of buttons
-      <button key={x.score} className="answer" onClick = {() => handleAnswerClick(course, id, x.score, fun)}>
-        {x.answer}
-      </button>
-    );
-
-    return(
-      <div className="answer">
-        {answerButtons}
-      </div>
-    );
-  }
-  else{
-    let flip = false;
-    const answerTexts = shuffle(essenAcandidates[id].answers).map(x => {// shuffle: randomize the order of buttons
-      if(x.score === 2) flip = true; // set flip
-      return(
-        <div>
-          {x.answer}
-        </div>
-      );
-    });
-    const scorearr = flip ? [2, 1, 0, -1, -2] : [-2, -1, 0, 1, 2];
-    const answerButtons = scorearr.map(score => // shuffle: randomize the order of buttons
-
-      <Radio
-        checked = {selectedValue === (score + "")}
-        onChange = {(e) => handleChange(e, course, id, score, fun)}
-        value = {score + ""}
-        name = "radio-buttons"
-      />
-      // <button key={score} className="answer" onClick = {() => handleAnswerClick(course, id, score, fun)}></button>
-    );
-
-    return(
-      <div className="answer">
-        {answerTexts[0]}
-        {answerButtons}
-        {answerTexts[1]}
-      </div>
-    );
-  }
-};
+import { onAuthStateChanged } from "firebase/auth";
 
 
 //* GetRandomFunQuestions
 /// input: course - course id , round, number - number of random questions you want to request 
 /// output: <html> - set of questions and answer buttons
-function GetRandomFunQuestions({course, round, number}){ 
+function GetRandomFunQuestions({course, round}){ 
   const dbRef = ref(getDatabase());
-  const route = '/classes/' + course + '/fun_order/';
+  var questionLst = []
   var result = []
-  var checkbox = []
-  var buttonClicked = []
-  var startIndex, endIndex;
-  if (round === "2"){
-    startIndex = 0;
-    endIndex = Math.floor(funQcandidates.length/2) - 1;
-  }
-  else{
-    startIndex = Math.floor(funQcandidates.length/2);
-    endIndex = funQcandidates.length - 1;
-  }
+  const [important, setImportant] = useState([]);
+  const [buttons, setButtons] = useState([{0: false, 1: false, 2: false}, {0: false, 1: false, 2: false}, {0: false, 1: false, 2: false}]);
+  const [final, setFinal] = useState([]);
 
   function handleChange(e){
-    if(checkbox.includes(e)){
-      var index = checkbox.indexOf(e);
-      if (index !== -1) {
-        checkbox.splice(index, 1);
+    var importantLst = [...important]
+    if(importantLst.includes(e)){
+      var index = importantLst.indexOf(e)
+      if (index !== -1){
+        importantLst.splice(index, 1)
       }
     }
     else{
-      checkbox.push(e)
+      importantLst.push(e)
     }
+    console.log(importantLst)
+    setImportant(importantLst)
   }
 
-  for (var j = startIndex; j <= endIndex; j++){
-    buttonClicked.push({0: false, 1: false, 2: false})
-  }
-  const [buttons, setButtons] = useState(buttonClicked);
-
-  function handleButtonClick (index, qNo){
-    const tempLst = [...buttons]
-    if (tempLst[index][qNo]){
-      tempLst[index][qNo] = false;
-    }
-    else{
-      tempLst[index][0] = false
-      tempLst[index][1] = false
-      tempLst[index][2] = false
-      tempLst[index][qNo] = true
-    }
-    setButtons(tempLst)
-  }
-
-  function renderButton(index, qNo, temp){
-    console.log(buttons[index][qNo])
-    if(buttons[index][qNo]){
+  function renderButton(index, qNo, ansNo){
+    if (buttons[index][ansNo]){
       return(
-        <div className = "button100" onClick = {() => handleButtonClick(index, qNo)}>{funAcandidates[temp].answers[qNo].answer}</div>
+        <div className = "button100" onClick = {() => buttonClick(index, ansNo)}>{funAcandidates[qNo].answers[ansNo].answer}</div>
       )
     }
     else{
       return(
-        <div className = "button100Unselect" onClick = {() => handleButtonClick(index, qNo)}>{funAcandidates[temp].answers[qNo].answer}</div>
+        <div className = "button100Unselect" onClick = {() => buttonClick(index, ansNo)}>{funAcandidates[qNo].answers[ansNo].answer}</div>
       )
     }
   }
+
+  function buttonClick(index, ansNo){
+    const temp = [...buttons]
+    if(temp[index][ansNo]){
+      temp[index][ansNo] = false
+    }
+    else{
+      temp[index][0] = false
+      temp[index][1] = false
+      temp[index][2] = false
+      temp[index][ansNo] = true
+    }
+    setButtons(temp)
+  }
+
+  function sendDB(){
+    const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/'
+    for(var iter = 0; iter < 3; iter++){
+      if(buttons[iter][0] || buttons[iter][1] || buttons[iter][2]){
+        continue
+      }
+      else{
+        alert("Please answer all questions to submit")
+        return;
+      }
+    }
+    for(var iter3 = 0; iter3 < 3; iter3++){
+      const temp3 = iter3
+      for(var iter4 = 0; iter4 < 3; iter4++){
+        const temp4 = iter4
+        if(buttons[temp3][temp4]){
+          set(ref(db, route + 'fun_questions/'+ questionLst[temp3] + '/score/'), temp4 + 1)
+        }
+      }
+    }
+    for(var iter2 = 0; iter2 < important.length; iter2++){
+      const temp2 = iter2
+      set(ref(db, route + 'fun_questions/'+ questionLst[temp2] + '/importance/'), 'yes')
+    }
+    set(ref(db, route + 'fun_questions/done/'), 'yes')
+    window.location.href = "/quizwaiting/" + course + "/" + round;
+  }
+
+  get(child(dbRef, '/classes/' + course + '/funQuestion/')).then((snapshot) => {
+    if(snapshot.exists()){
+      questionLst = snapshot.val()[round - 1]
+    }
+    else{
+      var potentialLst = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+      var q1list = []
+      var q2list = []
+      for (var a = 0; a < 6; a++){
+        const num = Math.floor(Math.random() * potentialLst.length)
+        if (a < 3){
+          q1list.push(potentialLst[num])
+        }
+        else{
+          q2list.push(potentialLst[num])
+        }
+        potentialLst.splice(num, 1)
+      }
+      var qList = {
+        1: q1list,
+        2: q2list
+      }
+      set(ref(db, '/classes/' + course + '/funQuestion/'), qList)
+      if (round === "2"){
+        questionLst = q1list
+      }
+      else{
+        questionLst = q2list
+      }
+    }
+    for (var i = 0; i < 3; i++){
+      const temp = i;
+      result.push(
+        <>
+          <table className = "quizTable">
+            <tbody>
+                <tr>
+                    <td className = "nopadding">
   
-  for (var i = startIndex; i <= endIndex; i++){
-    const temp = i;
+                    </td>
+                    <td className = "mini_explanation">
+                        Check if this question<br/> is important to you!
+                    </td>
+                </tr>
+                <tr>
+                    <td className = "question_title12">
+                        <b>Q{i + 1}</b>. {funQcandidates[questionLst[temp]].question}
+                    </td>
+                    <td className = "checkboxQuiz">
+                      <Checkbox
+                        onChange={() => handleChange(questionLst[temp])}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                        sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+                      /> 
+                    </td>
+                </tr>
+            </tbody>
+          </table>
+          <br/>
+          <br/>
+          <table className = "buttonTable">
+            <tbody>
+              <tr>
+                <td className = "buttonTd">
+                  {renderButton(temp, questionLst[temp], 0)}
+                </td>
+                <td className = "buttonTd">
+                  {renderButton(temp, questionLst[temp], 1)}
+                </td>
+                <td className = "buttonTd">
+                  {renderButton(temp, questionLst[temp], 2)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <br/>
+          <br/>
+        </>
+      )
+    }
     result.push(
       <>
-        <table className = "quizTable">
-          <tbody>
-              <tr>
-                  <td className = "nopadding">
-
-                  </td>
-                  <td className = "mini_explanation">
-                      Check if this question<br/> is important to you!
-                  </td>
-              </tr>
-              <tr>
-                  <td className = "question_title12">
-                      <b>Q{i - startIndex + 1}</b>. {funQcandidates[temp].question}
-                  </td>
-                  <td className = "checkboxQuiz">
-                    <Checkbox
-                      onChange={() => handleChange(temp + 1)}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                      sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-                    /> 
-                  </td>
-              </tr>
-          </tbody>
-        </table>
+        <br/> 
+        <div className = "buttonDone" onClick = {sendDB}>
+          DONE
+        </div>
         <br/>
         <br/>
-        <table className = "buttonTable">
-          <tbody>
-            <tr>
-              <td className = "buttonTd">
-                {renderButton(temp-startIndex, 0, temp)}
-              </td>
-              <td className = "buttonTd">
-                {renderButton(temp-startIndex, 1, temp)}
-              </td>
-              <td className = "buttonTd">
-                {renderButton(temp-startIndex, 2, temp)}
-              </td>
-            </tr>
-          </tbody>
-        </table>
         <br/>
         <br/>
       </>
     )
-  }
-  return result;
+    setFinal(result)
+  })
+    
+  return final;
 };
 
 
@@ -575,51 +542,6 @@ function GetEssentialQuestions({course, randArr}){
   )
   return result
 };
-
-//* handleDoneClick: event handler when the user clicks 'done' button after answering all questions
-/// input: course - course id, round, funNumber - number of fun questions at each round
-/// if done: goto quizwaiting page
-// function handleDoneClick(course, round, funNumber){
-//   const dbRef = ref(getDatabase());
-//   const route = '/classes/' + course + '/user/' + auth.currentUser.uid + '/';
-//   console.log(course, round, route); 
-
-//   /// essential questions
-//   get(child(dbRef, route + 'essen_questions/')).then((snapshot) => {
-//     set(ref(db, route + 'essen_questions/done/'), "no");
-//     const answeredquestions = Object.keys(snapshot.val());
-//     if(snapshot.exists() && answeredquestions.length - 1 === essenQcandidates.length) {
-//       set(ref(db, route + 'essen_questions/done/'), "yes");
-//       console.log(course, round, route, round===1); 
-//       if(round === '1') { /// done
-//         window.location.href = "/quizwaiting/" + course + "/" + round;
-//       }
-//     }
-//     else{
-//       if(round === '1') alert("not done"); //TODO
-//     }
-//   });
-//   if(round > 1){ /// fun questions
-//     get(child(dbRef, route + 'fun_questions/')).then((snapshot) => {
-//       set(ref(db, route + 'fun_questions/done/'), "no");
-//       const answeredquestions = Object.keys(snapshot.val());
-//       if(snapshot.exists() && answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length)) {
-//         set(ref(db, route + 'fun_questions/done/'), "yes");
-//         // console.log("What: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
-
-//         /// done
-//         window.location.href = "/quizwaiting/" + course + "/" + round;
-//       }
-//       else{
-//         // console.log("Whatf: ",answeredquestions.length - 1 === Math.min(funNumber*(round - 1), funQcandidates.length));
-
-//         alert("not done"); //TODO
-//       }
-//     });
-//   }
-// };
-
-
 
 //* Quiz - '/quiz/:course/:round' page
 function Quiz(props) {

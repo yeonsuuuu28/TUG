@@ -4,8 +4,10 @@ import { getDatabase, ref, push, get, child, set } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import "./my_class.css";
 import classes from "./classes_list.jsx";  
+import ERROR from "../images/error.png"
 
 function handleCourseClick(course){
+    console.log(course)
     const dbRef = ref(getDatabase());
     get(child(dbRef, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/teambuilding/')).then((snapshot) => {
         if (snapshot.exists()) {
@@ -29,7 +31,7 @@ function handleCourseClick(course){
                             if (Object.keys(snapshot2.val())[0] === "profile1") {
                               alert("You are already building a team for " + snapshot.val() + "."
                               + "\nRedirecting to " + Object.values(snapshot.val())[0] + " quiz page...")
-                              window.location.href = "/quizinfo/"+ Object.keys(snapshot.val())[0] +'/1';
+                              window.location.href = "/quizinfo/"+ Object.values(snapshot.val())[0] +'/1';
                               }
                             else if (Object.values(snapshot2.val())[0] === "no profile") {
                               alert("You have not finished creating your profile for " + Object.values(snapshot.val())[0] + "."
@@ -96,6 +98,15 @@ export default function Join(props) {
 
                 }
             }
+        }
+        if(classtable.length === 0){
+            return(
+                <div className = "error2">
+                    <img src = {ERROR} className = "error" alt=""/><br/>
+                    You have not joined any classes yet.<br/>
+                    Please sign-in and join classes to start team-building!
+                </div>
+            )
         }
         return classtable;
     }

@@ -7,6 +7,7 @@ import PROFILE3 from "../images/Level3.png"
 import PROFILE4 from "../images/Level4.png"
 import PROFILE5 from "../images/Level5.png"
 import "./profile.css"
+import ERROR from "../images/error.png"
 
 export class profile extends Component {
   constructor(props) {
@@ -62,7 +63,12 @@ user_credit() {
 
     render() {
       if (this.state.currentUser === null) {
-        return (<div>Please sign-in to see your profile</div>)
+        return (
+          <div className="error4">
+          <img src = {ERROR} className = "error3" alt=""/><br/>
+          Please sign-in to see your profile.
+          </div>
+        )
       }
       else {
         const user_name = this.state.currentUser.displayName;

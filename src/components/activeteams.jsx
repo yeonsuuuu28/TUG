@@ -2,6 +2,7 @@ import { auth } from "./firebase.jsx";
 import { getDatabase, ref, get, child } from "firebase/database";
 import { useState } from "react";
 import "./activeteams.css"
+import ERROR from "../images/error.png"
 
 //* ActiveTeamInfo - subpage to show team information of each course
 function ActiveTeamInfo({course, name}){
@@ -91,10 +92,21 @@ function ActiveTeamInfo({course, name}){
 
 //* ActiveTeams - page '/activeteams',, component 'ActiveTeams' in mypage
 function ActiveTeams() {
-  const dbRef = ref(getDatabase());
-  const route = 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/current_teams/' ;
   const [courseComponent, setCourseComponent] = useState('Loading...');
   const [onClick, setOnClick] = useState([false, '', '']);
+
+  if (auth.currentUser === null) {
+    return (
+      <div className="error4">
+      <img src = {ERROR} className = "error3" alt=""/><br/>
+      Please sign-in to see your active teams.
+      </div>
+    )
+  }
+  else {
+  const dbRef = ref(getDatabase());
+  const route = 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/current_teams/' ;
+
 
   get(child(dbRef, route)).then((s)=> {
     if (s.exists() && courseComponent === 'Loading...') {
@@ -138,7 +150,7 @@ function ActiveTeams() {
         }));
       })
     }
-  });
+  })}
 
   if(onClick[0]){ /// when the user clicked 'go' button
     console.log("onClick: ", onClick);

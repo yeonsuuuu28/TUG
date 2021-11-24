@@ -389,9 +389,55 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         if (plotUserId.length > 0 && plotUserId !== remoteId) {
 
             let outData = [];
+
+            // users/id/name/vis/classid/{idx: {ave_credit:#, name:#}} // 0<=idx<len(team)
+            // ave_credit := received scores from other teammates
+            // iterate all idx; given=self.ave_credit & received=mean(others.ave_credit)
+            get(ref(db, `users/${plotUserId}`)).then((snapshot) => {
+                if (snapshot.exists()) {
+
+                    // iterate once sice each id has one name
+                    snapshot.forEach((snapshotChild) => {
+                        const plotUserName = snapshotChild.key
+                        
+                        // iterate for each pastclass
+                        snapshotChild.child("vis").forEach((snapshotClass) => {
+                            // res array of dict{ave_credit:#, name:#}
+                            const res = Object.values(snapshotClass.val());
+                            console.log(snapshotClass.key, res)
+                            
+                            let received = -1;
+                            let creditSum = 0;
+                            let peers = 0;
+                            
+                            for (const r of res) {
+                                if (r['name'] === plotUserName) {
+                                    received = parseFloat(r['ave_credit'])
+                                    received = Math.round(100 * received) / 100;
+                                }
+                                else {
+                                    creditSum += parseFloat(r['ave_credit'])
+                                    peers += 1;
+                                }
+                            }
+                            
+                            const given = Math.round(100 * creditSum / peers) / 100;
+                            
+                            outData.push({
+                                'class': snapshotClass.key,
+                                'received': received,
+                                'given': given,
+                            })
+                        })
+                    })
+
+                    console.log(`plot data of ${plotUserId} is`, outData)
+                    setPlotData(outData);
+                }
+            });
             
             // this creates dummy data
-            const classList = ["CS101", "CS204", "CS220", "CS230", "CS330"]
+            /*const classList = ["CS101", "CS204", "CS220", "CS230", "CS330"]
             const meanCredits = [32.5, 28.3, 20.4, 36.3, 24.6]
             const myCredits = [43.2, 41.3, 38.0, 23.1, 40.7]
             
@@ -403,7 +449,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 })
             }
             console.log(`plot data of ${plotUserId} is`, outData)
-            setPlotData(outData);
+            setPlotData(outData);*/
 
             /*// this is the original code but disable to render report images
             // users/id/name/pastteams/CS101/??/Auejin:"10" <- 다른 사람한테 받은 점수

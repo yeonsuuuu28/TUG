@@ -11,8 +11,8 @@ const timeInit = Date.now();
 /// wait for 3 mins to gather students or after 3 mins, wait until 4 students join to this class
 function WaitingJoin(props) {
   const course = props.match.params.course;
-  const timelimit = 0.5 * 60 * 1000; // 3 minutes // TODO change this to 3*60*1000
-  const studlimit = 2; // 4 students // TODO change this to 4 later
+  const timelimit = 3 * 60 * 1000; // 3 minutes
+  const studlimit = 4; // 4 students 
   const dbRef = ref(getDatabase());
   const [joinedStudents, setJoinedStudents] = useState(0);
   const [sentence, setSentence] = useState("");

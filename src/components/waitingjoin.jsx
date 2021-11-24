@@ -14,7 +14,7 @@ const timeInit = Date.now();
 function WaitingJoin(props) {
   const course = props.match.params.course;
   const round = parseInt(props.match.params.round);
-  const timelimit = round === 1 ? 3 * 60 * 1000 : 0.2 * 60 * 1000; // 3 minutes //TODODODODODDODODODO
+  const timelimit = round === 1 ? 3 * 60 * 1000 : 1 * 60 * 1000; // 3 minutes 
   let studlimit = 8;
   for(var i =0; i<classes.length; i++){ // set studlimit
     if(classes[i].code === course) {
@@ -34,7 +34,7 @@ function WaitingJoin(props) {
   if(sentence === "Times Over! There is only one team left. Wish you have a nice teamwork!"){
     console.log("userarr: ", course, userarr);
     storeTeamInDB(course, userarr);
-    setTimeout(window.location.href = "/mypage", 3000);
+    setTimeout(function(){window.location.href = "/mypage"}, 3000);
     return;
   }
 

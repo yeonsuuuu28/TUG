@@ -86,6 +86,8 @@ export default class DynamicForm extends React.Component {
             <div className = {this.props.className}>
                 <div className = "proftitle" >{title}</div>
                 <div className = "profile_description">Submitting honest reviews will help you and other classmates in selecting a team mate with a good fit.</div>
+                <div className = "profile_description">Professors and TAs can see your credit distribution. 
+                By submitting this form, you acknowledge that everything written below is true.</div>
                 <h3> Remaining points to distribute: {this.state.count} </h3>
                 
                 <form className = "dynamic-form" onSubmit ={(e)=>{this.onSubmit(e)}}>

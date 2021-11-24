@@ -60,11 +60,15 @@ function PastTeamInfo({ course, name }) {
         </div>
         <div>Your Average Credits: {aveCredit}</div>
         <table>
+          <thead>
             <tr>
               <th key="member">MEMBER</th>
               <th key="grade">CREDIT</th>
             </tr>
+            </thead>
+            <tbody>
               {info}
+            </tbody>
         </table>
       </div>
     );
@@ -116,13 +120,14 @@ if (auth.currentUser === null) {
           courses.map((c) => {
             const name = s.child("/" + c + "/name/").val();
             const prof = s.child("/" + c + "/professor/").val();
+            console.log(name,prof)
             return (
-              <table className="hahahatest">
+              <table key = {name+prof} className="hahahatest">
                 <tbody>
-                  <tr>
+                  <tr key = {name}>
                     <td className="collapse">{name}</td>
                   </tr>
-                  <tr>
+                  <tr key = {prof}>
                     <td className="hahatest">
                       {prof}&nbsp;&nbsp;&nbsp;
                       <i className="fas fa-arrow-alt-circle-right"></i>

@@ -243,6 +243,50 @@ const funQcandidates = [ // candidates of fun questions
     id: 4,
     question: "Which place do you prefer to travel?"
   },
+  {
+    id: 5,
+    question: "What do you want to eat for dinner?"
+  },
+  {
+    id: 6,
+    question: "Which fruit do you like more?"
+  },
+  {
+    id: 7,
+    question: "Which country do you want to go to travel?"
+  },
+  {
+    id: 8,
+    question: "What is your favorite weather?"
+  },
+  {
+    id: 9,
+    question: "Which one do you eat after lunch?"
+  },
+  {
+    id: 10,
+    question: "Which SNS platform do you use the most?"
+  },
+  {
+    id: 11,
+    question: "Which animal do you like the most?"
+  },
+  {
+    id: 12,
+    question: "What color are your pants now?"
+  },
+  {
+    id: 13,
+    question: "Where do you prefer to study?"
+  },
+  {
+    id: 14,
+    question: "Which is your favorite flower?"
+  },
+  {
+    id: 15,
+    question: "Choose your favorite color!"
+  }
 ]
 
 const funAcandidates = [ // possible answers for each funQcandidates
@@ -315,6 +359,193 @@ const funAcandidates = [ // possible answers for each funQcandidates
       }
     ]
   },
+  {
+    id: 5,
+    answers: [
+      {
+        score: 1,
+        answer: "김치찌개 Kimchi-jjigae (stew)"
+      },
+      {
+        score: 2,
+        answer: "떡볶이 Tteokbokki"
+      },
+      {
+        score: 3,
+        answer: "Vietnamese rice noodles"
+      }
+    ]
+  },
+  {
+    id: 6,
+    answers: [
+      {
+        score: 1,
+        answer: "watermelon"
+      },
+      {
+        score: 2,
+        answer: "mango"
+      },
+      {
+        score: 3,
+        answer: "grapefruit"
+      }
+    ]
+  },
+  {
+    id: 7,
+    answers: [
+      {
+        score: 1,
+        answer: "Australia"
+      },
+      {
+        score: 2,
+        answer: "Italy"
+      },
+      {
+        score: 3,
+        answer: "Russia"
+      }
+    ]
+  },
+  {
+    id: 8,
+    answers: [
+      {
+        score: 1,
+        answer: "snowy"
+      },
+      {
+        score: 2,
+        answer: "sunny"
+      },
+      {
+        score: 3,
+        answer: "windy"
+      }
+    ]
+  },
+  {
+    id: 9,
+    answers: [
+      {
+        score: 1,
+        answer: "Cookie"
+      },
+      {
+        score: 2,
+        answer: "Candy"
+      },
+      {
+        score: 3,
+        answer: "Chocolate"
+      }
+    ]
+  },
+  {
+    id: 10,
+    answers: [
+      {
+        score: 1,
+        answer: "Facebook"
+      },
+      {
+        score: 2,
+        answer: "Instagram"
+      },
+      {
+        score: 3,
+        answer: "Twitter"
+      }
+    ]
+  },
+  {
+    id: 11,
+    answers: [
+      {
+        score: 1,
+        answer: "Cat"
+      },
+      {
+        score: 2,
+        answer: "Dog"
+      },
+      {
+        score: 3,
+        answer: "Goose"
+      }
+    ]
+  },
+  {
+    id: 12,
+    answers: [
+      {
+        score: 1,
+        answer: "Black"
+      },
+      {
+        score: 2,
+        answer: "Blue (jeans)"
+      },
+      {
+        score: 3,
+        answer: "Others"
+      }
+    ]
+  },
+  {
+    id: 13,
+    answers: [
+      {
+        score: 1,
+        answer: "Home"
+      },
+      {
+        score: 2,
+        answer: "Library"
+      },
+      {
+        score: 3,
+        answer: "Cafe"
+      }
+    ]
+  },
+  {
+    id: 14,
+    answers: [
+      {
+        score: 1,
+        answer: "Rose"
+      },
+      {
+        score: 2,
+        answer: "Tulip"
+      },
+      {
+        score: 3,
+        answer: "Dandelion"
+      }
+    ]
+  },
+  {
+    id: 15,
+    answers: [
+      {
+        score: 1,
+        answer: "Red"
+      },
+      {
+        score: 2,
+        answer: "Orange"
+      },
+      {
+        score: 3,
+        answer: "Yellow"
+      }
+    ]
+  }
 ]
 
 export {essenQcandidates, essenAcandidates, funQcandidates, funAcandidates }

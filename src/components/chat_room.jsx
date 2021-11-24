@@ -317,7 +317,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     
     
     // time when room first got created (unit:ms)
-    const roomInitTime = useRef(0);
+    //const roomInitTime = useRef(0);
+    const [roomInitTime, setRoomInitTime] = useState(0);
 
     // write room info with no messages when initialized 
     function updateRoomInfo(roomId) {
@@ -328,7 +329,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 console.log(snapshot.val());
 
                 // (unit:s) roomInitTime/1000 <= nowTime/1000 <= roomInitTime/1000 + maxChatSec
-                roomInitTime.current = roomInfo['initTime'];
+                //roomInitTime.current = roomInfo['initTime'];
+                setRoomInitTime(roomInfo['initTime'])
                 
                 const nowTime = new Date().getTime();
                 const timeLeft = (roomInfo['initTime'] / 1000) + maxChatSec - (nowTime / 1000);
@@ -347,7 +349,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 console.log("New Group Initialized!");
 
                 const nowTime = new Date().getTime();
-                roomInitTime.current = nowTime;
+                // roomInitTime.current = nowTime;
+                setRoomInitTime(nowTime)
                 secLeft.current = maxChatSec;
                 setTimerMin(parseInt(secLeft.current / 60));
                 setTimerSec(parseInt(secLeft.current % 60));
@@ -377,8 +380,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         }
         setGroups(emptyGroup);
         // eslint-disable-next-line
-        }, [snapshots]
-    )
+    }, [snapshots, roomInitTime])
 
     //// real-time plot update /////
     const [plotUserId, setPlotUserId] = useState('');
@@ -505,14 +507,14 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     const newCheckReminderFrom = useRef(-1);
 
     useEffect( () => {
-        if (roomInitTime.current && roomInitTime.current > 0) {
+        if (roomInitTime && roomInitTime > 0) {
             let breakLoop = false;
             newCheckReminderFrom.current = -1;
 
             for (let i=checkReminderFrom.current; i<whenToRemind.length && !breakLoop; i++) {
                 
                 let sec = whenToRemind[i];
-                let mid = 1000 * (maxChatSec - sec) + roomInitTime.current;
+                let mid = 1000 * (maxChatSec - sec) + roomInitTime;
                 let msg = reminders[i];
                 console.log(i, sec, mid, msg);
 
@@ -521,8 +523,28 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     breakLoop = true;
                 }
                 else {
-                    get(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`)).then((snapshot) => {
-                        if (!snapshot.exists()) {
+                    
+
+                    get(ref(db, `rooms/${classId}/${roomId}/messages`)).then((snapshot) => {
+                        if (snapshot.exists()) {                            
+                            const msgs = Object.values(snapshot.val());
+                            const res = msgs.filter((x) => x.message === reminders[i])
+                            if (res.length === 0) {
+                                get(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`)).then((snapshot) => {
+                                    if (!snapshot.exists()) {
+                                        set(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`), {
+                                            id: `${mid}`,
+                                            message: msg,
+                                            sender : remoteId
+                                        });
+                                        
+                                        newCheckReminderFrom.current = i;
+                                    }
+                                    
+                                })
+                            }
+                        }
+                        else {
                             set(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`), {
                                 id: `${mid}`,
                                 message: msg,
@@ -531,7 +553,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                             
                             newCheckReminderFrom.current = i;
                         }
-                        
                     })
                 }
             }

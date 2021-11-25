@@ -547,12 +547,13 @@ const ReadDB = (params) => {
       
     
 
-    alert(
-      "Thank you for submitting an honest review! As a bonus you get 10 points for evaluating your teamm. Check your profile to see your total credits!"
-    );
+   
 
     //redirect to another page
     setTimeout(function(){
+       alert(
+         "Thank you for submitting an honest review! As a bonus you get 10 points for evaluating your teamm. Check your profile to see your total credits!"
+       );
         history.push("/mypage")
     },6000);
     

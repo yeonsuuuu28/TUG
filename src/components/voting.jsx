@@ -155,7 +155,7 @@ function Voting(props) {
       </div>
       <div style={{textAlign: "center", fontFamily: "Lato", fontSize: "12pt"}}>
         Do you want to make team with current members?
-      </div>
+      </div> 
       <div style={{textAlign:"center"}}>
       <table style={{textAlign:"center", width: "50%", marginLeft: "25%", marginRight: "25%", height: "150px", border: "0"}}>
         <tbody>

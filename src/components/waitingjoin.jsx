@@ -64,7 +64,7 @@ function WaitingJoin(props) {
   /// go to quizinfo page if 4 or more students joined in the class
   function timeOut() {
     if(round === 1 && joinedStudents < studlimit) {
-      setSentence("3 minutes over. But we need at least " + studlimit + " students to start the quiz.");
+      setSentence("3 minutes over. But we need at least " + studlimit + " students to start the quiz. Waiting for more..." );
     }
     else if(round >= 2 && joinedStudents < studlimit){
       // setTimeout(window.location.href = "/mypage", 3000);

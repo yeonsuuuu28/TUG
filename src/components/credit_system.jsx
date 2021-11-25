@@ -131,7 +131,7 @@ const ReadDB = (params) => {
               }
             });
               
-              resolve(update2)},3000)
+              resolve(update2)},5000)
               
             })
    

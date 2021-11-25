@@ -16,9 +16,8 @@ Our system is unique in the sense that it
 
 ## Main page & Navigation bar
 - **main_page.jsx & main.css:** main page
-- **navbar.jsx & navbar.css & navbar_copy.jsx:** navigation bar for the main page
-- **navbar_quiz.jsx:** navigation bar for the quiz time
-- **navbar_chat.jsx:** navigation bar for the chatting page
+- **navbar.jsx & navbar.css:** navigation bar for the main page
+- **navbar_copy.jsx:** navigation bar for other pages
 
 ## Join Class
 - **join_class.jsx & join_class.css:** component to join the class
@@ -57,4 +56,3 @@ Our system is unique in the sense that it
 ## Others
 - **firebase.jsx:** configuration and initialization of firebase
 - **index.js:** App component with page routes
-- **navbar.jsx & navbar_copy.jsx & navbar.css :** navigation bar template to use later

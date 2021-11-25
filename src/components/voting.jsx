@@ -161,7 +161,7 @@ function Voting(props) {
         <tbody>
           <tr>
             <td style={{textAlign:"center", width: "100px"}}>
-        <div style={{
+        <div style={{ 
               display: "flex",
               justifyContent: "center",
               flexDirection: "column",

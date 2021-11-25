@@ -552,7 +552,10 @@ const ReadDB = (params) => {
     );
 
     //redirect to another page
-    history.push("/mypage");
+    setTimeout(function(){
+        history.push("/mypage")
+    },6000);
+    
   };
 
   useEffect(() => {

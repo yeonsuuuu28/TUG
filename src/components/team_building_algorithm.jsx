@@ -133,7 +133,7 @@ function team_building_algorithm(c, round, n) {
         }
       }
     }
-    for(var i=0; i<teams.length-1; i++){
+    for(i=0; i<teams.length-1; i++){
       if(Array.isArray(teams[i]) && teams[i].length > teammatelimit){
         const arr1 = teams[i].slice(0, teammatelimit);
         const arr2 = teams[i].slice(teammatelimit);

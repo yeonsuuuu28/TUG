@@ -21,11 +21,14 @@ Our system is unique in the sense that it
 
 ## Join Class
 - **join_class.jsx & join_class.css:** component to join the class
+- **modal1.jsx & modal.css:** modal to show up when pressing a button to join a class
 - **classes_list.jsx:** dataset of classes
 - **start_team_building.jsx & start_team_building.css:** component to start the quiz session
 - **create_profile.jsx & create_profile.css:** component to create profile for each class
+- **waitingjoin.jsx:** waiting room before joining each quiz session
 
 ## Task 1: Quiz session
+- **navbar_quiz.jsx:** navigation bar to show during quiz session
 - **quiz_information.jsx & quiz_information.css:** information page before each round of quiz starts
 - **random_quiz.jsx & random_quiz.css:** main part of quiz session
 - **question_candidates.jsx:** dataset of questions
@@ -34,6 +37,7 @@ Our system is unique in the sense that it
 - **quiz_waiting.jsx & quiz_waiting.css:** waiting page after quiz
 
 ## Task 2: Chat session
+- **navbar_chat.jsx:** navigation bar to show during chat session
 - **random_names.jsx:** dataset of random animal names
 - **chat_room.jsx & chat_room.css:** main part of chat session
 - **chat_user_info_vis.jsx:** credit plot at the right side of chat session
@@ -45,9 +49,12 @@ Our system is unique in the sense that it
 
 ## My Page
 - **my_page.jsx:** my page tabs at the left side
-- **activeteams.jsx:** ACTIVE TEAM tab
+- **my_class.jsx & my_class.css:** list of classes to join or make teams
+- **activeteams.jsx & activeteams.css:** ACTIVE TEAM tab
+- **pastteams.jsx:** PAST TEAM tab where users can give teammates credits
 - **profile.jsx & profile.css:** PROFILE tab
 
 ## Others
 - **firebase.jsx:** configuration and initialization of firebase
 - **index.js:** App component with page routes
+- **navbar.jsx & navbar_copy.jsx & navbar.css :** navigation bar template to use later

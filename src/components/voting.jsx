@@ -35,6 +35,7 @@ function storeTeamInDB(course, userarr){
         }));
         console.log("data2: ", 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/", data2);
         set(ref(db, 'users/' + user + '/' + username[index] + "/current_teams/" + course + "/"), data2); /// store current team in DB
+        set(ref(db, 'users/' + user + '/' + username[index] + "/pastteams/" + course + "/"), data2);  //store in pastteams
         set(ref(db, 'classes/' + course + '/user/' + user + "/finished/"), 'yes');
         set(ref(db, "users/" + user + '/' + username[index] + "/teambuilding/"), null);
       });
@@ -170,9 +171,9 @@ function Voting(props) {
               textAlign: "center",
               fontFamily: "Lato, sans-serif",
               height: "40px",
-              width: "90%",
-              marginLeft: "5%",
-              marginRight: "5%",
+              width: "99%",
+              marginLeft: "0.5%",
+              marginRight: "0.5%",
               background: "#1b1e2e",
               borderRadius: "10px",
               cursor: "pointer",
@@ -190,9 +191,9 @@ function Voting(props) {
               textAlign: "center",
               fontFamily: "Lato, sans-serif",
               height: "40px",
-              width: "90%",
-              marginLeft: "5%",
-              marginRight: "5%",
+              width: "99%",
+              marginLeft: "0.5%",
+              marginRight: "0.5%",
               background: "#1b1e2e",
               borderRadius: "10px",
               cursor: "pointer",

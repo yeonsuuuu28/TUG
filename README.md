@@ -18,12 +18,12 @@ Our system is unique in the sense that it
 - **main_page.jsx & main.css:** main page
 - **navbar.jsx & navbar.css & navbar_copy.jsx:** navigation bar for the main page
 - **navbar_quiz.jsx:** navigation bar for the quiz time
+- **navbar_chat.jsx:** navigation bar for the chatting page
 
 ## Join Class
 - **join_class.jsx & join_class.css:** component to join the class
 - **modal1.jsx & modal.css:** modal to show up when pressing a button to join a class
 - **classes_list.jsx:** dataset of classes
-- **start_team_building.jsx & start_team_building.css:** component to start the quiz session
 - **create_profile.jsx & create_profile.css:** component to create profile for each class
 - **waitingjoin.jsx:** waiting room before joining each quiz session
 

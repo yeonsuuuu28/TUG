@@ -425,7 +425,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         }
         setGroups(emptyGroup);
         // eslint-disable-next-line
-    }, [snapshots, roomInitTime])
+    }, [snapshots, roomInitTime, namePairs])
 
     //// real-time plot update /////
     const [plotUserId, setPlotUserId] = useState('');

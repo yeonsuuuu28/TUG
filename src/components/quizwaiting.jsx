@@ -68,6 +68,7 @@ function QuizWaiting(props) {
         Please wait for your peers to finish the quiz!<br/>
         Chat Round {round} will start soon. Who will be your first team?<br/>
         We hope you could find your suitable teammates!<br/>
+        Here is the number of students left.<br/>
       </div>
       <div className="waiting_number">
         <b>{leftStudents}</b>

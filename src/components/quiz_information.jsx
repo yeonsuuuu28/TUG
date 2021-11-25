@@ -18,7 +18,7 @@ function QuizInformation(props){
   const round = props.match.params.round;
   const totalrounds = 3;
   const leftrounds = totalrounds - round + 1;
-  const questions = (parseInt(round) === 1) ? essenQcandidates.length : 2; //TODO funQcandidates for 2~ rounds
+  const questions = (parseInt(round) === 1) ? essenQcandidates.length : 3; //TODO funQcandidates for 2~ rounds
   // const k = 2; //TODO: number of teams
   // let users; // Number of students joined in the class
   const dbRef = ref(getDatabase());

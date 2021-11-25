@@ -532,6 +532,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         if (secLeft.current < 0){
             console.log("CHAT SESSION FINISHED!");
             set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
+            set(ref(db, `rooms/${classId}/${roomId}/anons`), null);
             clearInterval(timerId.current);
         }
     // eslint-disable-next-line

@@ -1,5 +1,6 @@
 import { auth, db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
+import React, { useState } from 'react'
 
 //* storeTeamInDB
 function storeTeamInDB(course, userarr){
@@ -56,10 +57,14 @@ function voteResult(formed, course, round){
   }
 }
 
+
+
+
+
 //* handleVoting
 /// input: vote - true if the user clicks 'Yes', false if the user clicks 'Try Again'
 function handleVoting(vote, course, round){
-  alert("please wait until other teammates vote!");
+  // alert("please wait until other teammates vote!");
   const dbRef = ref(getDatabase());
   const route = 'classes/' + course + '/rooms/';
 
@@ -117,8 +122,16 @@ function handleVoting(vote, course, round){
 function Voting(props) {
   const course = props.course; 
   const round = props.round;
-  const totalrounds = 3; // TODO: connect to quizinfo page
+  const totalrounds = 2; // TODO: connect to quizinfo page
   const leftchances = totalrounds - round + 1;
+  const [aftervote, setAfterVote] = useState("");
+
+  //* handleclick
+  function handleclick(vote, course, round){
+    setAfterVote("Please wait until other teammates vote!😊");
+    handleVoting(vote, course, round);
+  }
+
 
   if(leftchances === 0) {
     return(
@@ -129,7 +142,7 @@ function Voting(props) {
       <div>
         Now you can check your new team at 'Active Team' bar of mypage. Have a good luck on your team project!
       </div>
-      <button onClick={() => handleVoting(true, course, round)}>Go to Active Team</button>
+      <button onClick={() => handleclick(true, course, round)}>Go to Active Team</button>
     </div>
     )
   }
@@ -164,7 +177,7 @@ function Voting(props) {
               borderRadius: "10px",
               cursor: "pointer",
           }} 
-          onClick={() => handleVoting(true, course, round)}>Yes</div>
+          onClick={() => handleclick(true, course, round)}>Yes</div>
           </td>
           <td style={{textAlign:"center", width: "100px"}}>
         <div style={{
@@ -183,11 +196,12 @@ function Voting(props) {
               background: "#1b1e2e",
               borderRadius: "10px",
               cursor: "pointer",
-          }} onClick={() => handleVoting(false, course, round)}>Try Again ({leftchances}/{totalrounds})</div>
+          }} onClick={() => handleclick(false, course, round)}>Try Again ({leftchances}/{totalrounds})</div>
           </td>
           </tr>
           </tbody>
           </table>
+          <div>{aftervote}</div>
       </div>
       </div>
   )

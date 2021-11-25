@@ -14,7 +14,7 @@ const timeInit = Date.now();
 function WaitingJoin(props) {
   const course = props.match.params.course;
   const round = parseInt(props.match.params.round);
-  const timelimit = round === 1 ? 3 * 60 * 1000 : 1 * 60 * 1000; // 3 minutes 
+  let timelimit = round === 1 ? 3 * 60 * 1000 : 1 * 60 * 1000; // 3 minutes 
   let studlimit = 8;
   for(var i =0; i<classes.length; i++){ // set studlimit
     if(classes[i].code === course) {
@@ -22,6 +22,10 @@ function WaitingJoin(props) {
       break;
     }
   }
+
+  studlimit = 1; //TODODODODODDODO
+  timelimit = 0.5 * 60 * 1000;//TODODODODODODODO
+
   const dbRef = ref(getDatabase());
   const [joinedStudents, setJoinedStudents] = useState(0);
   const [sentence, setSentence] = useState(round === 1 ? "Let's wait for 3 minutes." : "");

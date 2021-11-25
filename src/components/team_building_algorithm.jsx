@@ -89,7 +89,9 @@ function team_building_algorithm(c, round, n) {
         dataset.push(tot_scores);
       }
       else{ /// round 1
-        dataset.push(user_scores);
+        const randomparameter = Math.random()*0.1; //added~
+        const tot_scores = user_scores.concat(randomparameter);
+        dataset.push(tot_scores);
       }
       
     });

@@ -131,7 +131,7 @@ const ReadDB = (params) => {
               }
             });
               
-              resolve(update2)},3000)
+              resolve(update2)},5000)
               
             })
    
@@ -244,37 +244,7 @@ const ReadDB = (params) => {
                           });
                         }
                       });
-                      //build vis credit
-                      /*
-                      const vis_credit =
-                        "users/" +
-                        index.id +
-                        "/" +
-                        index.name +
-                        "/vis_credit/" +
-                        classid;
-                      const ave_credit =
-                        "users/" +
-                        index.id +
-                        "/" +
-                        index.name +
-                        "/pastcredit/" +
-                        classid+ "/0";
-                      get(child(dbRef, ave_credit)).then((snapshot) => {
-                        if (snapshot.exists()) {
-                          console.log(snapshot.val());
-                          set(ref(db, vis_credit), {
-                            credit:
-                              Number(snapshot.val().credit) +
-                              Number(model[index.name]),
-                          });
-                        } else {
-                          //write fresh
-                          set(ref(db, totalCreditAddr), {
-                            credit: Number(model[index.name]),
-                          });
-                        }
-                      });*/
+                    
                     }
                     return <></>;
                   });
@@ -573,16 +543,16 @@ const ReadDB = (params) => {
     );
 
     //build ave credit
-    if(writeUpdate2()){
-      history.push("/mypage");
-    }
+    writeUpdate2()
+      
+    
 
     alert(
       "Thank you for submitting an honest review! As a bonus you get 10 points for evaluating your teamm. Check your profile to see your total credits!"
     );
 
     //redirect to another page
-    
+    history.push("/mypage");
   };
 
   useEffect(() => {

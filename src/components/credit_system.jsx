@@ -226,7 +226,7 @@ const ReadDB = (params) => {
                           });
                         }
                       });
-                      //update total credit
+                      //update total credit <=== this is working 
                       const totalCreditAddr =
                         "users/" + index.id + "/" + index.name + "/totalcredit";
                       get(child(dbRef, totalCreditAddr)).then((snapshot) => {
@@ -499,7 +499,7 @@ const ReadDB = (params) => {
     }
   }, [pastteams]);
 
-  const onSubmit = (model) => {
+  const onSubmit = async(model) => {
     //
     onPush(model);
     const dbRef = ref(getDatabase());
@@ -533,6 +533,7 @@ const ReadDB = (params) => {
       ),
       update
     );
+
     //add 10 points
     const ownTotalCreditAddr =
       "users/" +
@@ -595,8 +596,8 @@ const ReadDB = (params) => {
     }
   }, [pastteams, fillModel]);
   useEffect(() => {
-    if(update3[0]?.length >0){
-writeUpdate2();
+    if(update3[0]?.length >0){  
+        writeUpdate2();
     }
     
   }, [update3,writeUpdate2])

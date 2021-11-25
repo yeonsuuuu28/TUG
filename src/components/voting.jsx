@@ -202,7 +202,7 @@ function Voting(props) {
           </tr>
           </tbody>
           </table>
-          <div style={{fontStyle:"Lato, sans-serif", fontSize:"12pt"}}>{aftervote}</div>
+          <div className="aftervote" style={{fontStyle:"Lato, sans-serif", fontSize:"12pt"}}>{aftervote}</div>
       </div>
       </div>
   )

@@ -38,3 +38,8 @@
     border-radius: 10px;
     cursor: pointer;
   }
+
+  .aftervote {
+    font-style: "Lato", sans-serif;
+    font-size: 12pt;
+  }

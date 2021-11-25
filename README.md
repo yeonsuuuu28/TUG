@@ -48,10 +48,10 @@ Our system is unique in the sense that it
 
 ## My Page
 - **my_page.jsx:** my page tabs at the left side
-- **my_class.jsx & my_class.css:** list of classes to join or make teams
-- **activeteams.jsx & activeteams.css:** ACTIVE TEAM tab
-- **pastteams.jsx:** PAST TEAM tab where users can give teammates credits
-- **profile.jsx & profile.css:** PROFILE tab
+- **my_class.jsx & my_class.css:** list of classes to join or make teams (YOUR CLASS tab)
+- **activeteams.jsx & activeteams.css:** ACTIVE TEAM tab where users can give teammates credits
+- **pastteams.jsx:** PAST TEAM tab where users can see previous credit distribution
+- **profile.jsx & profile.css:** PROFILE tab with total credit and Nubjuk character
 
 ## Others
 - **firebase.jsx:** configuration and initialization of firebase

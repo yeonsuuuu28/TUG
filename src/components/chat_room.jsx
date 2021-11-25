@@ -541,10 +541,43 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
     ///// global chat moderator /////
 
+    const helloNamesString = () => {
+        // namePairs
+        const names = Object.values(namePairs)
+        if (names.length === 0) {
+            return "Hello everyone! Ready to meet some people?"
+        }
+        else if (names.length === 1) {
+            return `Hi, ${names[0]}! Seems like you are the only one in this room!`
+        }
+        else if (names.length === 2) {
+            return `Hi, ${names[0]} and ${names[1]}! Ready to have some chat?`
+        }
+        else if (names.length > 2) {
+            let nameStr = ''
+            for (let i=0; i<names.length; i++) {
+                if (i < names.length - 2) {
+                    nameStr += names[i]
+                    nameStr += ', '
+                }
+                if (i === names.length - 2) {
+                    nameStr += names[i]                    
+                    nameStr += ', and '
+                }
+                else if (i === names.length - 1) {
+                    nameStr += names[i]
+                }
+                
+            }
+            return `Hi, ${nameStr}! Ready to have some chat?`
+        }
+    }
+
     // sec left to send messages to all room members (ascending order)
-    const whenToRemind = [299, 180, 60, 10].sort((a,b) => b-a);
-    const reminders = [
-        "Chat with your potential group members. Click each chat bubble to see profiles of its author.",
+    const whenToRemind = [298, 297, 180, 60, 10].sort((a,b) => b-a);
+    let reminders = [
+        "Hello everyone! Ready to meet some people?",
+        "Chat with your potential group members. Click each chat bubble to see profiles.",
         "You have three minutes before voting!",
         "One minute left! Share your last comments to people.",
         "Ten seconds left! Get ready to vote!",
@@ -556,6 +589,9 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         if (roomInitTime && roomInitTime > 0) {
             let breakLoop = false;
             newCheckReminderFrom.current = -1;
+
+            // update each time
+            reminders[0] = helloNamesString()
 
             for (let i=checkReminderFrom.current; i<whenToRemind.length && !breakLoop; i++) {
                 
@@ -573,7 +609,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     get(ref(db, `rooms/${classId}/${roomId}/messages`)).then((snapshot) => {
                         if (snapshot.exists()) {                            
                             const msgs = Object.values(snapshot.val());
-                            const res = msgs.filter((x) => (x.sender === remoteId) && (x.message === reminders[i]))
+                            const res = msgs.filter((x) => (x.sender === remoteId) && (x.message.charAt(0) === reminders[i].charAt(0)))
                             if (res.length === 0) {
                                 get(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`)).then((snapshot) => {
                                     if (!snapshot.exists()) {

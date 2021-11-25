@@ -118,12 +118,28 @@ function team_building_algorithm(c, round, n) {
     });
 
     /// adjusting number of team members to be under the limit of teammate
-    for(var i=0; i<teams.length-1; i++){
-      if(teams[i].length > teammatelimit){
+    for(var i=0; i<teams.length; i++){
+      if(Array.isArray(teams[i]) && teams[i].length > teammatelimit){
         const arr1 = teams[i].slice(0, teammatelimit);
         const arr2 = teams[i].slice(teammatelimit);
         teams[i] = arr1;
-        teams[i+1] = teams[i+1].concat(arr2);
+        if(i === teams.length - 1) {
+          if(Array.isArray(teams[0])) teams[0] = teams[0].concat(arr2);
+          else teams[0] = [teams[0]].concat(arr2);
+        }
+        else {
+          if(Array.isArray(teams[i+1])) teams[i+1] = teams[i+1].concat(arr2);
+          else teams[i+1] = [teams[i+1]].concat(arr2);
+        }
+      }
+    }
+    for(var i=0; i<teams.length-1; i++){
+      if(Array.isArray(teams[i]) && teams[i].length > teammatelimit){
+        const arr1 = teams[i].slice(0, teammatelimit);
+        const arr2 = teams[i].slice(teammatelimit);
+        teams[i] = arr1;
+        if(Array.isArray(teams[i+1])) teams[i+1] = teams[i+1].concat(arr2);
+        else teams[i+1] = [teams[i+1]].concat(arr2);
       }
     }
 

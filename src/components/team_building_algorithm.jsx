@@ -1,6 +1,7 @@
 import { db } from "./firebase.jsx";
 import { getDatabase, ref, get, child, set } from "firebase/database";
 import kmeans from './kmeans.jsx';
+import classes from "./classes_list.jsx";
 
 //* calculateRandomParameter
 /// input: course - course id, s - snapshot of DB of .../fun_questions
@@ -60,6 +61,13 @@ function team_building_algorithm(c, round, n) {
   let fun_scores = [];
   let user_scores = [];
   let dataset = [];
+  let teammatelimit = 100;
+  for(var i =0; i<classes.length; i++){ // set teammatelimit
+    if(classes[i].code === c) {
+      teammatelimit = classes[i].team;
+      break;
+    }
+  }
 
   get(child(dbRef, route)).then((s) => {
 
@@ -89,9 +97,7 @@ function team_building_algorithm(c, round, n) {
         dataset.push(tot_scores);
       }
       else{ /// round 1
-        const randomparameter = Math.random()*0.1; //added~
-        const tot_scores = user_scores.concat(randomparameter);
-        dataset.push(tot_scores);
+        dataset.push(user_scores);
       }
       
     });
@@ -101,7 +107,7 @@ function team_building_algorithm(c, round, n) {
     console.log(result.clusters);
 
     /// make teams with clustered result
-    const teams = result.clusters.map(c => {
+    let teams = result.clusters.map(c => {
       if(c.points.length === 1){
         return user_list[dataset.findIndex((e) => e === c.points[0])]
       }
@@ -110,6 +116,16 @@ function team_building_algorithm(c, round, n) {
         return team;
       }
     });
+
+    /// adjusting number of team members to be under the limit of teammate
+    for(var i=0; i<teams.length-1; i++){
+      if(teams[i].length > teammatelimit){
+        const arr1 = teams[i].slice(0, teammatelimit);
+        const arr2 = teams[i].slice(teammatelimit);
+        teams[i] = arr1;
+        teams[i+1] = arr2.concat(teams[i+1]);
+      }
+    }
 
     /// store into DB
     const route2 = '/classes/' + c + '/rooms/';

@@ -123,7 +123,7 @@ function team_building_algorithm(c, round, n) {
         const arr1 = teams[i].slice(0, teammatelimit);
         const arr2 = teams[i].slice(teammatelimit);
         teams[i] = arr1;
-        teams[i+1] = arr2.concat(teams[i+1]);
+        teams[i+1] = teams[i+1].concat(arr2);
       }
     }
 

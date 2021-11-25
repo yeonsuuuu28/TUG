@@ -109,7 +109,7 @@ function team_building_algorithm(c, round, n) {
     /// make teams with clustered result
     let teams = result.clusters.map(c => {
       if(c.points.length === 1){
-        return user_list[dataset.findIndex((e) => e === c.points[0])]
+        return [user_list[dataset.findIndex((e) => e === c.points[0])]];
       }
       else{
         const team = c.points.map(arr => user_list[dataset.findIndex((e) => e === arr)]);

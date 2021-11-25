@@ -128,7 +128,7 @@ export default function main(props) {
                 <div className="service_title">OUR SERVICES</div>
                 <br/>
                 <div className="chatchat">
-                <img src = {CHAT} alt=""/>
+                <img src = {CHAT} alt=""/> 
                 </div>
                 <div className="chatchat_sub">
                     Anonymous Chatting

@@ -128,7 +128,7 @@ function Voting(props) {
 
   //* handleclick
   function handleclick(vote, course, round){
-    setAfterVote("Please wait until other teammates vote!😊");
+    setAfterVote("Please wait until other teammates to vote!😊");
     handleVoting(vote, course, round);
   }
 
@@ -170,9 +170,9 @@ function Voting(props) {
               textAlign: "center",
               fontFamily: "Lato, sans-serif",
               height: "40px",
-              width: "80%",
-              marginLeft: "10%",
-              marginRight: "10%",
+              width: "90%",
+              marginLeft: "5%",
+              marginRight: "5%",
               background: "#1b1e2e",
               borderRadius: "10px",
               cursor: "pointer",
@@ -190,9 +190,9 @@ function Voting(props) {
               textAlign: "center",
               fontFamily: "Lato, sans-serif",
               height: "40px",
-              width: "80%",
-              marginLeft: "10%",
-              marginRight: "10%",
+              width: "90%",
+              marginLeft: "5%",
+              marginRight: "5%",
               background: "#1b1e2e",
               borderRadius: "10px",
               cursor: "pointer",

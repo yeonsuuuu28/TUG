@@ -239,6 +239,7 @@ const ReadDB = (params) => {
                           });
                         } else {
                           //write fresh
+                          console.log("write fresh")
                           set(ref(db, target), {
                             credits: Number(model[index.name]),
                             count: 1,
@@ -495,8 +496,12 @@ const ReadDB = (params) => {
     //write to db updated values
     //1.build items to be written in DB
     //add 10 to total credit
-
-    update[0] = { credits: 0, count: 0 };
+    
+    //check if current count has items inside
+    
+    update[0] = { 
+      credits: pastteams[0][0].credits, 
+      count: pastteams[0][0].count};
 
     for (const i in pastteams[0]) {
       if (Object.keys(pastteams[0][i]).includes("name")) {
@@ -509,6 +514,8 @@ const ReadDB = (params) => {
     }
     console.log(update);
     //2.write to db
+    console.log(update.length-1)
+ 
     set(
       ref(
         db,
@@ -517,12 +524,10 @@ const ReadDB = (params) => {
           "/" +
           auth.currentUser.displayName +
           "/pastteams/" +
-          classid
+          classid 
       ),
       update
     );
-
-    //add 10 points
 
     
 

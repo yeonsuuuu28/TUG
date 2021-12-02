@@ -23,9 +23,9 @@ function WaitingJoin(props) {
     }
   }
 
-  //for debugging
+  // for debugging
   // studlimit = 1; //TODODODODODDODO
-  // timelimit = 0.5 * 60 * 1000;//TODODODODODODODO
+  timelimit = 10 * 1000;//TODODODODODODODO 10 seconds
 
   const dbRef = ref(getDatabase());
   const [joinedStudents, setJoinedStudents] = useState(0);

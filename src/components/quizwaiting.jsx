@@ -18,16 +18,17 @@ function QuizWaiting(props) {
   
   if(leftStudents[0] === '0'){
     const totalStudents = leftStudents.split(' / ')[1];
-    // if(totalStudents >= 11) rooms = Math.round(totalStudents/4); // 11~: [totalStudents/4] rooms
-    // else if(totalStudents >= 6) rooms = Math.round(totalStudents/3); // ~3: 1 room, 4~7: 2 rooms, 8~10: 3 rooms
-    // else if(totalStudents >= 4) rooms = Math.round(totalStudents/2);  
+
     for(var i =0; i<classes.length; i++){ // set rooms
       if(classes[i].code === course) {
         rooms = Math.round(Math.ceil(totalStudents/classes[i].team));
+        if(totalStudents % rooms === 1) { // there might be 1 student left
+          rooms = rooms - 1;
+        }
         break;
       }
     }
-    team_building_algorithm(course, round, rooms); // TODO: should define n (the number of teams)
+    team_building_algorithm(course, round, rooms); 
     setTimeout(() => window.location.href = "/chat/" + course + "/" + round, 1000);  /// goto chat page
   }
 

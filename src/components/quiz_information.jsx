@@ -37,17 +37,20 @@ function QuizInformation(props){
   function getStudentsMinMax() {
     get(child(dbRef, route)).then((s) => {
       const totalStudents = Object.keys(s.val()).length;
-      const divide = () => {
+      const divide = () => { // return the limit of the number of teammates
         for(var i =0; i<classes.length; i++){
           if(classes[i].code === course) {
             console.log("sdlksdf", classes[i].team);
-            return classes[i].team;
+            return classes[i].team; 
           }
-        }
+        }/// totals = 5, divide=2 => 1.5 => 1~2명. nope => divided +=1.
       }
-      const divided = totalStudents/divide();
+      const divided = totalStudents/divide(); // average number of rooms
 
-      if((divided - Math.floor(divided)) > 0){ // totalStudents is multiple of divide()
+      if(totalStudents % Math.round(Math.ceil(divided)) === 1){ // there might be 1 student left
+        setStdMinMax(divide() + ' ~ ' + Math.ceil(divide()+1));
+      }
+      else if((divided - Math.floor(divided)) > 0){ // totalStudents is multiple of divide()
         setStdMinMax(Math.floor(divide()-0.5) + ' ~ ' + Math.ceil(divide()-0.5));
       }
       else{

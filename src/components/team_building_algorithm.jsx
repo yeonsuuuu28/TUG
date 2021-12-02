@@ -133,7 +133,7 @@ function team_building_algorithm(c, round, n) {
         }
       }
     }
-    for(i=0; i<teams.length-1; i++){
+    for(i=0; i<teams.length-1; i++){ // last team (teams[-1]) might have 1 more teammates than the limit.
       if(Array.isArray(teams[i]) && teams[i].length > teammatelimit){
         const arr1 = teams[i].slice(0, teammatelimit);
         const arr2 = teams[i].slice(teammatelimit);

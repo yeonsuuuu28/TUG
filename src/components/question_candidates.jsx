@@ -38,7 +38,7 @@ const essenQcandidates = [ // candidates of essential questions for team buildin
   },
   {
     id: 10,
-    question: "What is your gender?"
+    question: "Are you familiar with the presentation?"
   },
   {
     id: 11,
@@ -177,11 +177,11 @@ const essenAcandidates = [ // range description for each essenQcandidates
     answers: [
       {
         score: -2,
-        answer: "Female"
+        answer: "Yes"
       },
       {
         score: 2,
-        answer: "Male"
+        answer: "No"
       }
     ]
   },

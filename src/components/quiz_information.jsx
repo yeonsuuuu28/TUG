@@ -47,7 +47,7 @@ function QuizInformation(props){
       }
       const divided = totalStudents/divide(); // average number of rooms
 
-      if(totalStudents % Math.round(Math.ceil(divided)) === 1){ // there might be 1 student left
+      if(totalStudents % Math.round(Math.ceil(divide())) === 1){ // there might be 1 student left
         setStdMinMax(divide() + ' ~ ' + Math.ceil(divide()+1));
       }
       else if((divided - Math.floor(divided)) > 0){ // totalStudents is multiple of divide()

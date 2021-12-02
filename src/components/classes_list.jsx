@@ -1,8 +1,8 @@
     const classes = [
         {
-            "name" : "Data Structure",
-            "professor" : "Eun Young Moon",
-            "code" : "CS206",
+            "name" : "CLASS FOR DEMO",
+            "professor" : "Juho Kim",
+            "code" : "CS473",
             "open" : "Opened",
             "team" : 2
         }, 
@@ -14,9 +14,9 @@
             "team" : 3
         }, 
         {
-            "name" : "Introduction to Social Computing",
+            "name" : "Introduction to Human-Computer Interaction",
             "professor" : "Juho Kim",
-            "code" : "CS473",
+            "code" : "CS374",
             "open" : "Opened",
             "team" : 4
         }, 

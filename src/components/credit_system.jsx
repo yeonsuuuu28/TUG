@@ -34,23 +34,10 @@ const ReadDB = (params) => {
     const auth = getAuth();
     //const dbRef = ref(getDatabase());
     const update2 = await buildAveCredit();
-    setUpdate3(update2);
-    //current user
-    set(
-      ref(
-        db,
-        "users/" +
-          auth.currentUser.uid +
-          "/" +
-          auth.currentUser.displayName +
-          "/vis/" +
-          classid
-      ),
-      update3
-    );
-
-    //other teamates
-    console.log(pastteams[0]);
+    console.log("update2: ", update2);
+    console.log("update3: ", update3);
+    console.log("update3.1", update3[0]);
+    //build vis
     for (const index in pastteams[0]) {
       if (pastteams[0][index].name) {
         set(
@@ -71,92 +58,124 @@ const ReadDB = (params) => {
             "/" +
             pastteams[0][index].name +
             "/vis/" +
-            classid
+            update3
         );
       }
     }
+
+    return update2;
+    //console.log(update2[1])
+    //current user
   });
-      
+
   const buildAveCredit = () => {
-    return new Promise((resolve,reject) =>{
-      setTimeout(()=>{
-            const auth = getAuth();
-            const dbRef = ref(getDatabase());
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const auth = getAuth();
+        const dbRef = ref(getDatabase());
 
-            const loc =
-              "/users/" +
-              auth.currentUser.uid +
-              "/" +
-              auth.currentUser.displayName +
-              "/pastteams/" +
-              classid;
-            const update2 = [{}];
-            get(child(dbRef, loc)).then((snapshot) => {
-              if (snapshot.exists()) {
-                console.log(snapshot.val());
-                //object of past teams
+        const loc =
+          "/users/" +
+          auth.currentUser.uid +
+          "/" +
+          auth.currentUser.displayName +
+          "/pastteams/" +
+          classid;
+        const update2 = [];
+        get(child(dbRef, loc)).then((snapshot) => {
+          if (snapshot.exists()) {
+            //console.log(snapshot.val());
+            //object of past teams
 
-                //update current user 
-                //get average of all users
-                //0 own average
-                update2[0] = {
-                  name: auth.currentUser.displayName,
-                  ave_credit: String(snapshot.val()[0].credits),
-                };
-                //1 onwards, get users average
-                for (const i in snapshot.val()) {
-                  if (snapshot.val()[Number(i) + 1]) {
-                    const uname = snapshot.val()[Number(i) + 1].name;
-                    const usid = snapshot.val()[Number(i) + 1].id;
-                    get(
-                      child(
-                        dbRef,
-                        "/users/" + usid + "/" + uname + "/pastteams/" + classid + "/0"
-                      )
-                    ).then((snapshot) => {
-                      if (snapshot.exists()) {
-                        update2[Number(i) + 1] = {
-                          name: uname,
-                          ave_credit: String(snapshot.val().credits),
-                        };
-                      }
+            //update current user
+            //get average of all users
+
+            //0 own average
+            //own average
+            // update2.push({
+            //   name: auth.currentUser.displayName,
+            //   ave_credit: String(snapshot.val()[0].credits),
+            // });
+
+            //1 onwards, get users average
+            for (const i in snapshot.val()) {
+              if (snapshot.val()[Number(i) + 1]) {
+                const uname = snapshot.val()[Number(i) + 1].name;
+                const usid = snapshot.val()[Number(i) + 1].id;
+                get(
+                  child(
+                    dbRef,
+                    "/users/" +
+                      usid +
+                      "/" +
+                      uname +
+                      "/pastteams/" +
+                      classid +
+                      "/0"
+                  )
+                ).then((snapshot) => {
+                  if (snapshot.exists()) {
+                    update2.push({
+                      name: uname,
+                      ave_credit: String(snapshot.val().credits),
                     });
-                  } 
-                }
-
-                
-              
-              } else {
-                console.log("nodata");
+                  }
+                });
               }
-            });
-              
-              resolve(update2)},5000)
-              
-            })
-   
+            }
+          } else {
+            console.log("nodata");
+          }
+        });
+
+        console.log("inside: ", update2);
+        // update2.splice(0,1)
+
+        setUpdate3(update2);
+
+        //console.log(JSON.stringify(Object.assign({},update2)))
+        resolve(update2);
+      }, 1000);
+    });
   };
 
   const onPush = async (model) => {
     const auth = getAuth();
     const dbRef = ref(getDatabase());
 
-    get(child(dbRef, "/users")).then((snapshot) => {
+    //add 10 to current user 
+    const ownTotalCreditAddr =
+      "users/" +
+      auth.currentUser.uid +
+      "/" +
+      auth.currentUser.displayName +
+      "/totalcredit";
+    console.log("add 10 points");
+    console.log("ownTotalCreditAddr: ", ownTotalCreditAddr);
+    //if exist, add value, if not, create fresh
+    get(child(dbRef, ownTotalCreditAddr)).then((snapshot) => {
+      console.log("inside print owntotal credit");
       if (snapshot.exists()) {
         console.log(snapshot.val());
-        const userids = snapshot.val();
-        //setUserIds(snapshot.val());
-        console.log(userids);
-        //onsole.log(userdd)
+        set(ref(db, ownTotalCreditAddr), {
+          credit: Number(snapshot.val().credit) + 10,
+        });
+      } else {
+        //write fresh
+        set(ref(db, ownTotalCreditAddr), {
+          credit: 10,
+        });
+      }
+    });
 
-        //const tempName =  userids.map((x) => userids[x])
-        //console.log(tempName)
-        // var j = 0;
+    get(child(dbRef, "/users")).then((snapshot) => {
+      if (snapshot.exists()) {
+        const userids = snapshot.val();
+        
+
         console.log("current username: " + auth.currentUser.displayName);
-        // const currentUser = "Yeonsu";
         console.log(userids);
         const tempName = Object.keys(userids); //all user ids in the system
-        //console.log(Object.values(userids))
         // eslint-disable-next-line array-callback-return
         tempName.map((element) => {
           //userids[element] //displayname
@@ -226,7 +245,7 @@ const ReadDB = (params) => {
                           });
                         }
                       });
-                      //update total credit <=== this is working 
+                      //update total credit <=== this is working
                       const totalCreditAddr =
                         "users/" + index.id + "/" + index.name + "/totalcredit";
                       get(child(dbRef, totalCreditAddr)).then((snapshot) => {
@@ -244,7 +263,6 @@ const ReadDB = (params) => {
                           });
                         }
                       });
-                    
                     }
                     return <></>;
                   });
@@ -373,60 +391,60 @@ const ReadDB = (params) => {
           } else {
             //add in data
             alert("no data");
-            // set(
-            //   ref(
-            //     db,
-            //     "users/" +
-            //       uid +
-            //       "/" +
-            //       auth.currentUser.displayName +
-            //       "/current_teams/" +
-            //       classid
-            //   ),
-            //   [
-            //     { credits: 0, count: 0 },
-                
-            //     {
-            //       name: "Juan Mail",
-            //       credit: "0",
-            //       id: "Cjf0eQkTCOPYRs1Hud5P62HSWq53",
-            //       email: "mailjuan2021@gmail.com",
-            //     },
-            //     {
-            //       name: "Cheryl Siy",
-            //       credit: "0",
-            //       id: "r0UNsRPIzGVO99ovbeiuilpTxIp2",
-            //       email: "cherylmsiy@gmail.com",
-            //     },
-            //   ]
-            // );
-            // set(
-            //   ref(
-            //     db,
-            //     "users/" +
-            //       uid +
-            //       "/" +
-            //       auth.currentUser.displayName +
-            //       "/pastteams/" +
-            //       classid
-            //   ),
-            //   [
-            //     { credits: 0, count: 0 },
+            set(
+              ref(
+                db,
+                "users/" +
+                  uid +
+                  "/" +
+                  auth.currentUser.displayName +
+                  "/current_teams/" +
+                  classid
+              ),
+              [
+                { credits: 0, count: 0 },
 
-            //     {
-            //       name: "Juan Mail",
-            //       credit: "0",
-            //       id: "Cjf0eQkTCOPYRs1Hud5P62HSWq53",
-            //       email: "mailjuan2021@gmail.com",
-            //     },
-            //     {
-            //       name: "Cheryl Siy",
-            //       credit: "0",
-            //       id: "r0UNsRPIzGVO99ovbeiuilpTxIp2",
-            //       email: "cherylmsiy@gmail.com",
-            //     },
-            //   ]
-            // );
+                {
+                  name: "Juan Mail",
+                  credit: "0",
+                  id: "Cjf0eQkTCOPYRs1Hud5P62HSWq53",
+                  email: "mailjuan2021@gmail.com",
+                },
+                {
+                  name: "Cheryl Siy",
+                  credit: "0",
+                  id: "r0UNsRPIzGVO99ovbeiuilpTxIp2",
+                  email: "cherylmsiy@gmail.com",
+                },
+              ]
+            );
+            set(
+              ref(
+                db,
+                "users/" +
+                  uid +
+                  "/" +
+                  auth.currentUser.displayName +
+                  "/pastteams/" +
+                  classid
+              ),
+              [
+                { credits: 0, count: 0 },
+
+                {
+                  name: "Juan Mail",
+                  credit: "0",
+                  id: "Cjf0eQkTCOPYRs1Hud5P62HSWq53",
+                  email: "mailjuan2021@gmail.com",
+                },
+                {
+                  name: "Cheryl Siy",
+                  credit: "0",
+                  id: "r0UNsRPIzGVO99ovbeiuilpTxIp2",
+                  email: "cherylmsiy@gmail.com",
+                },
+              ]
+            );
           }
         });
         //get all user id
@@ -469,7 +487,7 @@ const ReadDB = (params) => {
     }
   }, [pastteams]);
 
-  const onSubmit = async(model) => {
+  const onSubmit = async (model) => {
     //
     onPush(model);
     const dbRef = ref(getDatabase());
@@ -489,7 +507,7 @@ const ReadDB = (params) => {
         };
       }
     }
-    console.log(update)
+    console.log(update);
     //2.write to db
     set(
       ref(
@@ -505,30 +523,13 @@ const ReadDB = (params) => {
     );
 
     //add 10 points
-    const ownTotalCreditAddr =
-      "users/" +
-      auth.currentUser.uid +
-      "/" +
-      auth.currentUser.displayName +
-      "/totalcredit";
-    //if exist, add value, if not, create fresh
-    get(child(dbRef, ownTotalCreditAddr)).then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-        set(ref(db, ownTotalCreditAddr), {
-          credit: Number(snapshot.val().credit) + 10,
-        });
-      } else {
-        //write fresh
-        set(ref(db, ownTotalCreditAddr), {
-          credit: 10,
-        });
-      }
-    });
+
+    
 
     //update past average
 
     //delete /current teams + classid
+    console.log("move");
     set(
       ref(
         db,
@@ -543,25 +544,18 @@ const ReadDB = (params) => {
     );
 
     //build ave credit
-    writeUpdate2()
-      
-    
-
-   
-
     //redirect to another page
-    setTimeout(function(){
-       alert(
-         "Thank you for submitting an honest review! As a bonus you get 10 points for evaluating your teamm. Check your profile to see your total credits!"
-       );
-        history.push("/mypage")
-    },6000);
-    
+
+    writeUpdate2();
+    history.push("/mypage");
+    alert(
+      "Thank you for submitting an honest review! As a bonus you get 10 points for evaluating your teamm. Check your profile to see your total credits!"
+    );
   };
 
   useEffect(() => {
     dbRead();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -569,14 +563,16 @@ const ReadDB = (params) => {
       fillModel();
     }
   }, [pastteams, fillModel]);
-  useEffect(() => {
-    if(update3[0]?.length >0){  
-        writeUpdate2();
-    }
-    
-  }, [update3,writeUpdate2])
 
-  
+  useEffect(() => {
+    let isMounted = true;
+    writeUpdate2().then((data) => {
+      if (isMounted) setUpdate3(data);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [update3, writeUpdate2]);
 
   return (
     <>

@@ -21,8 +21,8 @@ function QuizWaiting(props) {
 
     for(var i =0; i<classes.length; i++){ // set rooms
       if(classes[i].code === course) {
-        rooms = Math.round(Math.ceil(totalStudents/classes[i].team));
-        if(totalStudents % rooms === 1) { // there might be 1 student left
+        rooms = Math.ceil(totalStudents/classes[i].team);
+        if(totalStudents % classes[i].code === 1) { // there might be 1 student left
           rooms = rooms - 1;
         }
         break;

@@ -585,7 +585,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     ]*/
 
     // shortened version of chat time - only for the live demp
-    const whenToRemind = [maxChatSec-2, maxChatSec-1, 60, 10].sort((a,b) => b-a);
+    const whenToRemind = [118, 117, 60, 10].sort((a,b) => b-a);
     let reminders = [
         "Hello everyone! Ready to meet some people?",
         "Chat with your potential group members. Click each chat bubble to see profiles.",

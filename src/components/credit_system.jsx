@@ -31,7 +31,7 @@ const ReadDB = (params) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const writeUpdate2 = useCallback(async () => {
-    const auth = getAuth();
+    //const auth = getAuth();
     //const dbRef = ref(getDatabase());
     const update2 = await buildAveCredit();
     console.log("update2: ", update2);
@@ -491,7 +491,7 @@ const ReadDB = (params) => {
   const onSubmit = async (model) => {
     //
     onPush(model);
-    const dbRef = ref(getDatabase());
+    //const dbRef = ref(getDatabase());
 
     //write to db updated values
     //1.build items to be written in DB

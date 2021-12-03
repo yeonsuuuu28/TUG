@@ -25,6 +25,11 @@ function profileAdd(x, y) {
           if ((x.length === 3) && (y.length === 3)) {
             set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID + "/profile1/"), x)
             set(ref(db, 'users/' + auth.currentUser.uid + "/" + auth.currentUser.displayName + '/class/' + classID + "/profile2/"), y)
+
+            ////// added by Seonghye //////
+            set(ref(db, 'classes/' + classID + '/user/' + auth.currentUser.uid + "/profile/"), 'yes');
+            ///////////////////////////////
+
             alert("Successfully saved");
             // window.location.href = "/quizinfo/" + classID + '/1'
             window.location.href = "/waitingjoin/"+classID + '/1'; 

@@ -1,3 +1,22 @@
+//* <WAiting Join page algorithm (before the 1st round quiz)>
+//  let the class requires n teammates for each room. (n is usually 2 or 3 or 4)
+///
+/// 1. WAIT for 3 minutes (10 seconds for demo)
+/// 2. after 3 minutes, 
+///	  if ( the number of joined students >= 2*n){
+///	    if ( every joined students submitted their profile ) {
+///			  GO TO the quiz information page. 
+///			  SET db(classes/[classID]/quizstarted) : 'yes'
+///		  }
+///		  else {
+///			  WAIT until every joined students submit their profile
+///		  }
+///	  }
+///	  else {
+///		  WAIT until the number of joined students becomes 2*n or more
+///	  }
+///
+
 import Navbar from "./navbar_quiz.jsx";
 import React, { useState } from 'react'
 import { db} from "./firebase.jsx";
@@ -14,6 +33,7 @@ const timeInit = Date.now();
 function WaitingJoin(props) {
   const course = props.match.params.course;
   const round = parseInt(props.match.params.round);
+  let timelimitsntnc = "3 minutes";
   let timelimit = round === 1 ? 3 * 60 * 1000 : 1 * 60 * 1000; // 3 minutes 
   let studlimit = 8;
   for(var i =0; i<classes.length; i++){ // set studlimit
@@ -23,13 +43,15 @@ function WaitingJoin(props) {
     }
   }
 
-  // for debugging
+  //TODO: for debugging
   // studlimit = 1; //TODODODODODDODO
-  timelimit = 10 * 1000;//TODODODODODODODO 10 seconds
+  timelimit = 10 * 1000; //TODODODODODODODO 10 seconds
+  timelimitsntnc = "10 seconds"; //TODODODODOODOODO 10 seconds
 
   const dbRef = ref(getDatabase());
-  const [joinedStudents, setJoinedStudents] = useState(0);
-  const [sentence, setSentence] = useState(round === 1 ? "Let's wait for 3 minutes." : "");
+  const [startedStudents, setStartedStudents] = useState(0); // number of students who submitted the profile
+  const [joinedStudents, setJoinedStudents] = useState(0); // number of students who joined the class
+  const [sentence, setSentence] = useState(round === 1 ? "Let's wait for "+timelimitsntnc+"." : "");
   const [timeLeft, setTimeLeft] = useState('');
   const [userarr, setUserArr] = useState([]); // for round >= 2: set the left user list
   setTimeout(setTimeState, 1000);
@@ -64,10 +86,13 @@ function WaitingJoin(props) {
   //* timeOut
   /// go to quizinfo page if 4 or more students joined in the class
   function timeOut() {
-    if(round === 1 && joinedStudents < studlimit) {
-      setSentence("3 minutes over. But we need at least " + studlimit + " students to start the quiz. Waiting for more..." );
+    if(round === 1 && joinedStudents < studlimit) { // joined students are less than the lower limit
+      setSentence("Times over. But we need at least " + studlimit + " students to start the quiz. Waiting more..." );
     }
-    else if(round >= 2 && joinedStudents < studlimit){
+    else if(round === 1 && joinedStudents > startedStudents) { // there are some students who joined but haven't made profile yet
+      setSentence("Times over. But there are " + (joinedStudents - startedStudents) + " students who have not made the profile yet😥 Please wait for them to submit.");
+    }
+    else if(round >= 2 && joinedStudents < studlimit){ // 
       // setTimeout(window.location.href = "/mypage", 3000);
       
       setSentence("Times Over! There is only one team left. Wish you have a nice teamwork!");
@@ -80,7 +105,7 @@ function WaitingJoin(props) {
   }
 
   //* getJoinedStudents
-  /// get data of the number of joined students from DB and set the state 'joinedStudents' 
+  /// get data of the number of joined students from DB and set the state 'joinedStudents' & 'startedStudents'
   function getJoinedStudents() {
     const route = '/classes/' + course;
     get(child(dbRef, route)).then((s) => {
@@ -92,7 +117,6 @@ function WaitingJoin(props) {
         else if(round >= 2){ /// round >= 2: set userarr and joinedStudents
           let joined = 0;
           let userarr2 = [];
-          // console.log(s.child('/user/').val());
           Object.values(s.child('/user/').val()).map((obj, index) => {
             if(obj['finished'] === 'yes') {
               return(<></>)
@@ -107,10 +131,16 @@ function WaitingJoin(props) {
             setUserArr(userarr2);
             setJoinedStudents(joined);
           }
-          
-          // console.log("round ",round, " joined students: ", joinedStudents, userarr2);
         }
         else{ /// first start at round 1
+          let ss = 0;
+          Object.keys(s.child('/user/').val()).map((obj) => {
+            if(s.child('/user/'+obj+'/profile/').val() === "yes"){ // count the students who submitted the profile
+              ss = ss + 1;
+            }
+            return 0;
+          });
+          setStartedStudents(ss);
           setJoinedStudents(Object.keys(s.child('/user/').val()).length);
           console.log("currently joined students: ", joinedStudents);
           return(<></>)

@@ -62,12 +62,9 @@ function voteResult(formed, course, round){
 }
 
 
-
-
-
 //* handleVoting
 /// input: vote - true if the user clicks 'Yes', false if the user clicks 'Try Again'
-function handleVoting(vote, course, round){
+function handleVoting(vote, course, round, noChance){
   // alert("please wait until other teammates vote!");
   const dbRef = ref(getDatabase());
   const route = 'classes/' + course + '/rooms/';
@@ -95,6 +92,7 @@ function handleVoting(vote, course, round){
           //   storeTeamInDB(course, room.users);
           //   return voteResult(true, course, round);//TODO
           // }
+          
           if(vote){
             set(ref(db, route + index + '/vote/accept/' + auth.currentUser.uid + '/'), 'yes');
             curracceptance = curracceptance + 1;
@@ -115,20 +113,25 @@ function handleVoting(vote, course, round){
           //   }
           // }
           // else{ /// voted: false
-            if(voted < total){ /// recall this function until every student vote
-              // console.log('again~~');
-              return setTimeout(handleVoting(vote, course, round), 1000);
-            }
-            else if(voted === total && (curracceptance/total) < 2/3){ /// if 2/3 of students voted and 2/3 of students did not agree to this team, call voteResult with parameter 'false'
-              console.log("dkdk",curracceptance/total);
-              return voteResult(false, course, round);//TODO
-            }
-            else { /// if 2/3 of team members agree, finalize the team with this members!
-              // if(voted.length === total && (curracceptance.length/total) >= 2/3) {               
-              storeTeamInDB(course, room.users);
-              return voteResult(true, course, round);//TODO
-              // }
-            }
+          if(noChance){ /// No Chance Left
+            console.log("askldfalsdfasjdfa");
+            storeTeamInDB(course, room.users);
+            return setTimeout(function(){window.location.href = "/mypage"}, 1000);
+          }
+          else if(voted < total){ /// recall this function until every student vote
+            console.log('again~~');
+            return setTimeout(handleVoting(vote, course, round), 1000);
+          }
+          else if(voted === total && (curracceptance/total) < 2/3){ /// if 2/3 of students voted and 2/3 of students did not agree to this team, call voteResult with parameter 'false'
+            console.log("dkdk",curracceptance/total);
+            return voteResult(false, course, round);//TODO
+          }
+          else { /// if 2/3 of team members agree, finalize the team with this members!
+            // if(voted.length === total && (curracceptance.length/total) >= 2/3) {               
+            storeTeamInDB(course, room.users);
+            return voteResult(true, course, round);//TODO
+            // }
+          }
           // }
         }
         else{
@@ -149,9 +152,9 @@ function Voting(props) {
   const [aftervote, setAfterVote] = useState("");
 
   //* handleclick
-  function handleclick(vote, course, round){
+  function handleclick(vote, course, round, noChance){
     setAfterVote("Please wait until other teammates to vote!😊");
-    handleVoting(vote, course, round);
+    handleVoting(vote, course, round, noChance);
   }
 
 
@@ -164,7 +167,7 @@ function Voting(props) {
       <div>
         Now you can check your new team at 'Active Team' bar of mypage. Have a good luck on your team project!
       </div>
-      <button onClick={() => handleclick(true, course, round)}>Go to Active Team</button>
+      <button onClick={() => handleclick(true, course, round, true)}>Go to Active Team</button>
     </div>
     )
   }
@@ -199,7 +202,7 @@ function Voting(props) {
               borderRadius: "10px",
               cursor: "pointer",
           }} 
-          onClick={() => handleclick(true, course, round)}>Yes</div>
+          onClick={() => handleclick(true, course, round, false)}>Yes</div>
           </td>
           <td style={{textAlign:"center", width: "100px"}}>
         <div style={{
@@ -218,7 +221,7 @@ function Voting(props) {
               background: "#1b1e2e",
               borderRadius: "10px",
               cursor: "pointer",
-          }} onClick={() => handleclick(false, course, round)}>Try Again ({leftchances}/{totalrounds})</div>
+          }} onClick={() => handleclick(false, course, round, false)}>Try Again ({leftchances}/{totalrounds})</div>
           </td>
           </tr>
           </tbody>

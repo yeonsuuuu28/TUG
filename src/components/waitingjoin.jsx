@@ -108,7 +108,7 @@ function WaitingJoin(props) {
   }
 
   //* getJoinedStudents
-  /// get data of the number of joined students from DB and set the state 'joinedStudents' & 'startedStudents'
+  /// get data of the number of joined students from DB and set the state 'joinedStudents' & 'startedStudents' & 'totalStudents'
   function getJoinedStudents() {
     const route = '/classes/' + course;
     get(child(dbRef, route)).then((s) => {

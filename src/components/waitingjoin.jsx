@@ -49,8 +49,9 @@ function WaitingJoin(props) {
   timelimitsntnc = "10 seconds"; //TODODODODOODOODO 10 seconds
 
   const dbRef = ref(getDatabase());
-  const [startedStudents, setStartedStudents] = useState(0); // number of students who submitted the profile
-  const [joinedStudents, setJoinedStudents] = useState(0); // number of students who joined the class
+  const [startedStudents, setStartedStudents] = useState(0); // round 1: number of students who submitted the profile
+  const [totalStudents, setTotalStudents] = useState(100); // round 2~: # of students who need to finish voting
+  const [joinedStudents, setJoinedStudents] = useState(0); // round 1: number of students who joined the class, round 2~: # of students who finished voting
   const [sentence, setSentence] = useState(round === 1 ? "Let's wait for "+timelimitsntnc+"." : "");
   const [timeLeft, setTimeLeft] = useState('');
   const [userarr, setUserArr] = useState([]); // for round >= 2: set the left user list
@@ -62,7 +63,7 @@ function WaitingJoin(props) {
     console.log("userarr: ", course, userarr);
     storeTeamInDB(course, userarr);
     setTimeout(function(){window.location.href = "/mypage"}, 3000);
-    return;
+    // return(<></>);
   }
 
   //* setTimeState
@@ -90,11 +91,13 @@ function WaitingJoin(props) {
       setSentence("Times over. But we need at least " + studlimit + " students to start the quiz. Waiting more..." );
     }
     else if(round === 1 && joinedStudents > startedStudents) { // there are some students who joined but haven't made profile yet
-      setSentence("Times over. But there are " + (joinedStudents - startedStudents) + " students who have not made the profile yet😥 Please wait for them to submit.");
+      setSentence("Times over. But there are " + (joinedStudents - startedStudents) + " students who have not made the profile yet😥 Please wait for them submitting.");
     }
-    else if(round >= 2 && joinedStudents < studlimit){ // 
+    else if(round >= 2 && joinedStudents < totalStudents){ // there are some students who haven't vote yet
+      setSentence("Times over. But there are " + (totalStudents - joinedStudents) + " students who have not voted yet😥 Please wait for them voting.");
+    }
+    else if(round >= 2 && joinedStudents === totalStudents && joinedStudents < studlimit){ // students less than limit only go to next round
       // setTimeout(window.location.href = "/mypage", 3000);
-      
       setSentence("Times Over! There is only one team left. Wish you have a nice teamwork!");
     }
     else{ /// go to next page
@@ -117,20 +120,28 @@ function WaitingJoin(props) {
         else if(round >= 2){ /// round >= 2: set userarr and joinedStudents
           let joined = 0;
           let userarr2 = [];
+          let total = 0;
           Object.values(s.child('/user/').val()).map((obj, index) => {
             if(obj['finished'] === 'yes') {
               return(<></>)
             }
-            else {
-              userarr2.push(Object.keys(s.child('/user/').val())[index]);
-              joined = joined + 1;
-              return(<></>)
+            else{
+              total = total + 1;
+              if(obj['voted'] === 'yes') {
+                userarr2.push(Object.keys(s.child('/user/').val())[index]);
+                joined = joined + 1;
+                return(<></>)
+              }
+              else {
+                return(<></>)
+              }
             }
           });
-          if(timeLeft !== '0:00'){
+          // if(timeLeft !== '0:00'){ //TODODO??? time 끝나도 계속 체크해야될걸?
             setUserArr(userarr2);
             setJoinedStudents(joined);
-          }
+            setTotalStudents(total);
+          // }
         }
         else{ /// first start at round 1
           let ss = 0;

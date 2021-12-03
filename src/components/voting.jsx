@@ -38,6 +38,7 @@ function storeTeamInDB(course, userarr){
         set(ref(db, 'users/' + user + '/' + username[index] + "/pastteams/" + course + "/"), data2);  //store in pastteams
         set(ref(db, 'classes/' + course + '/user/' + user + "/finished/"), 'yes');
         set(ref(db, "users/" + user + '/' + username[index] + "/teambuilding/"), null);
+        set(ref(db, 'classes/' + course + '/users/' + user + "/voted/"), 'no');
       });
     }
   });
@@ -47,12 +48,14 @@ function storeTeamInDB(course, userarr){
 //* voteResult - return the html of the vote result and redirect to next page
 function voteResult(formed, course, round){
   if(formed === true) { /// goto Active Team page
-    alert("Your team is formed! ^V^\nmore than 2/3 of your teammates agreed to be in this team! :)");
+    alert("Your team is formed! ^V^\nMore than 2/3 of your teammates agreed to be in this team! :)");
+    set(ref(db, 'classes/' + course + '/users/' + auth.currentUser.uid + "/voted/"), 'yes');
     window.location.href = "/mypage";
   }
   else if(formed === false){ /// store the current team in the DB goto quizinfo page of next round
-    if(alert("Less than 2/3 of your teammates agreed to be in this team :(\n Let's go to the next round! :)"));
     const nextRound = parseInt(round) + 1;    
+    alert("Less than 2/3 of your teammates agreed to be in this team :(\n Let's go to the next round! :)");
+    set(ref(db, 'classes/' + course + '/user/' + auth.currentUser.uid + "/voted/"), 'yes');
     // window.location.href = "/quizinfo/" + course + "/" + nextRound;
     window.location.href = "/waitingjoin/" + course + "/" + nextRound;
   }
@@ -83,32 +86,50 @@ function handleVoting(vote, course, round){
           let voted = room.vote.voted;
           if(voted === undefined) voted = [];
           else voted = Object.keys(voted);
+          curracceptance = curracceptance.length;
+          voted = voted.length;
 
-          // console.log("curr: ", curracceptance/total, vote);
-          // console.log(voted, curracceptance.length, total);
-          if((curracceptance.length/total) >= 2/3) { /// if 2/3 of team members agree, finalize the team with this members!
-            storeTeamInDB(course, room.users);
-            return voteResult(true, course, round);//TODO
-          }
-          
-          if(vote){ /// +1 to room.vote.accept if user voted as 'true'
+          console.log("curr: ", curracceptance/total, vote);
+          console.log(voted, curracceptance, total);
+          // if(voted.length === total && (curracceptance.length/total) >= 2/3) { /// if 2/3 of team members agree, finalize the team with this members!
+          //   storeTeamInDB(course, room.users);
+          //   return voteResult(true, course, round);//TODO
+          // }
+          if(vote){
             set(ref(db, route + index + '/vote/accept/' + auth.currentUser.uid + '/'), 'yes');
-            if((curracceptance.length+1)/total >= 2/3) { /// if 2/3 of team members agree, finalize the team with this members!
-              storeTeamInDB(course, room.users);
-              // console.log("aft: ", (curracceptance.length + 1)/total);
-              return voteResult(true, course, round);//TODO
+            curracceptance = curracceptance + 1;
+          }
+
+          // if(vote){ /// +1 to room.vote.accept if user voted as 'true'
+          //   set(ref(db, route + index + '/vote/accept/' + auth.currentUser.uid + '/'), 'yes');
+          //   if(voted.length === total && (curracceptance.length+1)/total >= 2/3) { /// if 2/3 of team members agree, finalize the team with this members!
+          //     storeTeamInDB(course, room.users);
+          //     // console.log("aft: ", (curracceptance.length + 1)/total);
+          //     return voteResult(true, course, round);//TODO
+          //   }
+          //   else if ((voted.length + 1) === total){
+          //     return voteResult(false, course, round);
+          //   }
+          //   else{ /// recall this function until every student vote
+          //     return setTimeout(handleVoting(vote, course, round), 1000);
+          //   }
+          // }
+          // else{ /// voted: false
+            if(voted < total){ /// recall this function until every student vote
+              // console.log('again~~');
+              return setTimeout(handleVoting(vote, course, round), 1000);
             }
-          }
-          
-          if((voted.length/total) < 2/3){ /// if 2/3 of students haven't vote yet, recall this function
-            // console.log('again~~');
-            return setTimeout(handleVoting(vote, course, round), 1000);
-          }
-          else if((curracceptance.length/total) < 2/3){ /// if 2/3 of students voted and 2/3 of students did not agree to this team, call voteResult with parameter 'false'
-            console.log("dkdk",curracceptance.length/total);
-            return voteResult(false, course, round);//TODO
-          }
-          return(<></>)
+            else if(voted === total && (curracceptance/total) < 2/3){ /// if 2/3 of students voted and 2/3 of students did not agree to this team, call voteResult with parameter 'false'
+              console.log("dkdk",curracceptance/total);
+              return voteResult(false, course, round);//TODO
+            }
+            else { /// if 2/3 of team members agree, finalize the team with this members!
+              // if(voted.length === total && (curracceptance.length/total) >= 2/3) {               
+              storeTeamInDB(course, room.users);
+              return voteResult(true, course, round);//TODO
+              // }
+            }
+          // }
         }
         else{
           console.log("not in this room: ", room.users, auth.currentUser.uid);

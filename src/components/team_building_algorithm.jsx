@@ -151,6 +151,8 @@ function team_building_algorithm(c, round, n) {
           set(ref(db, route2 + index + '/users'), team);
           set(ref(db, route2 + index + '/round'), round);
           set(ref(db, route2 + index + '/vote/total'), team.length);
+          set(ref(db, route2 + index + '/vote/voted'), null);
+          set(ref(db, route2 + index + '/vote/accept'), null);
         });
       }
     });

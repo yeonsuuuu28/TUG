@@ -660,7 +660,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     
     
     
-    return (
+    return ( 
         <div style={{ height: "100%"}}>
             <div className="column">
                 <div style={{ position: "relative", height: "530px" }}> 

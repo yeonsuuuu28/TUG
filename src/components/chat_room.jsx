@@ -388,7 +388,6 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             }
             
             else {
-                // TODO: define animal name for each group members
                 console.log("New Group Initialized!");
 
                 const nowTime = new Date().getTime();
@@ -536,6 +535,25 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
             set(ref(db, `rooms/${classId}/${roomId}/anons`), null);
             clearInterval(timerId.current);
         }
+        else {
+            // (for debug) read db and check if chatFinished became true by others
+            get(ref(db, `rooms/${classId}/${roomId}/info`)).then((snapshot) => {
+
+                if (snapshot.exists() && snapshot.val()['chatFinished'] === true) {
+                    console.log("CHAT SESSION FINISHED BY OTHERS!");
+                    
+                    secLeft.current = 0;
+                    setTimerMin(parseInt(secLeft.current / 60));
+                    setTimerSec(parseInt(secLeft.current % 60));
+
+                    set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
+                    set(ref(db, `rooms/${classId}/${roomId}/anons`), null);
+                    clearInterval(timerId.current);
+                }
+            });
+        }
+
+        
     // eslint-disable-next-line
     }, [timerSec]);
 
@@ -635,15 +653,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                                 })
                             }
                         }
-                        else {
-                            /*set(ref(db, `rooms/${classId}/${roomId}/messages/${mid}`), {
-                                id: `${mid}`,
-                                message: msg,
-                                sender : remoteId
-                            });
-                            
-                            newCheckReminderFrom.current = i;*/
-                        }
+                        
                     })
                 }
             }
@@ -657,7 +667,17 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     // eslint-disable-next-line
     }, [timerSec]);
 
-    
+    const finishChatNow = () => {
+        console.log("NOW BROCASTING OTHERS TO FINISH CHAT")
+        
+        secLeft.current = 0;
+        setTimerMin(parseInt(secLeft.current / 60));
+        setTimerSec(parseInt(secLeft.current % 60));
+        
+        // this triggers other clients to render finished chat
+        set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
+        set(ref(db, `rooms/${classId}/${roomId}/anons`), null);
+    }
     
     
     return ( 
@@ -747,6 +767,28 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                 {(timerSec>0 || timerMin>0) && 
                     (plotUserId.length>0 && plotUserId !== remoteId) && 
                     (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <div className="newcomer">No credit history found.<br/>Please welcome the newcomer!</div>))
+                }
+                {(timerSec>0 || timerMin>0) && 
+                    (<div onClick={finishChatNow}
+                        style={{
+                        textAlign: "center", 
+                        paddingTop: "30px",
+                        fontFamily: "Lato, sans-serif", 
+                        fontSize: "10pt",
+                        paddingBottom: "10px",
+                        fontWeight: "bold",
+                        }}>
+                            <span style={{
+                                marginLeft: "20px",
+                                backgroundColor: "#c6e3fa",
+                                paddingLeft: "15px",
+                                paddingRight: "15px",
+                                paddingBottom: "7px",
+                                paddingTop: "7px",
+                                borderRadius: "15px",
+                                color: "#333333"
+                            }}>DEBUG MODE</span>
+                    </div>)
                 }
             </div>
         </div>

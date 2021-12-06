@@ -10,49 +10,49 @@
             "name" : "Introduction to Programming",
             "professor" : "Jongmoon Baik",
             "code" : "CS101",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 3
         }, 
         {
             "name" : "Introduction to Human-Computer Interaction",
             "professor" : "Juho Kim",
             "code" : "CS374",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 4
         }, 
         {
             "name" : "Introduction to Software Engineering",
             "professor" : "Doo-Hwan Bae",
             "code" : "CS350",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 4
         },
         {
             "name" : "Discrete Mathematics",
             "professor" : "Sungwon Kang",
             "code" : "CS204",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 3
         }, 
         {
             "name" : "Programming Principles",
             "professor" : "Jeehoon Kang",
             "code" : "CS220",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 2
         }, 
         {
             "name" : "System Programming",
             "professor" : "Jaehyuk Huh",
             "code" : "CS230",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 2
         }, 
         {
             "name" : "Introduction to Algorithms",
             "professor" : "Martin ZIEGLER",
             "code" : "CS300",
-            "open" : "Opened",
+            "open" : "Not Opened",
             "team" : 3
         }, 
         {

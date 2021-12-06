@@ -7,8 +7,19 @@ import classes from "./classes_list.jsx";
 import ERROR from "../images/error.png";
 
 function handleCourseClick(course) {
-  push(ref(db,"users/" + auth.currentUser.uid + "/" + auth.currentUser.displayName + "/teambuilding/"), course);
-      window.location.href = "/profile";
+  const dbRef = ref(getDatabase());
+  get(child(dbRef, "classes/" + course + "/quizstarted")).then((snapshot) => {
+      if (snapshot.exists()) {
+        if (Object.values(snapshot.val())[0] === "y") {
+          alert("Teambuilding session has already started. \nPlease contact your advisor.")
+        }
+      }
+      else {
+        push(ref(db,"users/" + auth.currentUser.uid + "/" + auth.currentUser.displayName + "/teambuilding/"), course);
+        window.location.href = "/profile";
+      }
+    }
+  );
 }
 
 

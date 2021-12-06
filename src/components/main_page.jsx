@@ -92,7 +92,7 @@ export default function main(props) {
                     <br/>
                     TUG is here to guide you to form your dreamt team.
                     <br/>
-                    We provide effective ways to find your best teamates.
+                    We provide effective ways to find your best teammates.
                 </div>
                 <Link to="./join">
                     <div className="button">GET STARTED</div>

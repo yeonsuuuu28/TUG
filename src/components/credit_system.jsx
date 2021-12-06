@@ -554,7 +554,7 @@ const ReadDB = (params) => {
     writeUpdate2();
     history.push("/mypage");
     alert(
-      "Thank you for submitting an honest review! As a bonus you get 10 points for evaluating your teamm. Check your profile to see your total credits!"
+      "Thank you for submitting an honest review! \nAs a bonus, you get 10 extra points for evaluating your team. \nCheck your profile to see your total credits!"
     );
   };
 

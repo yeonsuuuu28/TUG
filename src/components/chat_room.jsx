@@ -511,8 +511,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
 
     ///// chat timer /////    
     
-    // const maxChatSec = 300; // time to chat for each group (unit:s)
-    const maxChatSec = 120;    // time to chat for each group (unit:s) - shortened version for live demo
+    const maxChatSec = 300; // time to chat for each group (unit:s)
+    // const maxChatSec = 120;    // time to chat for each group (unit:s) - shortened version for live demo
     const secLeft = useRef(0); // time left to chat with group members (unit:s)
     const timerId = useRef(null);
     const [timerSec, setTimerSec] = useState(parseInt(maxChatSec / 60));
@@ -593,23 +593,24 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     }
 
     // sec left to send messages to all room members (descending order)
-    /*const whenToRemind = [298, 297, 180, 60, 10].sort((a,b) => b-a);
+    const whenToRemind = [298, 297, 180, 60, 10].sort((a,b) => b-a);
     let reminders = [
         "Hello everyone! Ready to meet some people?",
         "Chat with your potential group members. Click each chat bubble to see profiles.",
         "You have three minutes before voting!",
         "One minute left! Share your last comments to people.",
         "Ten seconds left! Get ready to vote!",
-    ]*/
+    ]/**/
 
-    // shortened version of chat time - only for the live demp
-    const whenToRemind = [118, 117, 60, 10].sort((a,b) => b-a);
+    // shortened version of chat time - only for the live demo
+    /*const whenToRemind = [118, 117, 60, 10].sort((a,b) => b-a);
     let reminders = [
         "Hello everyone! Ready to meet some people?",
         "Chat with your potential group members. Click each chat bubble to see profiles.",
         "One minute left! Share your last comments to people.",
         "Ten seconds left! Get ready to vote!",
-    ]
+    ]*/
+
     const checkReminderFrom = useRef(0);
     const newCheckReminderFrom = useRef(-1);
 
@@ -768,32 +769,34 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
                     (plotUserId.length>0 && plotUserId !== remoteId) && 
                     (( plotData.length > 0 && <CreditPlot data={plotData}/>) || ( plotData.length <= 0 && <div className="newcomer">No credit history found.<br/>Please welcome the newcomer!</div>))
                 }
-                {(timerSec>0 || timerMin>0) && 
-                    (<div onClick={finishChatNow}
-                        style={{
-                        textAlign: "center", 
-                        paddingTop: "30px",
-                        fontFamily: "Lato, sans-serif", 
-                        fontSize: "10pt",
-                        paddingBottom: "10px",
-                        fontWeight: "bold",
-                        }}>
-                            <span style={{
-                                marginLeft: "20px",
-                                backgroundColor: "#c6e3fa",
-                                paddingLeft: "15px",
-                                paddingRight: "15px",
-                                paddingBottom: "7px",
-                                paddingTop: "7px",
-                                borderRadius: "15px",
-                                color: "#333333"
-                            }}>DEBUG MODE</span>
-                    </div>)
-                }
+                
             </div>
         </div>
     )
 };
 
+/* {(timerSec>0 || timerMin>0) && 
+    (<div onClick={finishChatNow}
+        style={{
+        textAlign: "center", 
+        paddingTop: "30px",
+        fontFamily: "Lato, sans-serif", 
+        fontSize: "10pt",
+        paddingBottom: "10px",
+        fontWeight: "bold",
+        }}>
+            <span style={{
+                marginLeft: "20px",
+                backgroundColor: "#c6e3fa",
+                paddingLeft: "15px",
+                paddingRight: "15px",
+                paddingBottom: "7px",
+                paddingTop: "7px",
+                borderRadius: "15px",
+                color: "#333333"
+            }}>DEBUG MODE</span>
+    </div>)
+}
+*/
 
 export default GroupChatInterface

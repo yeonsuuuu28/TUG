@@ -668,7 +668,8 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
     // eslint-disable-next-line
     }, [timerSec]);
 
-    const finishChatNow = () => {
+    // debug mode button to brocast finish flag to chat members
+    /*const finishChatNow = () => {
         console.log("NOW BROCASTING OTHERS TO FINISH CHAT")
         
         secLeft.current = 0;
@@ -678,7 +679,7 @@ const RealChat = ({ classId, roomId, senderId, senderName, namePairs, chatRound}
         // this triggers other clients to render finished chat
         set(ref(db, `rooms/${classId}/${roomId}/info/chatFinished`), true);
         set(ref(db, `rooms/${classId}/${roomId}/anons`), null);
-    }
+    }*/
     
     
     return ( 

@@ -44,7 +44,7 @@ function WaitingJoin(props) {
   }
 
   //TODO: for debugging
-  // studlimit = 1; //TODODODODODDODO
+  studlimit = 4; //TODODODODODDODO
   timelimit = 10 * 1000; //TODODODODODODODO 10 seconds
   timelimitsntnc = "10 seconds"; //TODODODODOODOODO 10 seconds
 

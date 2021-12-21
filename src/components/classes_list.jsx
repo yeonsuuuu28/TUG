@@ -5,7 +5,7 @@
             "code" : "CS473",
             "open" : "Opened",
             "team" : 4
-        }, 
+        },  
         {
             "name" : "Introduction to Programming",
             "professor" : "Jongmoon Baik",

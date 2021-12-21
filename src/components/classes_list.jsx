@@ -1,10 +1,10 @@
     const classes = [
         {
-            "name" : "CLASS FOR DEMO",
+            "name" : "CLASS FOR TESTING",
             "professor" : "Juho Kim",
             "code" : "CS473",
             "open" : "Opened",
-            "team" : 2
+            "team" : 4
         }, 
         {
             "name" : "Introduction to Programming",
